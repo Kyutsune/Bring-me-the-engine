@@ -1,7 +1,9 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
 #include "engine/Shader.h"
+#include "engine/Mesh.h"
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+#include <iostream>
+
 
 int main() {
     if (!glfwInit()) {
@@ -12,7 +14,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Bring Me The Engine", nullptr, nullptr);
+    GLFWwindow * window = glfwCreateWindow(800, 600, "Bring Me The Engine", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
@@ -28,48 +30,51 @@ int main() {
     // Set viewport
     glViewport(0, 0, 800, 600);
 
-    Shader shader("../shaders/triangle.vert", "../shaders/triangle.frag");
+    // Ici on affiche un triangle avec la classe Shader
+    Shader shader("../shaders/vertex.vert", "../shaders/vertex.frag");
 
-    // Données du triangle + buffers VAO/VBO
-    float vertices[] = {
-         0.0f,  0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f
+
+    // Ici affichage d'un triangle avec la classe Mesh
+    std::vector<Vertex> vertices = {
+        // positions           normals         colors          texCoords
+        {{-0.5f, -0.5f,  0.5f}, {0, 0, 1}, {1, 0, 0}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f,  0.5f}, {0, 0, 1}, {0, 1, 0}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {0, 0, 1}, {0, 0, 1}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f,  0.5f}, {0, 0, 1}, {1, 0, 1}, {0.0f, 1.0f}},
+        
+
+        {{-0.5f, -0.5f, -0.5f}, {0, 0, -1}, {1, 0, 1}, {1.0f, 0.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {0, 0, -1}, {0, 1, 1}, {0.0f, 0.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {0, 0, -1}, {1, 1, 1}, {0.0f, 1.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {0, 0, -1}, {0, 0, 1}, {1.0f, 1.0f}},
     };
-
-    GLuint VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // position attribute (layout location = 0 dans le vertex shader)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    std::vector<unsigned int> indices = {
+        // Front face
+        0, 1, 2, 2, 3, 0,
+        // Right face
+        1, 5, 6, 6, 2, 1,
+        // Back face
+        5, 4, 7, 7, 6, 5,
+        // Left face
+        4, 0, 3, 3, 7, 4,
+        // Top face
+        3, 2, 6, 6, 7, 3,
+        // Bottom face
+        4, 5, 1, 1, 0, 4
+    };
+    Mesh mesh(vertices, indices);
 
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {
-        glClearColor(1.f, 1.f, 1.f, 1.0f);
+        glClearColor(0.f, 0.f, 0.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0);
+        mesh.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    // nettoyage
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
 
     glfwTerminate();
     return 0;

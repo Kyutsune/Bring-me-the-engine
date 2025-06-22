@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
+// Class that represent the shaders of the engine, used to compile and link vertex and fragment shaders.
 class Shader {
 public:
     GLuint ID;
