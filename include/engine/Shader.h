@@ -4,8 +4,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
+#include "base/Vec.h"
 
-// Class that represent the shaders of the engine, used to compile and link vertex and fragment shaders.
+// Classe qui représente les shaders du moteur, utilisée pour compiler et lier les vertex et fragment shaders.
 class Shader {
 public:
     GLuint ID;
@@ -18,9 +19,9 @@ public:
     void setInt(const std::string & name, int value) const;
     void setFloat(const std::string & name, float value) const;
 
-    void setMat4(const std::string & name, const glm::mat4 & mat) const;
+    void setMat4(const std::string & name, const Mat4 & mat) const;
     void setVec3(const std::string & name, float x, float y, float z) const;
-    void setVec3(const std::string & name, const glm::vec3 & vec) const;
+    void setVec3(const std::string & name, const Vec3 & vec) const;
 
 private:
     std::string loadFile(const std::string & path) const;

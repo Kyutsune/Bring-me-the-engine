@@ -1,10 +1,10 @@
 // engine/Vertex.h
 #pragma once
-#include <glm/glm.hpp>
+#include "base/Vec.h"
 
 struct Vertex {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec3 color;
-    glm::vec2 texCoords;
+    Vec3 position;
+    Vec3 normal;
+    Vec3 color;
+    Vec2 texCoords;
 };

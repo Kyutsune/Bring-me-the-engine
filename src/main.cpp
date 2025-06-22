@@ -1,9 +1,19 @@
-#include "engine/Shader.h"
+#include "base/Vec.h"
 #include "engine/Mesh.h"
-#include <GLFW/glfw3.h>
+#include "engine/Shader.h"
+#include "tools/Trigo.h"
+#include "utils/Cube.h"
+#include "engine/Camera.h"
+
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 
+void updateCameraUniforms(Shader & shader, const Mat4 & model, const Mat4 & view, const Mat4 & projection) {
+    shader.setMat4("model", model);
+    shader.setMat4("view", view);
+    shader.setMat4("projection", projection);
+}
 
 int main() {
     if (!glfwInit()) {
@@ -14,7 +24,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow * window = glfwCreateWindow(800, 600, "Bring Me The Engine", nullptr, nullptr);
+    GLFWwindow * window = glfwCreateWindow(1600, 800, "Bring Me The Engine", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();
@@ -27,50 +37,42 @@ int main() {
         return -1;
     }
 
-    // Set viewport
-    glViewport(0, 0, 800, 600);
+    // Définition des différentes matrices de transformation
+    Mat4 model = Mat4::identity();
 
-    // Ici on affiche un triangle avec la classe Shader
+    Camera camera(
+        Vec3(2, 1, 3),    // position à l'initialisation
+        Vec3(0, 0, 0),    // le point ciblé
+        Vec3(0, 1, 0),    // up
+        45.0f,            // FOV
+        1600.0f / 800.0f, // aspect ratio
+        0.1f, 100.0f);
+
+    Mat4 view = camera.getViewMatrix();
+    Mat4 projection = camera.getProjectionMatrix();
+
+    // Set viewport
+    glViewport(0, 0, 1600, 800);
+    glEnable(GL_DEPTH_TEST);
+
     Shader shader("../shaders/vertex.vert", "../shaders/vertex.frag");
 
-
-    // Ici affichage d'un triangle avec la classe Mesh
-    std::vector<Vertex> vertices = {
-        // positions           normals         colors          texCoords
-        {{-0.5f, -0.5f,  0.5f}, {0, 0, 1}, {1, 0, 0}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f,  0.5f}, {0, 0, 1}, {0, 1, 0}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {0, 0, 1}, {0, 0, 1}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f,  0.5f}, {0, 0, 1}, {1, 0, 1}, {0.0f, 1.0f}},
-        
-
-        {{-0.5f, -0.5f, -0.5f}, {0, 0, -1}, {1, 0, 1}, {1.0f, 0.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {0, 0, -1}, {0, 1, 1}, {0.0f, 0.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {0, 0, -1}, {1, 1, 1}, {0.0f, 1.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {0, 0, -1}, {0, 0, 1}, {1.0f, 1.0f}},
-    };
-    std::vector<unsigned int> indices = {
-        // Front face
-        0, 1, 2, 2, 3, 0,
-        // Right face
-        1, 5, 6, 6, 2, 1,
-        // Back face
-        5, 4, 7, 7, 6, 5,
-        // Left face
-        4, 0, 3, 3, 7, 4,
-        // Top face
-        3, 2, 6, 6, 7, 3,
-        // Bottom face
-        4, 5, 1, 1, 0, 4
-    };
-    Mesh mesh(vertices, indices);
+    Mesh cube = createCube();
 
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.f, 0.f, 0.f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();
-        mesh.draw();
+
+        float angle = glfwGetTime(); 
+        Mat4 rotation = Mat4::rotateY(angle);
+        model = rotation;
+
+        // On passe au shader les matrices de transformation
+        updateCameraUniforms(shader, model, view, projection);
+        cube.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include "Vertex.h"
 
-// Class that'll be used to represent a set of objects in the 3d space.
+// Classe qui sera utilisée pour représenter un objet dans l'espace 3D.
 class Mesh {
 public:
     Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);

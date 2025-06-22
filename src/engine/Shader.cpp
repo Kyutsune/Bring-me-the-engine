@@ -1,4 +1,5 @@
 #include "engine/Shader.h"
+#include "base/Vec.h"
 
 #include <fstream>
 #include <sstream>
@@ -19,7 +20,6 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
     glAttachShader(ID, fragmentShader);
     glLinkProgram(ID);
 
-    // Check linking
     GLint success;
     glGetProgramiv(ID, GL_LINK_STATUS, &success);
     if (!success) {
@@ -65,7 +65,6 @@ GLuint Shader::compileShader(GLenum type, const std::string& source) const {
     glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
 
-    // Check compilation
     GLint success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
@@ -77,14 +76,14 @@ GLuint Shader::compileShader(GLenum type, const std::string& source) const {
 }
 
 
-void Shader::setMat4(const std::string& name, const glm::mat4& mat) const {
-    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+void Shader::setMat4(const std::string& name, const Mat4& mat) const {
+    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.ptr());
 }
 
 void Shader::setVec3(const std::string& name, float x, float y, float z) const {
     glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
 }
 
-void Shader::setVec3(const std::string& name, const glm::vec3& vec) const {
-    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(vec));
+void Shader::setVec3(const std::string& name, const Vec3& vec) const {
+    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, vec.ptr());
 }
