@@ -40,8 +40,6 @@ void Scene::update() {
     float angle = glfwGetTime();
     this->model = Mat4::Translation(Vec3(0, 0, -1.f))*Mat4::rotateY(angle) ;
 
-    std::cout<< "Model Matrix: " << this->model << "\n";
-
     updateCameraUniforms(*this->shader, this->model, this->view, this->projection);
 
     this->meshes[0]->draw();
