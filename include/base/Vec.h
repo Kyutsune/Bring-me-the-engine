@@ -148,6 +148,33 @@ struct Mat4 {
                   << m.data[12] << ", " << m.data[13] << ", " << m.data[14] << ", " << m.data[15] << ")\n";
     }
 
+    static Mat4 rotateX(float angleRadians) {
+        Mat4 result;
+        float c = std::cos(angleRadians);
+        float s = std::sin(angleRadians);
+
+        result.data[0] = 1.0f;
+        result.data[1] = 0.0f;
+        result.data[2] = 0.0f;
+        result.data[3] = 0.0f;
+
+        result.data[4] = 0.0f;
+        result.data[5] = c;
+        result.data[6] = -s;
+        result.data[7] = 0.0f;
+
+        result.data[8] = 0.0f;
+        result.data[9] = s;
+        result.data[10] = c;
+        result.data[11] = 0.0f;
+
+        result.data[12] = 0.0f;
+        result.data[13] = 0.0f;
+        result.data[14] = 0.0f;
+        result.data[15] = 1.0f;
+
+        return result;
+    }
 
     static Mat4 rotateY(float angleRadians) {
         Mat4 result;
@@ -174,6 +201,66 @@ struct Mat4 {
         result.data[14] = 0.0f;
         result.data[15] = 1.0f;
 
+        return result;
+    }
+
+    static Mat4 rotateZ(float angleRadians) {
+        Mat4 result;
+        float c = std::cos(angleRadians);
+        float s = std::sin(angleRadians);
+
+        result.data[0] = c;
+        result.data[1] = -s;
+        result.data[2] = 0.0f;
+        result.data[3] = 0.0f;
+
+        result.data[4] = s;
+        result.data[5] = c;
+        result.data[6] = 0.0f;
+        result.data[7] = 0.0f;
+
+        result.data[8] = 0.0f;
+        result.data[9] = 0.0f;
+        result.data[10] = 1.0f;
+        result.data[11] = 0.0f;
+
+        result.data[12] = 0.0f;
+        result.data[13] = 0.0f;
+        result.data[14] = 0.0f;
+        result.data[15] = 1.0f;
+
+        return result;
+    }
+
+    void setIdentity() {
+        for (int i = 0; i < 16; ++i)
+            data[i] = (i % 5 == 0) ? 1.0f : 0.0f;
+    }
+
+    Mat4 operator*(const Mat4 & other) const {
+        Mat4 result;
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                result.data[i * 4 + j] = data[i * 4 + 0] * other.data[0 * 4 + j] +
+                                         data[i * 4 + 1] * other.data[1 * 4 + j] +
+                                         data[i * 4 + 2] * other.data[2 * 4 + j] +
+                                         data[i * 4 + 3] * other.data[3 * 4 + j];
+            }
+        }
+        return result;
+    }
+
+    Mat4 & translate(const Vec3 & t) {
+        Mat4 translation = Mat4::Translation(t);
+        *this = *this * translation;
+        return *this;
+    }
+
+    static Mat4 Translation(const Vec3 & translation) {
+        Mat4 result;
+        result.data[12] = translation.x;
+        result.data[13] = translation.y;
+        result.data[14] = translation.z;
         return result;
     }
 };
