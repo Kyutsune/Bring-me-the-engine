@@ -3,7 +3,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include "Vertex.h"
+#include "base/Vertex.h"
 
 // Classe qui sera utilisée pour représenter un objet dans l'espace 3D.
 class Mesh {

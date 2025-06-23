@@ -2,8 +2,9 @@
 
 #include "engine/Camera.h"
 #include "engine/Mesh.h"
-#include "engine/Shader.h"
+#include "base/Shader.h"
 #include "utils/Cube.h"
+#include "engine/Entity.h"
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -22,6 +23,6 @@ private:
     Mat4 view;
     Mat4 projection;
 
-    std::vector<std::shared_ptr<Mesh>> meshes;
+    std::vector<std::shared_ptr<Entity>> entities;
     Shader * shader;
 };

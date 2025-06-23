@@ -1,14 +1,8 @@
 #include "engine/Scene.h"
 #include "base/Vec.h"
-#include "engine/Shader.h"
+#include "base/Shader.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-
-void updateCameraUniforms(Shader & shader, const Mat4 & model, const Mat4 & view, const Mat4 & projection) {
-    shader.setMat4("model", model);
-    shader.setMat4("view", view);
-    shader.setMat4("projection", projection);
-}
 
 Scene::Scene(Shader * shader) : shader(shader), model(Mat4::identity()), view(Mat4::identity()), projection(Mat4::identity()) {
     init();
@@ -30,17 +24,32 @@ void Scene::init() {
 }
 
 void Scene::initObjects() {
-    this->meshes.push_back(createCube<std::shared_ptr<Mesh>>());
+    std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>();
+    Mat4 t;
+
+    auto entity = std::make_shared<Entity>(t, cubeMesh);
+    entities.push_back(entity);
+
+
+
+    std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>();
+    Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
+    auto entity2 = std::make_shared<Entity>(t2, cubeMesh2);
+    entities.push_back(entity2);
+
+
 }
 
 void Scene::update() {
-    // Utilisation du shader pour dessiner les objets
     shader->use();
-    // // Pour l'instant on fait juste tourner l'objet
+
     float angle = glfwGetTime();
-    this->model = Mat4::Translation(Vec3(0, 0, -1.f))*Mat4::rotateY(angle) ;
 
-    updateCameraUniforms(*this->shader, this->model, this->view, this->projection);
+    entities[0]->setTransform(Mat4::Translation(Vec3(0, 0, -1.f)) * Mat4::rotateY(angle));
 
-    this->meshes[0]->draw();
+    // Dessin de chaque entité avec sa propre matrice de transformation
+    for (const auto & entity : entities) {
+        entity->draw_entity(*shader, view, projection);
+    }
+
 }

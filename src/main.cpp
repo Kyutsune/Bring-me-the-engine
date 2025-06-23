@@ -2,7 +2,7 @@
 #include "engine/Camera.h"
 #include "engine/Mesh.h"
 #include "engine/Scene.h"
-#include "engine/Shader.h"
+#include "base/Shader.h"
 #include "tools/Trigo.h"
 #include "utils/Cube.h"
 
