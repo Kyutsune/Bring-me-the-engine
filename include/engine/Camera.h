@@ -33,10 +33,10 @@ public:
         return Mat4::perspective(radians(fov), aspectRatio, nearPlane, farPlane);
     }
 
-    const Vec3 & getPosition() const { return position; }
-    void setPosition(const Vec3 & pos) { position = pos; }
-    const Vec3 & getTarget() const { return target; }
-    void setTarget(const Vec3 & tgt) { target = tgt; }
+    inline const Vec3 & getPosition() const { return position; }
+    inline void setPosition(const Vec3 & pos) { position = pos; }
+    inline const Vec3 & getTarget() const { return target; }
+    inline void setTarget(const Vec3 & tgt) { target = tgt; }
 
     Vec3 getDirection() const;
     Vec3 getRight() const;
