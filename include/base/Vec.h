@@ -93,9 +93,8 @@ struct Vec4 {
 };
 
 struct Mat4 {
-    float data[16]; // row-major
+    float data[16];
 
-    // Identité par défaut
     Mat4() {
         for (int i = 0; i < 16; ++i)
             data[i] = 0.0f;
@@ -104,6 +103,16 @@ struct Mat4 {
 
     static Mat4 identity() {
         return Mat4();
+    }
+
+    Mat4(std::initializer_list<float> list) {
+        int i = 0;
+        for (auto it = list.begin(); it != list.end() && i < 16; ++it, ++i) {
+            data[i] = *it;
+        }
+        for (; i < 16; ++i) {
+            data[i] = 0.0f;
+        }
     }
 
     static Mat4 lookAt(const Vec3 & eye, const Vec3 & center, const Vec3 & up) {
@@ -159,7 +168,7 @@ struct Mat4 {
                   << m.data[12] << ", " << m.data[13] << ", " << m.data[14] << ", " << m.data[15] << ")\n";
     }
 
-    static Mat4 rotateX(float angleRadians) {
+    Mat4 rotateX(float angleRadians) {
         Mat4 result;
         float c = std::cos(angleRadians);
         float s = std::sin(angleRadians);
@@ -243,6 +252,23 @@ struct Mat4 {
         return result;
     }
 
+    Mat4 rotate(const Vec3 & axis, float angle) {
+        Vec3 u = axis.normalized();
+
+        float c = cos(angle);
+        float s = sin(angle);
+        float one_c = 1.0f - c;
+
+        float ux = u.x;
+        float uy = u.y;
+        float uz = u.z;
+
+        return Mat4({c + ux * ux * one_c, ux * uy * one_c - uz * s, ux * uz * one_c + uy * s, 0.f,
+                     uy * ux * one_c + uz * s, c + uy * uy * one_c, uy * uz * one_c - ux * s, 0.f,
+                     uz * ux * one_c - uy * s, uz * uy * one_c + ux * s, c + uz * uz * one_c, 0.f,
+                     0.f, 0.f, 0.f, 1.f});
+    }
+
     void setIdentity() {
         for (int i = 0; i < 16; ++i)
             data[i] = (i % 5 == 0) ? 1.0f : 0.0f;
@@ -261,6 +287,15 @@ struct Mat4 {
         return result;
     }
 
+    Mat4 operator*(const Vec3 & v) const {
+        Mat4 result;
+        result.data[0] = data[0] * v.x + data[4] * v.y + data[8] * v.z + data[12];
+        result.data[1] = data[1] * v.x + data[5] * v.y + data[9] * v.z + data[13];
+        result.data[2] = data[2] * v.x + data[6] * v.y + data[10] * v.z + data[14];
+        result.data[3] = 1.0f;
+        return result;
+    }
+
     Mat4 & translate(const Vec3 & t) {
         Mat4 translation = Mat4::Translation(t);
         *this = *this * translation;
@@ -275,3 +310,12 @@ struct Mat4 {
         return result;
     }
 };
+
+// Free function for Mat4 * Vec3 multiplication
+inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {
+    // Treat Vec3 as a Vec4 with w = 1 for affine transformations
+    float x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12];
+    float y = mat.data[1] * vec.x + mat.data[5] * vec.y + mat.data[9] * vec.z + mat.data[13];
+    float z = mat.data[2] * vec.x + mat.data[6] * vec.y + mat.data[10] * vec.z + mat.data[14];
+    return Vec3(x, y, z);
+}

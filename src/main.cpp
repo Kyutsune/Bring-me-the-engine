@@ -5,7 +5,7 @@
 #include "base/Shader.h"
 #include "base/Vec.h"
 #include "engine/Camera.h"
-#include "engine/Clavier.h"
+#include "engine/ClavierSouris.h"
 #include "engine/Mesh.h"
 #include "engine/Scene.h"
 #include "tools/Trigo.h"
@@ -23,6 +23,10 @@ void key_callback(GLFWwindow * window, int key, int scancode, int action, int mo
             reactKeyboardPressed(window, name, key);
         }
     }
+}
+
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+    ClavierSouris::handleMouse(window, xpos, ypos);
 }
 
 int main() {
@@ -48,6 +52,8 @@ int main() {
     }
 
     glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+
 
     // Set viewport
     glViewport(0, 0, 1600, 800);
@@ -63,7 +69,7 @@ int main() {
         glClearColor(0.f, 0.f, 0.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Clavier::handleContinuousInput(window); 
+        ClavierSouris::handleContinuousInput(window); 
         gameScene->update();
 
         glfwSwapBuffers(window);
