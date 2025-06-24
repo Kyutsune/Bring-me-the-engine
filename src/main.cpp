@@ -1,6 +1,7 @@
 #include "base/Shader.h"
 #include "base/Vec.h"
 #include "engine/Camera.h"
+#include "engine/Clavier.h"
 #include "engine/Mesh.h"
 #include "engine/Scene.h"
 #include "tools/Trigo.h"
@@ -10,13 +11,16 @@
 #include <glad/glad.h>
 #include <iostream>
 
+
+// Cette fonction est un callback pour gérer les événements de clavier crée par GLFW.
+// Concept nouveau et pratique à mes yeux, la manière d'en créer une est donnée en exemple dans le dossier compétences_acquises dans src
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         const char * name = glfwGetKeyName(key, scancode);
         if (name) {
-            std::cout << "Appui sur: " << name << std::endl;
+            reactKeyboardPressed(window, name, key);
         } else {
-            std::cout << "Appui sur une touche dont le code est: " << key << std::endl;
+            reactKeyboardPressed(window, name, key);
         }
     }
 }
@@ -59,10 +63,6 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         gameScene->update();
-
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            break;
-        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
