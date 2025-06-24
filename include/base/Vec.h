@@ -24,6 +24,10 @@ struct Vec2 {
         return len == 0 ? *this : *this / len;
     }
 
+    Vec2 operator-() const {
+        return Vec2(-x, -y);
+    }
+
     friend std::ostream & operator<<(std::ostream & os, const Vec2 & v) {
         return os << "Vec2(" << v.x << ", " << v.y << ")";
     }
@@ -57,6 +61,10 @@ struct Vec3 {
             x * other.y - y * other.x};
     }
 
+    Vec3 operator-() const {
+        return Vec3(-x, -y, -z);
+    }
+
     friend std::ostream & operator<<(std::ostream & os, const Vec3 & v) {
         return os << "Vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
     }
@@ -76,6 +84,9 @@ struct Vec4 {
     const float * ptr() const { return &x; }
     float * ptr() { return &x; }
 
+    Vec4 operator-() const {
+        return Vec4(-x, -y, -z, -w);
+    }
     friend std::ostream & operator<<(std::ostream & os, const Vec4 & v) {
         return os << "Vec4(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
     }

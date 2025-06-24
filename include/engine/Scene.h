@@ -17,9 +17,12 @@ public:
 
     void initObjects();
 
+    inline Camera * getCamera() { return &camera; }
+    inline Mat4 & getView() { return view; }
+
 private:
     Camera camera;
-    Mat4 model;
+    //Ici chaque objet de la scène aura sa propre matrice de transformation donc pas de model global
     Mat4 view;
     Mat4 projection;
 

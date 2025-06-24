@@ -1,3 +1,7 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
+
 #include "base/Shader.h"
 #include "base/Vec.h"
 #include "engine/Camera.h"
@@ -6,11 +10,7 @@
 #include "engine/Scene.h"
 #include "tools/Trigo.h"
 #include "utils/Cube.h"
-
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
-#include <iostream>
-
+#include "Globals.h"
 
 // Cette fonction est un callback pour gérer les événements de clavier crée par GLFW.
 // Concept nouveau et pratique à mes yeux, la manière d'en créer une est donnée en exemple dans le dossier compétences_acquises dans src
@@ -56,12 +56,14 @@ int main() {
     // Ici on alloue des unique_ptr pour gérer la mémoire d'une plus jolie manière, et plus sûre.
     std::unique_ptr<Shader> shader = std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag");
     std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shader.get());
+    g_scene = gameScene.get();
 
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.f, 0.f, 0.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        Clavier::handleContinuousInput(window); 
         gameScene->update();
 
         glfwSwapBuffers(window);

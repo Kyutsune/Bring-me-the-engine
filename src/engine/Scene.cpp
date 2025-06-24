@@ -4,13 +4,13 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-Scene::Scene(Shader * shader) : shader(shader), model(Mat4::identity()), view(Mat4::identity()), projection(Mat4::identity()) {
+Scene::Scene(Shader * shader) : shader(shader), view(Mat4::identity()), projection(Mat4::identity()) {
     init();
 }
 
 void Scene::init() {
     this->camera = Camera(
-        Vec3(2, 1, 3),    // position à l'initialisation
+        Vec3(0, 0, 3),    // position à l'initialisation
         Vec3(0, 0, 0),    // le point ciblé
         Vec3(0, 1, 0),    // up
         45.0f,            // FOV
@@ -19,7 +19,6 @@ void Scene::init() {
 
     this->view = camera.getViewMatrix();
     this->projection = camera.getProjectionMatrix();
-    this->model = Mat4::identity();
     this->initObjects();
 }
 
@@ -41,6 +40,9 @@ void Scene::initObjects() {
 }
 
 void Scene::update() {
+    view = camera.getViewMatrix();
+    projection = camera.getProjectionMatrix(); 
+
     shader->use();
 
     float angle = glfwGetTime();
