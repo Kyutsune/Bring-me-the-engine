@@ -1,14 +1,25 @@
+#include "base/Shader.h"
 #include "base/Vec.h"
 #include "engine/Camera.h"
 #include "engine/Mesh.h"
 #include "engine/Scene.h"
-#include "base/Shader.h"
 #include "tools/Trigo.h"
 #include "utils/Cube.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <iostream>
+
+void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        const char * name = glfwGetKeyName(key, scancode);
+        if (name) {
+            std::cout << "Appui sur: " << name << std::endl;
+        } else {
+            std::cout << "Appui sur une touche dont le code est: " << key << std::endl;
+        }
+    }
+}
 
 int main() {
     if (!glfwInit()) {
@@ -32,24 +43,33 @@ int main() {
         return -1;
     }
 
+    glfwSetKeyCallback(window, key_callback);
+
     // Set viewport
     glViewport(0, 0, 1600, 800);
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("../shaders/vertex.vert", "../shaders/vertex.frag");
-    Scene gameScene(&shader);
-
+    // Ici on alloue des unique_ptr pour gérer la mémoire d'une plus jolie manière, et plus sûre.
+    std::unique_ptr<Shader> shader = std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag");
+    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shader.get());
 
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.f, 0.f, 0.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        gameScene.update();
+        gameScene->update();
+
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            break;
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    gameScene.reset();
+    shader.reset();
 
     glfwTerminate();
     return 0;
