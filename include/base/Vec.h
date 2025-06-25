@@ -287,15 +287,6 @@ struct Mat4 {
         return result;
     }
 
-    Mat4 operator*(const Vec3 & v) const {
-        Mat4 result;
-        result.data[0] = data[0] * v.x + data[4] * v.y + data[8] * v.z + data[12];
-        result.data[1] = data[1] * v.x + data[5] * v.y + data[9] * v.z + data[13];
-        result.data[2] = data[2] * v.x + data[6] * v.y + data[10] * v.z + data[14];
-        result.data[3] = 1.0f;
-        return result;
-    }
-
     Mat4 & translate(const Vec3 & t) {
         Mat4 translation = Mat4::Translation(t);
         *this = *this * translation;
@@ -311,9 +302,7 @@ struct Mat4 {
     }
 };
 
-// Free function for Mat4 * Vec3 multiplication
 inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {
-    // Treat Vec3 as a Vec4 with w = 1 for affine transformations
     float x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12];
     float y = mat.data[1] * vec.x + mat.data[5] * vec.y + mat.data[9] * vec.z + mat.data[13];
     float z = mat.data[2] * vec.x + mat.data[6] * vec.y + mat.data[10] * vec.z + mat.data[14];
