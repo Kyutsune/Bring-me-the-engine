@@ -311,7 +311,6 @@ struct Mat4 {
     }
 };
 
-// Free function for Mat4 * Vec3 multiplication
 inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {
     // Treat Vec3 as a Vec4 with w = 1 for affine transformations
     float x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12];
