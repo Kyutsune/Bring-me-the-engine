@@ -79,8 +79,8 @@ void ClavierSouris::handleMouse(GLFWwindow * window, double xpos, double ypos) {
         Vec3 right = cam->getRight();
         Vec3 up = Vec3(0, 1, 0); 
 
-        float yaw = -static_cast<float>(dx) * sensibility_rot;
-        float pitch = -static_cast<float>(dy) * sensibility_rot;
+        float yaw = static_cast<float>(dx) * sensibility_rot;
+        float pitch = static_cast<float>(dy) * sensibility_rot;
 
         Mat4 yawRotation;
         yawRotation = yawRotation.rotate(up, yaw); 
