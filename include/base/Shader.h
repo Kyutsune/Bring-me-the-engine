@@ -23,6 +23,11 @@ public:
     void setVec3(const std::string & name, float x, float y, float z) const;
     void setVec3(const std::string & name, const Vec3 & vec) const;
 
+
+    void set(const std::string &name, const Vec3 &vec);
+    void set(const std::string &name, float value);
+
+
 private:
     std::string loadFile(const std::string & path) const;
     GLuint compileShader(GLenum type, const std::string & source) const;

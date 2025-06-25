@@ -6,6 +6,7 @@
 #include "utils/Cube.h"
 #include "utils/Floor.h"
 #include "engine/Entity.h"
+#include "engine/Light.h"
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -28,5 +29,6 @@ private:
     Mat4 projection;
 
     std::vector<std::shared_ptr<Entity>> entities;
+    std::vector<Light> lights; 
     Shader * shader;
 };
