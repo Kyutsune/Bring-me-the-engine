@@ -5,6 +5,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 #include "base/Vec.h"
+#include "engine/Light.h"
+#include "engine/LightSettings.h"
 
 // Classe qui représente les shaders du moteur, utilisée pour compiler et lier les vertex et fragment shaders.
 class Shader {
@@ -26,7 +28,7 @@ public:
 
     void set(const std::string &name, const Vec3 &vec);
     void set(const std::string &name, float value);
-
+    void set(const std::string &name, int value);
 
 private:
     std::string loadFile(const std::string & path) const;

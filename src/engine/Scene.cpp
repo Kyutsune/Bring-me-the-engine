@@ -21,12 +21,14 @@ void Scene::init() {
     this->projection = camera.getProjectionMatrix();
     this->initObjects();
 
-    this->lights.push_back(Light{
-        Vec3(0, 2, -3), // position de la lumière
-        Vec3(0, 0, 0),  // direction de la lumière (non utilisée pour une lumière ponctuelle)
-        Vec3(1, 1, 1),  // couleur de la lumière
-        0.01f          // intensité de la lumière
-    });
+    lightingManager.settings().ambientColor = Vec3(1.f, 1.f, 1.f);
+    lightingManager.settings().ambientStrength = 0.2f;
+
+    lightingManager.settings().specularStrength = 0.6f;
+    lightingManager.settings().shininess = 64.f;
+
+    lightingManager.addLight({Vec3(0, 2, -3), Vec3(0, -1, 0), Vec3(1,1,1), 1.f});
+    // lightingManager.addLight({Vec3(0, 2, 3), Vec3(0, -1, 0), Vec3(1,1,1), 0.5f});
 }
 
 void Scene::initObjects() {
@@ -51,18 +53,9 @@ void Scene::update() {
     view = camera.getViewMatrix();
     projection = camera.getProjectionMatrix();
 
-    shader->use();
+    lightingManager.apply(*shader, camera.getPosition());
 
-    shader->set("lightPos", lights[0].position);
-    shader->set("lightColor", lights[0].color);
-    std::cout<< "Light Position: " << lights[0].position << std::endl;
-    std::cout<< "Light Color: " << lights[0].color << std::endl;
-    std::cout<< "Light Intensity: " << lights[0].intensity << std::endl;
-    shader->set("lightIntensity", lights[0].intensity);
-    shader->set("viewPos", camera.getPosition()); // nouvelle uniform
-    shader->set("ambientStrength", 0.1f);
-    shader->set("specularStrength", 0.2f);
-    shader->set("shininess", 32); // Plus grand = reflet plus petit et plus net
+
 
     float angle = glfwGetTime();
 
