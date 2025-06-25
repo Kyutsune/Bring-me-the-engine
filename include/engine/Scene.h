@@ -4,6 +4,7 @@
 #include "engine/Mesh.h"
 #include "base/Shader.h"
 #include "utils/Cube.h"
+#include "utils/Floor.h"
 #include "engine/Entity.h"
 #include <iostream>
 #include <memory>
