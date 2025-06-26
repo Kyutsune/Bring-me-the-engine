@@ -31,6 +31,8 @@ private:
     std::vector<std::shared_ptr<Entity>> entities;
 
     LightingManager lightingManager;
+
+    std::vector<std::shared_ptr<Entity>> lightEntities;
     
     Shader * shader;
 };

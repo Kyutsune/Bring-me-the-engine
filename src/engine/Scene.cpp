@@ -27,8 +27,15 @@ void Scene::init() {
     lightingManager.settings().specularStrength = 0.6f;
     lightingManager.settings().shininess = 64.f;
 
-    lightingManager.addLight({Vec3(0, 2, -3), Vec3(0, -1, 0), Vec3(1,1,1), 1.f});
+    lightingManager.addLight({Vec3(0, 2, -3), Vec3(0, -1, 0), Vec3(1, 1, 1), 1.f});
     // lightingManager.addLight({Vec3(0, 2, 3), Vec3(0, -1, 0), Vec3(1,1,1), 0.5f});
+
+    std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>();
+    for (const auto & light : lightingManager.getLights()) {
+        Mat4 lightTransform = Mat4::Translation(light.position);
+        auto lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
+        lightEntities.push_back(lightEntity);
+    }
 }
 
 void Scene::initObjects() {
@@ -55,14 +62,16 @@ void Scene::update() {
 
     lightingManager.apply(*shader, camera.getPosition());
 
-
-
     float angle = glfwGetTime();
 
     entities[0]->setTransform(Mat4::Translation(Vec3(0, 0, -1.f)) * Mat4::rotateY(angle));
 
     // Dessin de chaque entité avec sa propre matrice de transformation
     for (const auto & entity : entities) {
+        entity->draw_entity(*shader, view, projection);
+    }
+
+    for (const auto & entity : lightEntities) {
         entity->draw_entity(*shader, view, projection);
     }
 }
