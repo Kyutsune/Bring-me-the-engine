@@ -18,10 +18,14 @@ uniform vec3 specularColor;
 uniform float specularStrength;
 uniform float shininess;
 
+uniform vec3 viewPos;
+uniform sampler2D texture_diffuse;
+uniform bool useTexture;
+
 in vec3 FragPos;
 in vec3 Normal;
 in vec3 vColor;
-uniform vec3 viewPos;
+in vec2 TexCoord; 
 
 out vec4 FragColor;
 
@@ -40,7 +44,7 @@ void main() {
         float diff = max(dot(norm, lightDir), 0.0);
         vec3 diffuse = diff * diffuseIntensity * diffuseColor * lights[i].color * lights[i].intensity;
 
-        // composante Spéculaire
+        // Composante Spéculaire
         vec3 reflectDir = reflect(-lightDir, norm);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
         vec3 specular = specularStrength * spec * specularColor * lights[i].color * lights[i].intensity;
@@ -48,6 +52,8 @@ void main() {
         result += diffuse + specular;
     }
 
-    result *= vColor;
+    vec3 baseColor = useTexture ? texture(texture_diffuse, TexCoord).rgb : vColor;
+    result *= baseColor;
+
     FragColor = vec4(result, 1.0);
 }
