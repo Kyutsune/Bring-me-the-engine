@@ -50,7 +50,7 @@ void Scene::initObjects() {
     auto entity2 = std::make_shared<Entity>(t2, cubeMesh2);
     entities.push_back(entity2);
 
-    std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f, 16.f, 144.f, 48.f);
+    std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
     auto entity3 = std::make_shared<Entity>(t3, floorMesh);
     entities.push_back(entity3);
