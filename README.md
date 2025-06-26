@@ -19,7 +19,21 @@ make
 ```
 Enfin, pour lancer le projet, exécuter la commande suivante :
 ```bash
-./Bring-me-the-engine
+./bin/BringMeTheEngine
+```
+Pour lancer les fichiers de tests, exécuter la commande suivante :
+```bash
+./bin/Bring-me-the-engine-tests
+```
+
+Une automatisation de tout le processus de pré-compilation et de compilation est possible en lançant à partir de la racine du projet la commande suivante :
+```bash
+./rebuild.sh
+```
+Puis le lancement du projet se fait de la même manière qu'avant, en étant dans le dossier `build` :
+```bash
+cd build
+./bin/BringMeTheEngine
 ```
 ____________________________________________
 ## Utilisation

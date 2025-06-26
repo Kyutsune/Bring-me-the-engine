@@ -41,16 +41,16 @@ target_link_libraries(${PROJECT_NAME}
 file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS tests/*.cpp)
 
 # Créer l'exécutable de tests
-add_executable(Tests ${TEST_SOURCES})
+add_executable(BringMeTheEngine-tests ${TEST_SOURCES})
 
 # Inclure les headers nécessaires
-target_include_directories(Tests PRIVATE
+target_include_directories(BringMeTheEngine-tests PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/include
 )
 
 # Lier les bibliothèques : moteur + dépendances + Catch2
-target_link_libraries(Tests
+target_link_libraries(BringMeTheEngine-tests
     PRIVATE
         Catch2::Catch2WithMain
         glad
@@ -58,7 +58,6 @@ target_link_libraries(Tests
         glm::glm
 )
 
-# Optionnel : ajouter les tests à CTest
 include(CTest)
 include(Catch)
-catch_discover_tests(Tests)
+catch_discover_tests(BringMeTheEngine-tests)
