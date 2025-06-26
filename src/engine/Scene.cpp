@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-Scene::Scene(Shader * shader) : shader(shader), view(Mat4::identity()), projection(Mat4::identity()) {
+Scene::Scene(Shader * shader, Shader * lightShader) : shader(shader), lightShader(lightShader), view(Mat4::identity()), projection(Mat4::identity()) {
     init();
 }
 
@@ -27,10 +27,10 @@ void Scene::init() {
     lightingManager.settings().specularStrength = 0.6f;
     lightingManager.settings().shininess = 64.f;
 
-    lightingManager.addLight({Vec3(0, 2, -3), Vec3(0, -1, 0), Vec3(1, 1, 1), 1.f});
+    lightingManager.addLight({Vec3(0, 0, -3), Vec3(0, -1, 0), Vec3(1, 1, 1), 1.f});
     // lightingManager.addLight({Vec3(0, 2, 3), Vec3(0, -1, 0), Vec3(1,1,1), 0.5f});
 
-    std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>();
+    std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>(Color::red());
     for (const auto & light : lightingManager.getLights()) {
         Mat4 lightTransform =  Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.position);
         auto lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
@@ -72,6 +72,9 @@ void Scene::update() {
     }
 
     for (const auto & entity : lightEntities) {
-        entity->draw_entity(*shader, view, projection);
+        lightShader->use();
+        lightShader->set("color", Vec3(lightColor.r/255.f, lightColor.g/255.f, lightColor.b/255.f));
+        entity->draw_entity(*lightShader, view, projection);
+        shader->use();
     }
 }

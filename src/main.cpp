@@ -61,7 +61,8 @@ int main() {
 
     // Ici on alloue des unique_ptr pour gérer la mémoire d'une plus jolie manière, et plus sûre.
     std::unique_ptr<Shader> shader = std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag");
-    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shader.get());
+    std::unique_ptr<Shader> lightShader = std::make_unique<Shader>("../shaders/light_pos.vert", "../shaders/light_pos.frag");
+    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shader.get(), lightShader.get());
     g_scene = gameScene.get();
 
     // boucle de rendu
