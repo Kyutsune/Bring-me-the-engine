@@ -20,28 +20,28 @@ public:
         return Color(r - other.r, g - other.g, b - other.b, a - other.a);
     }
 
-    Color red() {
-        return Color(1.0f, 0.0f, 0.0f, 1.0f);
+    static Color red() {
+      return Color(255.0f, 0.0f, 0.0f, 255.0f);
     }
-    Color green() {
-        return Color(0.0f, 1.0f, 0.0f, 1.0f);
+    static Color green() {
+      return Color(0.0f, 255.0f, 0.0f, 255.0f);
     }
-    Color blue() {
-        return Color(0.0f, 0.0f, 1.0f, 1.0f);
+    static Color blue() {
+      return Color(0.0f, 0.0f, 255.0f, 255.0f);
     }
-    Color white() {
-        return Color(1.0f, 1.0f, 1.0f, 1.0f);
+    static Color white() {
+      return Color(255.0f, 255.0f, 255.0f, 255.0f);
     }
-    Color black() {
-        return Color(0.0f, 0.0f, 0.0f, 1.0f);
+    static Color black() {
+      return Color(0.0f, 0.0f, 0.0f, 255.0f);
     }
-    Color yellow() {
-        return Color(1.0f, 1.0f, 0.0f, 1.0f);
+    static Color yellow() {
+      return Color(255.0f, 255.0f, 0.0f, 255.0f);
     }
-    Color cyan() {
-        return Color(0.0f, 1.0f, 1.0f, 1.0f);
+    static Color cyan() {
+      return Color(0.0f, 255.0f, 255.0f, 255.0f);
     }
-    Color magenta() {
-        return Color(1.0f, 0.0f, 1.0f, 1.0f);
+    static Color magenta() {
+      return Color(255.0f, 0.0f, 255.0f, 255.0f);
     }
 };

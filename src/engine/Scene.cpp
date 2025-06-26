@@ -39,13 +39,13 @@ void Scene::init() {
 }
 
 void Scene::initObjects() {
-    std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>();
+    std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::yellow());
     Mat4 t;
 
     auto entity = std::make_shared<Entity>(t, cubeMesh);
     entities.push_back(entity);
 
-    std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>();
+    std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::cyan());
     Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
     auto entity2 = std::make_shared<Entity>(t2, cubeMesh2);
     entities.push_back(entity2);
