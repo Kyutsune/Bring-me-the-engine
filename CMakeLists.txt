@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(BringMeTheEngine)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -10,6 +12,7 @@ find_package(glm REQUIRED)
 
 # Ajout de GLAD depuis un dossier externe
 add_subdirectory(external/glad)
+add_subdirectory(external/Catch2-3.8.1)
 
 # Récupère tous les fichiers .cpp dans src/
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS src/*.cpp)
@@ -32,3 +35,30 @@ target_link_libraries(${PROJECT_NAME}
         glfw
         glm::glm
 )
+
+
+# Récupérer tous les fichiers de test
+file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS tests/*.cpp)
+
+# Créer l'exécutable de tests
+add_executable(Tests ${TEST_SOURCES})
+
+# Inclure les headers nécessaires
+target_include_directories(Tests PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+# Lier les bibliothèques : moteur + dépendances + Catch2
+target_link_libraries(Tests
+    PRIVATE
+        Catch2::Catch2WithMain
+        glad
+        glfw
+        glm::glm
+)
+
+# Optionnel : ajouter les tests à CTest
+include(CTest)
+include(Catch)
+catch_discover_tests(Tests)

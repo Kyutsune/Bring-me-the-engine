@@ -64,7 +64,7 @@ void Scene::update() {
 
     float angle = glfwGetTime();
 
-    entities[0]->setTransform(Mat4::Translation(Vec3(0, 0, -1.f)) * Mat4::rotateY(angle));
+    entities[0]->setTransform(Mat4::Translation(Vec3(0, 0, -1.f)) * Mat4::rotateY(angle) * Mat4::rotateZ(angle));
 
     // Dessin de chaque entité avec sa propre matrice de transformation
     for (const auto & entity : entities) {
