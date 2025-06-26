@@ -17,6 +17,7 @@
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         const char * name = glfwGetKeyName(key, scancode);
+        // std::cout << "Touche pressée: " << (name ? name : "Inconnue") << " (code: " << key << ")\n";
         if (name) {
             reactKeyboardPressed(window, name, key);
         } else {

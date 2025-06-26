@@ -10,11 +10,11 @@ Scene::Scene(Shader * shader, Shader * lightShader) : shader(shader), lightShade
 
 void Scene::init() {
     this->camera = Camera(
-        Vec3(0, 0, 3),    // position à l'initialisation
-        Vec3(0, 0, 0),    // le point ciblé
-        Vec3(0, 1, 0),    // up
-        45.0f,            // FOV
-        1600.0f / 800.0f, // aspect ratio
+        Vec3(-5.68114, 0.024997, -0.912596),    // position à l'initialisation
+        Vec3(0.025365, 0.0263991, -3.00793),    // le point ciblé
+        Vec3(0, 1, 0),                          // up
+        45.0f,                                  // FOV
+        1600.0f / 800.0f,                       // aspect ratio
         0.1f, 100.0f);
 
     this->view = camera.getViewMatrix();

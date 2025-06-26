@@ -42,6 +42,11 @@ void ClavierSouris::handleContinuousInput(GLFWwindow * window) {
         cam->setPosition(cam->getPosition() + dir * sensibility_depl);
         cam->setTarget(cam->getTarget() + dir * sensibility_depl);
     }
+    if(glfwGetKey(window, 67) == GLFW_PRESS) {
+        std::cout<< "Position de la caméra: " << cam->getPosition() << std::endl;
+    }
+
+
 }
 
 void ClavierSouris::handleMouse(GLFWwindow * window, double xpos, double ypos) {
