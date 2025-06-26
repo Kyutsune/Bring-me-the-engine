@@ -3,7 +3,7 @@
 Bring me the engine est un moteur de rendu et un moteur graphique 3D codé en C++ et basé sur OpenGL.
 ___________________________________________
 ## Compilation et Exécution
-Pour compiler le projet, cmake ainsi que les bibliothèques GLFW et GLM sont nécessaires.
+Pour faire fonctionner le projet, cmake ainsi que les bibliothèques GLFW et GLM sont nécessaires.
 
 Pour compiler le projet, créer et se déplacer dans le dossier `build` :
 ```bash
