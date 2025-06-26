@@ -27,10 +27,10 @@ void Scene::init() {
     lightingManager.settings().specularStrength = 0.6f;
     lightingManager.settings().shininess = 64.f;
 
-    lightingManager.addLight({Vec3(0, 0, -3), Vec3(0, -1, 0), Vec3(1, 1, 1), 1.f});
+    lightingManager.addLight({Vec3(0, 0, -3), Vec3(0, -1, 0), Color(255,255,255), 1.f});
     // lightingManager.addLight({Vec3(0, 2, 3), Vec3(0, -1, 0), Vec3(1,1,1), 0.5f});
 
-    std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>(Color::red());
+    std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>();
     for (const auto & light : lightingManager.getLights()) {
         Mat4 lightTransform =  Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.position);
         auto lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
@@ -60,7 +60,7 @@ void Scene::update() {
     view = camera.getViewMatrix();
     projection = camera.getProjectionMatrix();
 
-    lightingManager.apply(*shader, camera.getPosition());
+    lightingManager.applyLightning(*shader, camera.getPosition());
 
     float angle = glfwGetTime();
 
@@ -72,9 +72,7 @@ void Scene::update() {
     }
 
     for (const auto & entity : lightEntities) {
-        lightShader->use();
-        lightShader->set("color", Vec3(lightColor.r/255.f, lightColor.g/255.f, lightColor.b/255.f));
+        lightingManager.applyPosLights(*lightShader);
         entity->draw_entity(*lightShader, view, projection);
-        shader->use();
     }
 }

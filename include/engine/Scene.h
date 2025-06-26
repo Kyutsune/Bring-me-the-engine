@@ -38,5 +38,4 @@ private:
     // Ce shader va me permettre de dessiner les lumières, on le fait à part pour éviter de mélanger les deux
     // ainsi que permettre de ne pas faire de lumière sur les lumières elles-mêmes
     Shader * lightShader;
-    Color lightColor = Color::red();
 };

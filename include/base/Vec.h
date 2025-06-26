@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <ostream>
+#include "base/Color.h"
 
 struct Vec2 {
     float x, y;
@@ -37,6 +38,7 @@ struct Vec3 {
     float x, y, z;
 
     Vec3(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
+    Vec3(const Color & color) : x(color.r / 255.0f), y(color.g / 255.0f), z(color.b / 255.0f) {}
 
     Vec3 operator+(const Vec3 & other) const { return {x + other.x, y + other.y, z + other.z}; }
     Vec3 operator-(const Vec3 & other) const { return {x - other.x, y - other.y, z - other.z}; }
@@ -67,7 +69,7 @@ struct Vec3 {
 
     friend std::ostream & operator<<(std::ostream & os, const Vec3 & v) {
         return os << "Vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
-    }
+    } 
 };
 
 struct Vec4 {
@@ -91,6 +93,7 @@ struct Vec4 {
         return os << "Vec4(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
     }
 };
+
 
 struct Mat4 {
     float data[16];
