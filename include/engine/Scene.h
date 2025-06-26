@@ -13,7 +13,7 @@
 
 class Scene {
 public:
-    Scene(Shader * shader);
+    Scene(Shader * shader, Shader * lightShader);
     void init();
     void update();
 
@@ -31,6 +31,11 @@ private:
     std::vector<std::shared_ptr<Entity>> entities;
 
     LightingManager lightingManager;
+
+    std::vector<std::shared_ptr<Entity>> lightEntities;
     
     Shader * shader;
+    // Ce shader va me permettre de dessiner les lumières, on le fait à part pour éviter de mélanger les deux
+    // ainsi que permettre de ne pas faire de lumière sur les lumières elles-mêmes
+    Shader * lightShader;
 };

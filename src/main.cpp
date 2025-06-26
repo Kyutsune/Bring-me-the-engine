@@ -60,8 +60,13 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     // Ici on alloue des unique_ptr pour gérer la mémoire d'une plus jolie manière, et plus sûre.
-    std::unique_ptr<Shader> shader = std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag");
-    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shader.get());
+    std::vector<std::unique_ptr<Shader>> shaders;
+    shaders.push_back(std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/light_pos.vert", "../shaders/light_pos.frag"));
+    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shaders[0].get(), shaders[1].get());
+
+    // On à une variable globale pour la scène, on peut y accéder depuis n'importe où dans le code.
+    // C'est pratique pour les callbacks et autres fonctions qui n'ont pas accès à la scène
     g_scene = gameScene.get();
 
     // boucle de rendu
@@ -76,8 +81,10 @@ int main() {
         glfwPollEvents();
     }
 
+    // On oublie pas de nettoyer les ressources allouées, on le fait à la main ici car si on utilise
+    // glfwTerminate() avant, on ne pourra plus désallouer les shaders ensuite.
     gameScene.reset();
-    shader.reset();
+    shaders.clear();
 
     glfwTerminate();
     return 0;

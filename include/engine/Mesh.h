@@ -1,9 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+
 #include "base/Vertex.h"
+#include "base/Texture.h"
 
 // Classe qui sera utilisée pour représenter un objet dans l'espace 3D.
 class Mesh {

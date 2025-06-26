@@ -12,6 +12,7 @@ uniform mat4 projection;
 out vec3 FragPos;
 out vec3 Normal;
 out vec3 vColor;
+out vec2 TexCoord;
 
 void main()
 {
@@ -21,4 +22,5 @@ void main()
     // On recalcule la normale en fonction des transformations model qu'on lui passe
     Normal = mat3(transpose(inverse(model))) * aNormal;
     vColor = aColor;
+    TexCoord = aTexCoord;
 }
