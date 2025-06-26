@@ -32,7 +32,7 @@ void Scene::init() {
 
     std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>();
     for (const auto & light : lightingManager.getLights()) {
-        Mat4 lightTransform = Mat4::Translation(light.position);
+        Mat4 lightTransform =  Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.position);
         auto lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
         lightEntities.push_back(lightEntity);
     }
