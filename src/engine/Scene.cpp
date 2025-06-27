@@ -10,11 +10,11 @@ Scene::Scene(Shader * shader, Shader * lightShader) : shader(shader), lightShade
 
 void Scene::init() {
     this->camera = Camera(
-        Vec3(-5.68114, 0.024997, -0.912596),    // position à l'initialisation
-        Vec3(0.025365, 0.0263991, -3.00793),    // le point ciblé
-        Vec3(0, 1, 0),                          // up
-        45.0f,                                  // FOV
-        1600.0f / 800.0f,                       // aspect ratio
+        Vec3(-5.68114, 0.024997, -0.912596), // position à l'initialisation
+        Vec3(0.025365, 0.0263991, -3.00793), // le point ciblé
+        Vec3(0, 1, 0),                       // up
+        45.0f,                               // FOV
+        1600.0f / 800.0f,                    // aspect ratio
         0.1f, 100.0f);
 
     this->view = camera.getViewMatrix();
@@ -27,7 +27,7 @@ void Scene::init() {
     lightingManager.settings().specularStrength = 0.6f;
     lightingManager.settings().shininess = 64.f;
 
-    lightingManager.addLight({Vec3(0, 0, -3), Vec3(0, -1, 0), Color(255, 255, 255), 1.f});
+    lightingManager.addLight({Vec3(-3, 0, -2.25), Vec3(0, -1, 0), Color(255, 255, 255), 1.f});
     // lightingManager.addLight({Vec3(0, 2, 3), Vec3(0, -1, 0), Vec3(1,1,1), 0.5f});
 
     std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>();
@@ -50,14 +50,17 @@ void Scene::initObjects() {
     entities.push_back(Cube_tout_bleu);
 
 
+
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
-    Mat4 t4 = Mat4::Translation(Vec3(2, 0, -3));
+    Mat4 t4 = Mat4::Translation(Vec3(3, 0, -3));
     auto Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3, "../assets/bois.jpg");
     entities.push_back(Cube_plein_de_texture);
 
+
+
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
-    auto sol_beton = std::make_shared<Entity>(t3, floorMesh,"../assets/sol_beton.jpg");
+    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/Mud.jpg", "../assets/Mud_normal.jpg");
     entities.push_back(sol_beton);
 }
 

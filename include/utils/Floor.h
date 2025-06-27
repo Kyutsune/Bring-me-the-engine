@@ -1,25 +1,27 @@
 #pragma once
-#include <vector>
-#include <memory>
-#include "engine/Mesh.h"
 #include "base/Color.h"
+#include "engine/Mesh.h"
+#include "tools/Tang_Bitang.h"
+#include <memory>
+#include <vector>
 
-template<typename T = Mesh>
+template <typename T = Mesh>
 inline T createFloor(float size = 10.0f, float height = 0.0f, const Color & color = Color(16.f, 144.f, 48.f)) {
     float half = size / 2.0f;
 
     std::vector<Vertex> vertices = {
-        //position                normale      couleur                                          texCoords
-        {{-half, height, -half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
-        {{ half, height, -half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
-        {{ half, height,  half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
-        {{-half, height,  half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
+        // position                normale      couleur                                          texCoords
+        {{-half, height, -half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {0.0f, 0.0f}},
+        {{half, height, -half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {1.0f, 0.0f}},
+        {{half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {1.0f, 1.0f}},
+        {{-half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {0.0f, 1.0f}},
     };
 
     std::vector<unsigned int> indices = {
         0, 1, 2,
-        2, 3, 0
-    };
+        2, 3, 0};
+
+    computeTangentsAndBitangents(vertices, indices);
 
     if constexpr (std::is_same_v<T, Mesh>) {
         return Mesh(vertices, indices);

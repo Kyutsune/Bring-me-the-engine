@@ -3,6 +3,7 @@
 #include <memory>
 #include "engine/Mesh.h"
 #include "base/Color.h"
+#include "tools/Tang_Bitang.h"
 
 template<class> inline constexpr bool always_false = false;
 
@@ -54,6 +55,9 @@ inline T createCube(const Color & color = Color(204.f, 204.f, 204.f)) {
        16,17,18,18,19,16,       // Haut
        20,21,22,22,23,20        // Bas
     };
+
+    computeTangentsAndBitangents(vertices, indices);
+
 
     if constexpr (std::is_same_v<T, Mesh>) {
         return Mesh(vertices, indices);
