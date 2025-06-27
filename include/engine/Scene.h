@@ -5,6 +5,7 @@
 #include "base/Shader.h"
 #include "utils/Cube.h"
 #include "utils/Floor.h"
+#include "utils/Sphere.h"
 #include "engine/Entity.h"
 #include "engine/LightingManager.h"
 #include <iostream>

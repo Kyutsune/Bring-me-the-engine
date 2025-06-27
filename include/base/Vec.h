@@ -78,6 +78,14 @@ struct Vec3 {
     }
 };
 
+inline Vec3 normalize(Vec3 v) {
+    float len = v.length();
+    if (len != 0.0f) {
+        v = v / len;
+    }
+    return v;
+}
+
 struct Vec4 {
     float x, y, z, w;
 

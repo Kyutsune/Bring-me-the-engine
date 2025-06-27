@@ -27,10 +27,10 @@ void Scene::init() {
     lightingManager.settings().specularStrength = 0.6f;
     lightingManager.settings().shininess = 64.f;
 
-    lightingManager.addLight({Vec3(-3, 0, -2.25), Vec3(0, -1, 0), Color(255, 255, 255), 1.f});
+    lightingManager.addLight({Vec3(0, 0, -3), Vec3(0, -1, 0), Color(255, 255, 255), 1.f});
     // lightingManager.addLight({Vec3(0, 2, 3), Vec3(0, -1, 0), Vec3(1,1,1), 0.5f});
 
-    std::shared_ptr<Mesh> lightMesh = createCube<std::shared_ptr<Mesh>>();
+    std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
     for (const auto & light : lightingManager.getLights()) {
         Mat4 lightTransform = Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.position);
         auto lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
