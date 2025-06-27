@@ -49,18 +49,18 @@ void Scene::initObjects() {
     auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2);
     entities.push_back(Cube_tout_bleu);
 
-
-
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
     Mat4 t4 = Mat4::Translation(Vec3(3, 0, -3));
     auto Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3, "../assets/bois.jpg");
     entities.push_back(Cube_plein_de_texture);
 
-
-
+    // std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
+    // Mat4 t3;
+    // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/Mud.jpg", "../assets/Mud_normal.jpg");
+    // entities.push_back(sol_beton);
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
-    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/Mud.jpg", "../assets/Mud_normal.jpg");
+    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol_cobble.jpg", "../assets/sol_cobble_normal.jpg");
     entities.push_back(sol_beton);
 }
 

@@ -9,12 +9,14 @@ template <typename T = Mesh>
 inline T createFloor(float size = 10.0f, float height = 0.0f, const Color & color = Color(16.f, 144.f, 48.f)) {
     float half = size / 2.0f;
 
+    float texelDensity = 0.5f; 
+    float repeat = size * texelDensity;
+
     std::vector<Vertex> vertices = {
-        // position                normale      couleur                                          texCoords
         {{-half, height, -half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {0.0f, 0.0f}},
-        {{half, height, -half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {1.0f, 0.0f}},
-        {{half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {1.0f, 1.0f}},
-        {{-half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {0.0f, 1.0f}},
+        {{half, height, -half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {repeat, 0.0f}},
+        {{half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {repeat, repeat}},
+        {{-half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {0.0f, repeat}},
     };
 
     std::vector<unsigned int> indices = {
