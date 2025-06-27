@@ -3,6 +3,7 @@
 #include <memory>
 #include "engine/Mesh.h"
 #include "base/Color.h"
+#include "utils/MeshUtils.h"
 
 
 template<typename T = Mesh>
@@ -10,17 +11,19 @@ inline T createFloor(float size = 10.0f, float height = 0.0f, const Color & colo
     float half = size / 2.0f;
 
     std::vector<Vertex> vertices = {
-        //position                normale      couleur                               texCoords
-        {{-half, height, -half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
-        {{ half, height, -half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
-        {{ half, height,  half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
-        {{-half, height,  half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
+        //position                normale      couleur                                          texCoords  tangente    bitangente
+        {{-half, height, -half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f},{0, 0, 0}, {0, 0, 0}},
+        {{ half, height, -half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f},{0, 0, 0}, {0, 0, 0}},
+        {{ half, height,  half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f},{0, 0, 0}, {0, 0, 0}},
+        {{-half, height,  half},  {0, 1, 0},   {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f},{0, 0, 0}, {0, 0, 0}},
     };
 
     std::vector<unsigned int> indices = {
         0, 1, 2,
         2, 3, 0
     };
+
+    computeTangentsAndBitangents(vertices, indices);
 
     if constexpr (std::is_same_v<T, Mesh>) {
         return Mesh(vertices, indices);

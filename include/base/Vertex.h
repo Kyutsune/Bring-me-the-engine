@@ -7,4 +7,7 @@ struct Vertex {
     Vec3 normal;
     Vec3 color;
     Vec2 texCoords;
+    Vec3 tangent;
+    Vec3 bitangent;
 };
+

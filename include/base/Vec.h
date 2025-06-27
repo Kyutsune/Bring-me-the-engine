@@ -1,7 +1,7 @@
 #pragma once
+#include "base/Color.h"
 #include <cmath>
 #include <ostream>
-#include "base/Color.h"
 
 struct Vec2 {
     float x, y;
@@ -17,7 +17,7 @@ struct Vec2 {
     float * ptr() { return &x; }
 
     // Simplement une distance euclidienne, qui sera la même pour Vec2 et Vec3
-    float length() const { return std::sqrt(x * x + y * y); }
+    float length() const { return sqrt(x * x + y * y); }
 
     // Normalisation basique, on veut un vecteur de longueur 1
     Vec2 normalized() const {
@@ -44,6 +44,12 @@ struct Vec3 {
     Vec3 operator-(const Vec3 & other) const { return {x - other.x, y - other.y, z - other.z}; }
     Vec3 operator*(float scalar) const { return {x * scalar, y * scalar, z * scalar}; }
     Vec3 operator/(float scalar) const { return {x / scalar, y / scalar, z / scalar}; }
+    Vec3 operator+=(const Vec3 & other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        return *this;
+    }
 
     const float * ptr() const { return &x; }
     float * ptr() { return &x; }
@@ -69,7 +75,7 @@ struct Vec3 {
 
     friend std::ostream & operator<<(std::ostream & os, const Vec3 & v) {
         return os << "Vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
-    } 
+    }
 };
 
 struct Vec4 {
@@ -94,7 +100,6 @@ struct Vec4 {
     }
 };
 
-
 struct Mat4 {
     float data[16];
 
@@ -110,7 +115,6 @@ struct Mat4 {
     static Mat4 Scale(const Vec3 & scale);
     static Mat4 Scale(float scaleX, float scaleY, float scaleZ);
     static Mat4 Scale(float scaleFactor);
-
 
     Mat4 rotateX(float angleRadians);
     Mat4 rotate(const Vec3 & axis, float angle);
