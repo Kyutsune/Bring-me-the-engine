@@ -3,7 +3,6 @@
 #include <memory>
 #include "engine/Mesh.h"
 #include "base/Color.h"
-#include "utils/MeshUtils.h"
 
 template<class> inline constexpr bool always_false = false;
 
@@ -11,40 +10,40 @@ template<typename T = Mesh>
 inline T createCube(const Color & color = Color(204.f, 204.f, 204.f)) {
     std::vector<Vertex> vertices = {
         // Face avant (z = +0.5)
-        {{-0.5f, -0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f, -0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f,  0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f,  0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}, {0,0,0}, {0,0,0}},
+        {{-0.5f, -0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f,  0.5f}, {0, 0, 1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
 
         // Face arrière (z = -0.5)
-        {{ 0.5f, -0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f, -0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f,  0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f,  0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}, {0,0,0}, {0,0,0}},
+        {{ 0.5f, -0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
+        {{-0.5f, -0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {0, 0, -1}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
 
         // Face gauche (x = -0.5)
-        {{-0.5f, -0.5f, -0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f, -0.5f,  0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f,  0.5f,  0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f,  0.5f, -0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}, {0,0,0}, {0,0,0}},
+        {{-0.5f, -0.5f, -0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
+        {{-0.5f, -0.5f,  0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
+        {{-0.5f,  0.5f,  0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {-1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
 
         // Face droite (x = +0.5)
-        {{ 0.5f, -0.5f,  0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f, -0.5f, -0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f,  0.5f, -0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f,  0.5f,  0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}, {0,0,0}, {0,0,0}},
+        {{ 0.5f, -0.5f,  0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {1, 0, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
 
         // Face haut (y = +0.5)
-        {{-0.5f,  0.5f,  0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f,  0.5f,  0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f,  0.5f, -0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f,  0.5f, -0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}, {0,0,0}, {0,0,0}},
+        {{-0.5f,  0.5f,  0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {0, 1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
 
         // Face bas (y = -0.5)
-        {{-0.5f, -0.5f, -0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f, -0.5f, -0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}, {0,0,0}, {0,0,0}},
-        {{ 0.5f, -0.5f,  0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}, {0,0,0}, {0,0,0}},
-        {{-0.5f, -0.5f,  0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}, {0,0,0}, {0,0,0}},
+        {{-0.5f, -0.5f, -0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 0.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 0.0f}},
+        {{ 0.5f, -0.5f,  0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {1.0f, 1.0f}},
+        {{-0.5f, -0.5f,  0.5f}, {0, -1, 0}, {color.r/255.f, color.g/255.f, color.b/255.f}, {0.0f, 1.0f}},
     };
 
     std::vector<unsigned int> indices = {
@@ -55,8 +54,6 @@ inline T createCube(const Color & color = Color(204.f, 204.f, 204.f)) {
        16,17,18,18,19,16,       // Haut
        20,21,22,22,23,20        // Bas
     };
-
-    computeTangentsAndBitangents(vertices, indices);
 
     if constexpr (std::is_same_v<T, Mesh>) {
         return Mesh(vertices, indices);

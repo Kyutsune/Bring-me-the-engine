@@ -16,7 +16,7 @@ class Entity {
 public:
     Entity() : transform(Mat4::identity()), mesh(nullptr) {}
 
-    Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh, const std::string & filenameText = "");
+    Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh, const std::string & filenameTextDiffuse = "");
 
     virtual ~Entity() = default;
 
@@ -31,5 +31,6 @@ private:
     Mat4 transform;
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<Texture> texture;
+    std::shared_ptr<Texture> specularMap;
 
 };

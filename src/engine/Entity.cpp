@@ -1,13 +1,14 @@
 #include "engine/Entity.h"
 
-Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh, const std::string & filenameText)
+Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh, const std::string & filenameTextDiffuse)
     : transform(transform), mesh(std::move(mesh)) {
-    if (!std::filesystem::exists(filenameText) && !filenameText.empty()) {
-        std::cout << "Erreur lors du chargement de la texture : " << filenameText << " La couleur seule sera utilisée" << std::endl;
+    if (!std::filesystem::exists(filenameTextDiffuse) && !filenameTextDiffuse.empty()) {
+        std::cout << "Erreur lors du chargement de la texture : " << filenameTextDiffuse << " La couleur seule sera utilisée" << std::endl;
         return;
     }
-    if (!filenameText.empty())
-        this->setTexture(std::make_shared<Texture>(filenameText));
+    if (!filenameTextDiffuse.empty())
+        this->setTexture(std::make_shared<Texture>(filenameTextDiffuse));
+
 }
 
 void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection) {
