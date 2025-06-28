@@ -87,8 +87,8 @@ void Scene::initObjects() {
 
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
-    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/sol_cobble/sol_cobble.jpg", "../assets/sol/sol_cobble/sol_cobble_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg");
-    // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg", "../assets/sol/brique_recyclee/brique_recyclee_normal.png");
+    // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/sol_cobble/sol_cobble.jpg", "../assets/sol/sol_cobble/sol_cobble_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg");
+    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg", "../assets/sol/brique_recyclee/brique_recyclee_normal.jpg");
     entities.push_back(sol_beton);
 }
 
