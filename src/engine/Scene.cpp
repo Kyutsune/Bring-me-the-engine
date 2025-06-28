@@ -39,9 +39,9 @@ void Scene::init() {
 }
 
 void Scene::initObjects() {
-    std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::yellow());
+    std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::cyan());
     Mat4 t;
-    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh);
+    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh,"../assets/cuivre_diffus.jpg", "../assets/cuivre_normal.jpg", "../assets/cuivre_specular.jpg");
     entities.push_back(cube_qui_tourne);
 
     std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::cyan());
@@ -58,9 +58,11 @@ void Scene::initObjects() {
     // Mat4 t3;
     // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/Mud.jpg", "../assets/Mud_normal.jpg");
     // entities.push_back(sol_beton);
+
+    
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
-    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol_cobble.jpg", "../assets/sol_cobble_normal.jpg");
+    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol_cobble.jpg", "../assets/sol_cobble_normal.jpg", "../assets/sol_cobble_specular.jpg");
     entities.push_back(sol_beton);
 }
 

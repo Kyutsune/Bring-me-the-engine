@@ -1,8 +1,11 @@
 #include "engine/Entity.h"
 
-Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh, const std::string & filenameTextDiffuse,
-               const std::string & filenameNormalMap)
+Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
+               const std::string & filenameTextDiffuse,
+               const std::string & filenameNormalMap,
+               const std::string & filenameSpecularMap)
     : transform(transform), mesh(std::move(mesh)) {
+
     if (!filenameTextDiffuse.empty() && !std::filesystem::exists(filenameTextDiffuse)) {
         std::cout << "Erreur lors du chargement de la texture : " << filenameTextDiffuse << " La couleur seule sera utilisée" << std::endl;
     } else if (!filenameTextDiffuse.empty()) {
@@ -13,6 +16,12 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh, const std::st
         std::cout << "Erreur lors du chargement de la normal map : " << filenameNormalMap << " La normal map ne sera pas utilisée" << std::endl;
     } else if (!filenameNormalMap.empty()) {
         normalMap = std::make_shared<Texture>(filenameNormalMap);
+    }
+
+    if (!filenameSpecularMap.empty() && !std::filesystem::exists(filenameSpecularMap)) {
+        std::cout << "Erreur lors du chargement de la specular map : " << filenameSpecularMap << " La specular map ne sera pas utilisée" << std::endl;
+    } else if (!filenameSpecularMap.empty()) {
+        specularMap = std::make_shared<Texture>(filenameSpecularMap);
     }
 }
 
@@ -33,6 +42,14 @@ void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projec
         normalMap->bind(1);
     } else {
         shader.set("useNormalMap", 0);
+    }
+
+    if (specularMap) {
+        shader.set("useSpecularMap", 1);
+        shader.set("texture_specular", 2);
+        specularMap->bind(2);
+    } else {
+        shader.set("useSpecularMap", 0);
     }
 
     mesh->draw();

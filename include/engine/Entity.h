@@ -16,8 +16,10 @@ class Entity {
 public:
     Entity() : transform(Mat4::identity()), mesh(nullptr) {}
 
-    Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh, const std::string & filenameTextDiffuse = "",
-        const std::string & filenameNormalMap = "");
+Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
+       const std::string & filenameTextDiffuse = "",
+       const std::string & filenameNormalMap = "",
+       const std::string & filenameSpecularMap = "");
 
     virtual ~Entity() = default;
 
@@ -31,8 +33,11 @@ public:
 private:
     Mat4 transform;
     std::shared_ptr<Mesh> mesh;
+
+    // Pour les textures de chaque entité, on ajoute une texture diffuse pour la couleur de base,
+    // Une normal map pour les détails de surface (souvent pour donner du relief),
+    // et une specular map pour les reflets spéculaires particulier au contact de la surface.
     std::shared_ptr<Texture> texture;
     std::shared_ptr<Texture> normalMap; 
-    std::shared_ptr<Texture> specularMap; // Au cas ou, ce sera pour la suite
-
+    std::shared_ptr<Texture> specularMap; 
 };

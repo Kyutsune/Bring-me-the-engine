@@ -7,6 +7,8 @@ struct Light {
     float intensity;
 };
 
+
+// Touts les paramètres relatifs à la lumière (systeme Phong pour le moment)
 uniform int numLights;
 uniform Light lights[MAX_LIGHTS];
 
@@ -19,22 +21,32 @@ uniform float specularStrength;
 uniform float shininess;
 
 uniform vec3 viewPos;
+
+// Toutes les composantes de la texture (diffuse, normal, spéculaire)
 uniform sampler2D texture_diffuse;
 uniform sampler2D texture_normal;
+uniform sampler2D texture_specular;
+
 uniform bool useTexture;
 uniform bool useNormalMap;
+uniform bool useSpecularMap;
 
+
+// Les informations sur le pixel cible
 in vec3 FragPos;
 in vec3 Normal;
-in vec3 Tangent;
-in vec3 Bitangent;
 in vec3 vColor;
 in vec2 TexCoord;
+in vec3 Tangent;
+in vec3 Bitangent;
+
 
 out vec4 FragColor;
 
 void main() {
     vec3 norm = normalize(Normal);
+
+    // Ici le calcul de la normal map, utile pour donner du relief
     if (useNormalMap) {
         // Construction matrice TBN
         vec3 T = normalize(Tangent);
@@ -58,14 +70,19 @@ void main() {
     for (int i = 0; i < numLights; i++) {
         vec3 lightDir = normalize(lights[i].position - FragPos);
 
-        // Diffuse
+        // composante diffuse
         float diff = max(dot(norm, lightDir), 0.0);
         vec3 diffuse = diff * diffuseIntensity * diffuseColor * lights[i].color * lights[i].intensity;
 
-        // Spéculaire
+        // composante spéculaire
         vec3 reflectDir = reflect(-lightDir, norm);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-        vec3 specular = specularStrength * spec * specularColor * lights[i].color * lights[i].intensity;
+
+        // On ajoute la spécular map au calcul de la composante spéculaire
+        float specMapVal = useSpecularMap ? 
+            dot(texture(texture_specular, TexCoord).rgb, vec3(0.299, 0.587, 0.114)) : 1.0;
+
+        vec3 specular = specularStrength * specMapVal * spec * specularColor * lights[i].color * lights[i].intensity;
 
         result += diffuse + specular;
     }
