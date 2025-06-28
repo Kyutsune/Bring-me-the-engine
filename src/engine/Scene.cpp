@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-Scene::Scene(Shader * shader, Shader * lightShader) : shader(shader), lightShader(lightShader), view(Mat4::identity()), projection(Mat4::identity()) {
+Scene::Scene(Shader * shader, Shader * lightShader, Shader * skyboxShader = nullptr) : shader(shader), lightShader(lightShader), skyboxShader(skyboxShader), view(Mat4::identity()), projection(Mat4::identity()) {
     init();
 }
 
@@ -29,20 +29,20 @@ void Scene::init() {
     lightingManager.settings().shininess = 64.f;
 
     lightingManager.addLight({
-        LightType::LIGHT_POINT,   // type 0=ponctuelle, 1= directionnelle
-        Vec3(-3, 2, -3),          // position 
-        Vec3(0, -1, 0),           // direction vers le bas
-        Color(255, 255, 255),     // couleur blanche
-        0.3f,                     // intensité
-        0.5f, 0.7f, 1.8f          // Consantes d'atténuation (constant, linear, quadratic) 
+        LightType::LIGHT_POINT, // type 0=ponctuelle, 1= directionnelle
+        Vec3(-3, 0, -3),        // position
+        Vec3(0, -1, 0),         // direction vers le bas
+        Color(255, 255, 255),   // couleur blanche
+        0.3f,                   // intensité
+        0.5f, 0.7f, 1.8f        // Consantes d'atténuation (constant, linear, quadratic)
     });
     // lightingManager.addLight({
-    //     LightType::LIGHT_DIRECTIONAL,   
-    //     Vec3(3, 2, -3),           
-    //     Vec3(0, -1, 0),          
-    //     Color(255, 255, 255),     
-    //     0.1f,                    
-    //     0.5f, 0.7f, 1.8f         
+    //     LightType::LIGHT_DIRECTIONAL,
+    //     Vec3(3, 2, -3),
+    //     Vec3(0, -1, 0),
+    //     Color(255, 255, 255),
+    //     0.1f,
+    //     0.5f, 0.7f, 1.8f
     // });
 
     std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
@@ -51,12 +51,23 @@ void Scene::init() {
         std::shared_ptr<Entity> lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
         lightEntities.push_back(lightEntity);
     }
+
+    if (skyboxShader) {
+        std::vector<std::string> faces = {
+            "../assets/cubemap/ciel_de_nuit/right.png",
+            "../assets/cubemap/ciel_de_nuit/left.png",
+            "../assets/cubemap/ciel_de_nuit/bottom.png",
+            "../assets/cubemap/ciel_de_nuit/top.png",
+            "../assets/cubemap/ciel_de_nuit/front.png",
+            "../assets/cubemap/ciel_de_nuit/back.png"};
+        skybox = std::make_unique<Skybox>(faces);
+    }
 }
 
 void Scene::initObjects() {
     std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::cyan());
     Mat4 t;
-    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh, "../assets/cuivre_diffus.jpg", "../assets/cuivre_normal.jpg", "../assets/cuivre_specular.jpg");
+    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh, "../assets/materiaux/cuivre_diffus.jpg", "../assets/materiaux/cuivre_normal.jpg", "../assets/materiaux/cuivre_specular.jpg");
     entities.push_back(cube_qui_tourne);
 
     std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::rose());
@@ -66,7 +77,7 @@ void Scene::initObjects() {
 
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
     Mat4 t4 = Mat4::Translation(Vec3(3, 0, -3));
-    auto Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3, "../assets/bois.jpg");
+    auto Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3, "../assets/materiaux/bois.jpg");
     entities.push_back(Cube_plein_de_texture);
 
     // std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
@@ -76,11 +87,23 @@ void Scene::initObjects() {
 
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
-    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol_cobble.jpg", "../assets/sol_cobble_normal.jpg", "../assets/sol_cobble_specular.jpg");
+    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/sol_cobble/sol_cobble.jpg", "../assets/sol/sol_cobble/sol_cobble_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg");
+    // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg", "../assets/sol/brique_recyclee/brique_recyclee_normal.png");
     entities.push_back(sol_beton);
 }
 
 void Scene::update() {
+    if (skybox && skyboxShader) {
+        // Désactive le depth write temporairement pour que la skybox soit en arrière-plan
+        glDepthFunc(GL_LEQUAL);
+        skyboxShader->use();
+        Mat4 viewWithoutTranslation = view.removeTranslation();
+        skyboxShader->setMat4("view", viewWithoutTranslation);
+        skyboxShader->setMat4("projection", projection);
+        skybox->draw(*skyboxShader, viewWithoutTranslation, projection);
+        glDepthFunc(GL_LESS); // Réactive le depth write pour les autres objets
+    }
+
     view = camera.getViewMatrix();
     projection = camera.getProjectionMatrix();
 
@@ -96,7 +119,7 @@ void Scene::update() {
     }
 
     for (size_t i = 0; i < lightEntities.size(); ++i) {
-        const Light & light = lightingManager.getLights()[i]; 
+        const Light & light = lightingManager.getLights()[i];
 
         // On ne dessine que les lumières ponctuelles
         if (light.type != LightType::LIGHT_POINT)

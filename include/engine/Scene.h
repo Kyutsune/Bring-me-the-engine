@@ -8,13 +8,14 @@
 #include "utils/Sphere.h"
 #include "engine/Entity.h"
 #include "engine/LightingManager.h"
+#include "base/Skybox.h"
 #include <iostream>
 #include <memory>
 #include <vector>
 
 class Scene {
 public:
-    Scene(Shader * shader, Shader * lightShader);
+    Scene(Shader * shader, Shader * lightShader, Shader* skyboxShader);
     void init();
     void update();
 
@@ -39,4 +40,9 @@ private:
     // Ce shader va me permettre de dessiner les lumières, on le fait à part pour éviter de mélanger les deux
     // ainsi que permettre de ne pas faire de lumière sur les lumières elles-mêmes
     Shader * lightShader;
+
+
+    std::unique_ptr<Skybox> skybox;
+    Shader * skyboxShader;
+
 };

@@ -164,3 +164,12 @@ std::ostream & operator<<(std::ostream & os, const Mat4 & m) {
               << m.data[8] << ", " << m.data[9] << ", " << m.data[10] << ", " << m.data[11] << ")\n"
               << m.data[12] << ", " << m.data[13] << ", " << m.data[14] << ", " << m.data[15] << ")\n";
 }
+
+
+Mat4 Mat4::removeTranslation() const {
+    Mat4 result = *this;
+    result.data[12] = 0.0f;
+    result.data[13] = 0.0f;
+    result.data[14] = 0.0f;
+    return result;
+}

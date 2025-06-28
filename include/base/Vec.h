@@ -133,6 +133,7 @@ struct Mat4 {
 
     const float * ptr() const;
     float * ptr();
+    Mat4 removeTranslation() const;
 
     friend std::ostream & operator<<(std::ostream & os, const Mat4 & m);
 };
