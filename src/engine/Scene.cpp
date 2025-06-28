@@ -21,19 +21,34 @@ void Scene::init() {
     this->projection = camera.getProjectionMatrix();
     this->initObjects();
 
+    lightingManager.settings().diffuseIntensity = 0.4f;
     lightingManager.settings().ambientColor = Vec3(1.f, 1.f, 1.f);
-    lightingManager.settings().ambientStrength = 0.2f;
+    lightingManager.settings().ambientStrength = 0.4f;
 
-    lightingManager.settings().specularStrength = 0.6f;
+    lightingManager.settings().specularStrength = 0.2f;
     lightingManager.settings().shininess = 64.f;
 
-    lightingManager.addLight({Vec3(0, 0, -3), Vec3(0, -1, 0), Color(255, 255, 255), 1.f});
-    // lightingManager.addLight({Vec3(0, 2, 3), Vec3(0, -1, 0), Vec3(1,1,1), 0.5f});
+    lightingManager.addLight({
+        LightType::LIGHT_POINT,   // type 0=ponctuelle, 1= directionnelle
+        Vec3(-3, 2, -3),           // position 
+        Vec3(0, -1, 0),           // direction vers le bas
+        Color(255, 255, 255),     // couleur blanche
+        0.3f,                     // intensité
+        0.5f, 0.7f, 1.8f          // Consantes d'atténuation (constant, linear, quadratic) 
+    });
+    // lightingManager.addLight({
+    //     LightType::LIGHT_DIRECTIONAL,   
+    //     Vec3(3, 2, -3),           
+    //     Vec3(0, -1, 0),          
+    //     Color(255, 255, 255),     
+    //     0.1f,                    
+    //     0.5f, 0.7f, 1.8f         
+    // });
 
     std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
-    for (const auto & light : lightingManager.getLights()) {
+    for (const Light & light : lightingManager.getLights()) {
         Mat4 lightTransform = Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.position);
-        auto lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
+        std::shared_ptr<Entity> lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
         lightEntities.push_back(lightEntity);
     }
 }
@@ -41,7 +56,7 @@ void Scene::init() {
 void Scene::initObjects() {
     std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::cyan());
     Mat4 t;
-    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh,"../assets/cuivre_diffus.jpg", "../assets/cuivre_normal.jpg", "../assets/cuivre_specular.jpg");
+    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh, "../assets/cuivre_diffus.jpg", "../assets/cuivre_normal.jpg", "../assets/cuivre_specular.jpg");
     entities.push_back(cube_qui_tourne);
 
     std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::cyan());
@@ -59,7 +74,6 @@ void Scene::initObjects() {
     // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/Mud.jpg", "../assets/Mud_normal.jpg");
     // entities.push_back(sol_beton);
 
-    
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
     auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol_cobble.jpg", "../assets/sol_cobble_normal.jpg", "../assets/sol_cobble_specular.jpg");
@@ -77,12 +91,18 @@ void Scene::update() {
     entities[0]->setTransform(Mat4::Translation(Vec3(0, 0, -1.f)) * Mat4::rotateY(angle) * Mat4::rotateZ(angle));
 
     // Dessin de chaque entité avec sa propre matrice de transformation
-    for (const auto & entity : entities) {
+    for (const std::shared_ptr<Entity> & entity : entities) {
         entity->draw_entity(*shader, view, projection);
     }
 
-    for (const auto & entity : lightEntities) {
+    for (size_t i = 0; i < lightEntities.size(); ++i) {
+        const Light & light = lightingManager.getLights()[i]; 
+
+        // On ne dessine que les lumières ponctuelles
+        if (light.type != LightType::LIGHT_POINT)
+            continue;
+
         lightingManager.applyPosLights(*lightShader);
-        entity->draw_entity(*lightShader, view, projection);
+        lightEntities[i]->draw_entity(*lightShader, view, projection);
     }
 }
