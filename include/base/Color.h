@@ -44,4 +44,7 @@ public:
     static Color magenta() {
       return Color(255.0f, 0.0f, 255.0f, 255.0f);
     }
+    static Color rose(){
+      return Color(255.0f, 192.0f, 203.0f, 255.0f);
+    }
 };

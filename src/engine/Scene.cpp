@@ -30,7 +30,7 @@ void Scene::init() {
 
     lightingManager.addLight({
         LightType::LIGHT_POINT,   // type 0=ponctuelle, 1= directionnelle
-        Vec3(-3, 2, -3),           // position 
+        Vec3(-3, 2, -3),          // position 
         Vec3(0, -1, 0),           // direction vers le bas
         Color(255, 255, 255),     // couleur blanche
         0.3f,                     // intensité
@@ -59,7 +59,7 @@ void Scene::initObjects() {
     auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh, "../assets/cuivre_diffus.jpg", "../assets/cuivre_normal.jpg", "../assets/cuivre_specular.jpg");
     entities.push_back(cube_qui_tourne);
 
-    std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::cyan());
+    std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::rose());
     Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
     auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2);
     entities.push_back(Cube_tout_bleu);
