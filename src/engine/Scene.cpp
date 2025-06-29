@@ -28,6 +28,13 @@ void Scene::init() {
     lightingManager.settings().specularStrength = 0.2f;
     lightingManager.settings().shininess = 64.f;
 
+
+    lightingManager.settings().fogColor=Color(126.f, 126.f, 126.f, 1.f); // Gris clair
+    lightingManager.settings().fogStart = 15.0f;
+    lightingManager.settings().fogEnd = 30.0f;
+    lightingManager.settings().fogDensity = 0.025f;
+    lightingManager.settings().fogType = 3; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
+
     lightingManager.addLight({
         LightType::LIGHT_POINT, // type 0=ponctuelle, 1= directionnelle
         Vec3(-3, 0, -3),        // position

@@ -51,6 +51,17 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) {
     shader.set("specularStrength", lightingSettings.specularStrength);
     shader.set("shininess", lightingSettings.shininess);
 
+    // Paramètres sur le fog
+    shader.setVec3("fogColor", Vec3(lightingSettings.fogColor.r/255.0f, 
+                                    lightingSettings.fogColor.g/255.0f, 
+                                    lightingSettings.fogColor.b/255.0f));
+    shader.setFloat("fogStart", lightingSettings.fogStart);
+    shader.setFloat("fogEnd", lightingSettings.fogEnd);
+    shader.setFloat("fogDensity", lightingSettings.fogDensity);
+    shader.setInt("fogType", lightingSettings.fogType);
+
+
+
     shader.set("viewPos", viewPos);
 }
 

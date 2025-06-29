@@ -35,6 +35,13 @@ uniform bool useTexture;
 uniform bool useNormalMap;
 uniform bool useSpecularMap;
 
+// Les informations sur le fog 
+uniform vec3 fogColor;
+uniform float fogStart;    
+uniform float fogEnd;
+uniform float fogDensity;  
+uniform int fogType;       // 0: aucun, 1: linéaire, 2: exp, 3: exp²
+
 
 // Les informations sur le pixel cible
 in vec3 FragPos;
@@ -65,6 +72,24 @@ void main() {
 
         norm = normalize(TBN * normalMap);
     }
+
+    float distance_to_obj = length(viewPos - FragPos);
+    float fogFactor;
+
+    if (fogType == 1) {
+        fogFactor = clamp((fogEnd - distance_to_obj) / (fogEnd - fogStart), 0.0, 1.0);
+    } else if (fogType == 2) {
+        fogFactor = exp(-fogDensity * distance_to_obj);
+    } else if (fogType == 3) {
+        fogFactor = exp(-pow(fogDensity * distance_to_obj, 2.0));
+    } else {
+        fogFactor = 1.0; // pas de brouillard
+    }
+
+
+
+
+
 
     vec3 viewDir = normalize(viewPos - FragPos);
 
@@ -115,10 +140,14 @@ void main() {
         result += diffuse + specular;
     }
 
+    // On prend en compte la couleur de la texture si présente, la couleur de base autrement.
     vec3 baseColor = useTexture ? texture(texture_diffuse, TexCoord).rgb : vColor;
     result *= baseColor;
+    // On clamp la valeur pour éviter les débordements
     result = clamp(result, 0.0, 1.0);
 
+    // Application du fog
+    vec3 finalColor = mix(fogColor, result, fogFactor);
 
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(finalColor, 1.0);
 }
