@@ -101,19 +101,18 @@ void Skybox::setupCube() {
     glBindVertexArray(0);
 }
 
-void Skybox::draw(const Shader& shader, const Mat4& view, const Mat4& projection) const {
-    glDepthFunc(GL_LEQUAL);  // Important pour que la skybox passe derrière tout
+void Skybox::draw(const Shader & shader, const Mat4 & view, const Mat4 & projection) const {
+    glDepthFunc(GL_LEQUAL); // Important pour que la skybox passe derrière tout
     shader.use();
 
     shader.setMat4("view", view.removeTranslation());
     shader.setMat4("projection", projection);
 
-    bind(); 
     shader.setInt("skybox", 0);
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-    
-    glDepthFunc(GL_LESS); 
+
+    glDepthFunc(GL_LESS);
 }

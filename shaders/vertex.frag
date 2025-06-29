@@ -76,7 +76,7 @@ void main() {
     // on ne fasse qu'un calcul de lumière ambiant classique par soucis de réalisme.
     // Pour l'instant ce système est convaincant dans les deux cas donc pas un soucis immense 
     vec3 upColor = vec3(1.0, 1.0, 1.0);    // lumière du ciel
-    vec3 downColor = vec3(0.3, 0.3, 0.3);  // lumière du sol (ou ombre)
+    vec3 downColor = vec3(0.3, 0.3, 0.3);  // lumière du sol 
     float factor = norm.y * 0.5 + 0.5;     // interpole [-1,1] vers [0,1]
     vec3 ambient = mix(downColor, upColor, factor) * ambientStrength;
     vec3 result = ambient;

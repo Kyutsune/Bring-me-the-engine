@@ -54,12 +54,12 @@ void Scene::init() {
 
     if (skyboxShader) {
         std::vector<std::string> faces = {
-            "../assets/cubemap/ciel_de_nuit/right.png",
-            "../assets/cubemap/ciel_de_nuit/left.png",
-            "../assets/cubemap/ciel_de_nuit/bottom.png",
-            "../assets/cubemap/ciel_de_nuit/top.png",
-            "../assets/cubemap/ciel_de_nuit/front.png",
-            "../assets/cubemap/ciel_de_nuit/back.png"};
+            "../assets/cubemap/Nuit_bleue/right.jpg",
+            "../assets/cubemap/Nuit_bleue/left.jpg",
+            "../assets/cubemap/Nuit_bleue/bottom.jpg",
+            "../assets/cubemap/Nuit_bleue/top.jpg",
+            "../assets/cubemap/Nuit_bleue/front.jpg",
+            "../assets/cubemap/Nuit_bleue/back.jpg"};
         skybox = std::make_unique<Skybox>(faces);
     }
 }
@@ -72,7 +72,7 @@ void Scene::initObjects() {
 
     std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::rose());
     Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
-    auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2);
+    auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2, "","","");
     entities.push_back(Cube_tout_bleu);
 
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
@@ -94,14 +94,7 @@ void Scene::initObjects() {
 
 void Scene::update() {
     if (skybox && skyboxShader) {
-        // Désactive le depth write temporairement pour que la skybox soit en arrière-plan
-        glDepthFunc(GL_LEQUAL);
-        skyboxShader->use();
-        Mat4 viewWithoutTranslation = view.removeTranslation();
-        skyboxShader->setMat4("view", viewWithoutTranslation);
-        skyboxShader->setMat4("projection", projection);
-        skybox->draw(*skyboxShader, viewWithoutTranslation, projection);
-        glDepthFunc(GL_LESS); // Réactive le depth write pour les autres objets
+        skybox->draw(*skyboxShader, view, projection);
     }
 
     view = camera.getViewMatrix();
