@@ -14,6 +14,26 @@ void LightingManager::clearLights() {
     lights.clear();
 }
 
+void LightingManager::setupLightingOnScene(){
+    // Paramètres sur la lumière diffuse et ambiante
+    lightingSettings.diffuseIntensity = 0.4f;
+    lightingSettings.ambientColor = Vec3(1.f, 1.f, 1.f);
+    lightingSettings.ambientStrength = 0.4f;
+
+    // Paramètres sur la lumière spéculaire
+    lightingSettings.specularStrength = 0.2f;
+    lightingSettings.shininess = 64.f;
+
+
+    // Paramètres sur le fog
+    lightingSettings.fogColor=Color(126.f, 126.f, 126.f, 1.f); // Gris clair
+    lightingSettings.fogStart = 15.0f;
+    lightingSettings.fogEnd = 30.0f;
+    lightingSettings.fogDensity = 0.025f;
+    lightingSettings.fogType = 3; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
+}
+
+
 void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) {
     shader.use();
 
