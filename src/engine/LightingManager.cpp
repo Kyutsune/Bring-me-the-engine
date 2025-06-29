@@ -31,6 +31,9 @@ void LightingManager::setupLightingOnScene(){
     lightingSettings.fogEnd = 30.0f;
     lightingSettings.fogDensity = 0.025f;
     lightingSettings.fogType = 3; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
+
+
+    colorMeshLight = Color::red(); // Couleur par défaut pour les meshes de lumière
 }
 
 

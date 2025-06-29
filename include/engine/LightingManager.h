@@ -30,5 +30,7 @@ private:
     static constexpr int MAX_LIGHTS = 8;
     LightSettings lightingSettings;
 
+    //TODO: Pour l'instant on considère qu'une lumière ponctuelle est représentée avec la couleur rouge
+    // On pourrait éventuellement rajouter une texture pour cette lumière
     Color colorMeshLight = Color::red();
 };
