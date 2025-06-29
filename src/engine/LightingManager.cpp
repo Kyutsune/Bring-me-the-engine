@@ -16,7 +16,7 @@ void LightingManager::clearLights() {
 
 void LightingManager::setupLightingOnScene(){
     // Paramètres sur la lumière diffuse et ambiante
-    lightingSettings.diffuseIntensity = 0.4f;
+    lightingSettings.diffuseIntensity = 0.2f;
     lightingSettings.ambientColor = Vec3(1.f, 1.f, 1.f);
     lightingSettings.ambientStrength = 0.4f;
 
@@ -33,7 +33,7 @@ void LightingManager::setupLightingOnScene(){
     lightingSettings.fogType = 3; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
 
 
-    colorMeshLight = Color::red(); // Couleur par défaut pour les meshes de lumière
+    colorMeshLight = Color::yellow(); // Couleur par défaut pour les meshes de lumière
 }
 
 
