@@ -14,6 +14,7 @@ public:
     void beginFrame();
     void render();
     void endFrame();
+    void setupMenuDisplay();
 
     // Chaque section à mettre dans le menu
     void drawFogSection();
@@ -23,4 +24,9 @@ private:
     GLFWwindow * window;
     bool show = true;
     Scene * scene;
+
+    int taille_minimale_x;
+    int taille_minimale_y;
+    int taille_maximale_x;
+    int taille_maximale_y;
 };

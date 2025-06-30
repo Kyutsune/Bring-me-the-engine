@@ -12,12 +12,17 @@ Menu::Menu(GLFWwindow * window) : window(window), scene(g_scene) {
     style.ScaleAllSizes(1.5f);
 
     ImGuiIO & io = ImGui::GetIO();
-    io.FontGlobalScale = 1.5f; 
-    // Permet de changer le nom du fichier de configuration 
+    io.FontGlobalScale = 1.5f;
+    // Permet de changer le nom du fichier de configuration
     io.IniFilename = "menu.ini";
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
+
+    taille_minimale_x = 300;
+    taille_minimale_y = 100;
+    taille_maximale_x = 800;
+    taille_maximale_y = 400;
 }
 
 Menu::~Menu() {
@@ -32,19 +37,28 @@ void Menu::beginFrame() {
     ImGui::NewFrame();
 }
 
+void Menu::setupMenuDisplay() {
+    // On force la taille de la fenêtre à la taille minimale nécessaire pour afficher le contenu
+    ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_Always);
+    // Et on fixe des contraintes maximales et minimales pour la taille de ce menu
+    ImGui::SetNextWindowSizeConstraints(
+        ImVec2(taille_minimale_x, taille_minimale_y),
+        ImVec2(taille_maximale_x, taille_maximale_y));
+}
+
 void Menu::render() {
     if (!show)
         return;
 
-    // On force la taille de la fenêtre à la taille minimale nécessaire pour afficher le contenu
-    ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_Always);
-    ImGui::Begin("Mon menu", &show);
+    setupMenuDisplay();
+    ImGui::Begin("Bring me the menu", &show);
+
+    // Déclaration de chaque section du menu
     drawFogSection();
     drawQuitButton();
 
     ImGui::End();
 }
-
 
 void Menu::endFrame() {
     ImGui::Render();
@@ -52,15 +66,22 @@ void Menu::endFrame() {
 }
 
 void Menu::drawFogSection() {
-    if (ImGui::CollapsingHeader("Brouillard", ImGuiTreeNodeFlags_DefaultOpen)) {
-        ImGui::Text("Contrôle du brouillard");
+    if (ImGui::CollapsingHeader("Fog", ImGuiTreeNodeFlags_DefaultOpen)) {
+        ImGui::Text("Contrôle du fog");
 
+        // Section sur le Type de Fog
         static const char * items[] = {"Aucun", "Linéaire", "Exponentiel", "Exponentiel²"};
         static int currentType = scene->getFogType();
 
         if (ImGui::Combo("Type de Fog", &currentType, items, IM_ARRAYSIZE(items))) {
             scene->setFogType(currentType);
         }
+
+        ImGui::Text("Valeurs du Fog");
+
+        ImGui::SliderFloat("Début", scene->getFogStart(), 0.0f, *scene->getFogEnd(), "%.1f", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::SliderFloat("Fin", scene->getFogEnd(), *scene->getFogStart(), 100.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::SliderFloat("Densité", scene->getFogDensity(), 0.0f, 1.0f, "%.3f", ImGuiSliderFlags_AlwaysClamp);
     }
 }
 

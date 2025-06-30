@@ -25,6 +25,7 @@ public:
 
     void setupLightingOnScene();
 
+
 private:
     // Liste des lumières dans la scène, côté glsl on à un MAX_LIGHTS = 8 donc attention
     std::vector<Light> lights;

@@ -118,9 +118,8 @@ void Scene::update() {
     }
 }
 
-const int Scene::getFogType() const{
-    return lightingManager.settings().fogType;
-};
-void Scene::setFogType(int type) {
-    lightingManager.settings().fogType = type;
-}
+const int Scene::getFogType() const { return lightingManager.settings().fogType; }
+void Scene::setFogType(int type) { lightingManager.settings().fogType = type; }
+float * Scene::getFogStart() { return &lightingManager.settings().fogStart; }
+float * Scene::getFogEnd() { return &lightingManager.settings().fogEnd; }
+float * Scene::getFogDensity() { return &lightingManager.settings().fogDensity; }
