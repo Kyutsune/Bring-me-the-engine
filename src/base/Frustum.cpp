@@ -51,6 +51,11 @@ void Frustum::update(const Mat4 & m) {
     }
 }
 
+//FIXME: Corriger le bug du frustum qui ne détecte pas parfaitement les entités sur leur côté droit 
+//(en regardant côté lumière au début de l'appli)
+//Le problème NE SEMBLE pas venir ni du frustum car en le bougeant a travers la scène on se rend compte
+//que c'est le côté de la boite qui pose soucis pas la cam
+//Mais en affichant le AABB de la boîté ça à l'air bien construit visuellement donc???
 bool Frustum::isBoxInFrustum(const AABB & box) const {
     for (int i = 0; i < 6; i++) {
         const Plane & plane = planes[i];
