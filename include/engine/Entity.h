@@ -3,6 +3,7 @@
 #include "base/Shader.h"
 #include "base/Vec.h"
 #include "engine/Mesh.h"
+#include "base/PlaneBoundingVolume.h"
 #include <filesystem>
 #include <iostream>
 
@@ -19,10 +20,12 @@ public:
 Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
        const std::string & filenameTextDiffuse = "",
        const std::string & filenameNormalMap = "",
-       const std::string & filenameSpecularMap = "");
+       const std::string & filenameSpecularMap = "",
+       const std::string & name = "");
 
     virtual ~Entity() = default;
 
+    const std::string & getName() const { return entity_name; }
     const Mat4 & getTransform() const { return transform; }
     void setTransform(const Mat4 & newTransform) { transform = newTransform; }
 
@@ -30,9 +33,14 @@ Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
 
     void setTexture(std::shared_ptr<Texture> tex);
 
+    AABB getBoundingBox() { return boundingBox; }
+    AABB getTransformedBoundingBox() const;
+
 private:
+    std::string entity_name;
     Mat4 transform;
     std::shared_ptr<Mesh> mesh;
+    AABB boundingBox;
 
     // Pour les textures de chaque entité, on ajoute une texture diffuse pour la couleur de base,
     // Une normal map pour les détails de surface (souvent pour donner du relief),

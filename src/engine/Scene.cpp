@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-Scene::Scene(Shader * shader, Shader * lightShader, Shader * skyboxShader = nullptr) : shader(shader), lightShader(lightShader), skyboxShader(skyboxShader), view(Mat4::identity()), projection(Mat4::identity()) {
+Scene::Scene(Shader * shader, Shader * lightShader, Shader * skyboxShader = nullptr, Shader * bboxShader = nullptr) : shader(shader), lightShader(lightShader), skyboxShader(skyboxShader), bboxShader(bboxShader), view(Mat4::identity()), projection(Mat4::identity()) {
     init();
 }
 
@@ -62,17 +62,20 @@ void Scene::init() {
 void Scene::initObjects() {
     std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::cyan());
     Mat4 t;
-    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh, "../assets/materiaux/cuivre_diffus.jpg", "../assets/materiaux/cuivre_normal.jpg", "../assets/materiaux/cuivre_specular.jpg");
+    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh, "../assets/materiaux/cuivre_diffus.jpg", "../assets/materiaux/cuivre_normal.jpg", "../assets/materiaux/cuivre_specular.jpg", "Cube_qui_tourne");
+    cube_qui_tourne->getBoundingBox().setupBBoxBuffers();
     entities.push_back(cube_qui_tourne);
 
     std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::rose());
     Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
-    auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2, "", "", "");
+    auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2, "", "", "", "Cube_tout_bleu");
+    Cube_tout_bleu->getBoundingBox().setupBBoxBuffers();
     entities.push_back(Cube_tout_bleu);
 
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
     Mat4 t4 = Mat4::Translation(Vec3(3, 0, -3));
-    auto Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3, "../assets/materiaux/bois.jpg");
+    auto Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3, "../assets/materiaux/bois.jpg", "", "", "Cube_plein_de_texture");
+    Cube_plein_de_texture->getBoundingBox().setupBBoxBuffers();
     entities.push_back(Cube_plein_de_texture);
 
     // std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
@@ -83,17 +86,22 @@ void Scene::initObjects() {
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     Mat4 t3;
     // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/sol_cobble/sol_cobble.jpg", "../assets/sol/sol_cobble/sol_cobble_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg");
-    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg", "../assets/sol/brique_recyclee/brique_recyclee_normal.jpg");
+    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg", "../assets/sol/brique_recyclee/brique_recyclee_normal.jpg", "", "Sol_beton");
+    sol_beton->getBoundingBox().setupBBoxBuffers();
     entities.push_back(sol_beton);
 }
 
 void Scene::update() {
+
+    view = camera.getViewMatrix();
+    projection = camera.getProjectionMatrix();
+
+
     if (skybox && skyboxShader) {
         skybox->draw(*skyboxShader, view, projection);
     }
 
-    view = camera.getViewMatrix();
-    projection = camera.getProjectionMatrix();
+    frustum.update(view * projection);
 
     lightingManager.applyLightning(*shader, camera.getPosition());
 
@@ -101,9 +109,14 @@ void Scene::update() {
 
     entities[0]->setTransform(Mat4::Translation(Vec3(0, 0, -1.f)) * Mat4::rotateY(angle) * Mat4::rotateZ(angle));
 
-    // Dessin de chaque entité avec sa propre matrice de transformation
+    // Dessin de chaque entité avec sa propre matrice de transformation si elle est dans le frustum
     for (const std::shared_ptr<Entity> & entity : entities) {
-        entity->draw_entity(*shader, view, projection);
+        if (frustum.isBoxInFrustum(entity->getTransformedBoundingBox())) {
+            entity->draw_entity(*shader, view, projection);
+        }
+        // else {
+        //     std::cout << "L'entité " << entity->getName() << " n'est pas dans le frustum." << std::endl;
+        // }
     }
 
     for (size_t i = 0; i < lightEntities.size(); ++i) {

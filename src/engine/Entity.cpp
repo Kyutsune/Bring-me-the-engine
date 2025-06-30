@@ -3,7 +3,8 @@
 Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
                const std::string & filenameTextDiffuse,
                const std::string & filenameNormalMap,
-               const std::string & filenameSpecularMap)
+               const std::string & filenameSpecularMap,
+               const std::string & name)
     : transform(transform), mesh(std::move(mesh)) {
 
     if (!filenameTextDiffuse.empty() && !std::filesystem::exists(filenameTextDiffuse)) {
@@ -23,6 +24,11 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
     } else if (!filenameSpecularMap.empty()) {
         specularMap = std::make_shared<Texture>(filenameSpecularMap);
     }
+
+    if (this->mesh) {
+        boundingBox = this->mesh->getBoundingBox();
+    }
+    entity_name = name.empty() ? "Unnamed Entity" : name;
 }
 
 void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection) {
@@ -57,4 +63,8 @@ void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projec
 
 void Entity::setTexture(std::shared_ptr<Texture> tex) {
     texture = std::move(tex);
+}
+
+AABB Entity::getTransformedBoundingBox() const {
+    return boundingBox.transform(transform);
 }

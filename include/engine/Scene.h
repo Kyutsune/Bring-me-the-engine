@@ -9,13 +9,14 @@
 #include "utils/Cube.h"
 #include "utils/Floor.h"
 #include "utils/Sphere.h"
+#include "base/Frustum.h"
 #include <iostream>
 #include <memory>
 #include <vector>
 
 class Scene {
 public:
-    Scene(Shader * shader, Shader * lightShader, Shader * skyboxShader);
+    Scene(Shader * shader, Shader * lightShader, Shader * skyboxShader, Shader * BboxShader);
     void init();
     void update();
 
@@ -52,4 +53,7 @@ private:
 
     std::unique_ptr<Skybox> skybox;
     Shader * skyboxShader;
+
+    Shader * bboxShader;
+    Frustum frustum;
 };

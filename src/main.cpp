@@ -67,7 +67,8 @@ int main() {
     shaders.push_back(std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag"));
     shaders.push_back(std::make_unique<Shader>("../shaders/light_pos.vert", "../shaders/light_pos.frag"));
     shaders.push_back(std::make_unique<Shader>("../shaders/skybox.vert", "../shaders/skybox.frag"));
-    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shaders[0].get(), shaders[1].get(), shaders[2].get());
+    shaders.push_back(std::make_unique<Shader>("../shaders/bounding_box.vert", "../shaders/bounding_box.frag"));
+    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get());
 
     // On à une variable globale pour la scène, on peut y accéder depuis n'importe où dans le code.
     // C'est pratique pour les callbacks et autres fonctions qui n'ont pas accès à la scène

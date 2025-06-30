@@ -7,6 +7,7 @@
 
 #include "base/Vertex.h"
 #include "base/Texture.h"
+#include "base/PlaneBoundingVolume.h"
 
 // Classe qui sera utilisée pour représenter un objet dans l'espace 3D.
 class Mesh {
@@ -15,6 +16,7 @@ public:
     ~Mesh();
 
     void draw() const;
+    AABB getBoundingBox() const;
 
 private:
     GLuint VAO, VBO, EBO;

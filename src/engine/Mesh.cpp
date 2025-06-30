@@ -59,3 +59,25 @@ void Mesh::draw() const {
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
+
+
+AABB Mesh::getBoundingBox() const {
+    if (vertices.empty()) {
+        return AABB(); // Retourne une boîte vide si aucun sommet n'est défini
+    }
+
+    Vec3 min = vertices[0].position;
+    Vec3 max = vertices[0].position;
+
+    for (const auto & vertex : vertices) {
+        min.x = std::min(min.x, vertex.position.x);
+        min.y = std::min(min.y, vertex.position.y);
+        min.z = std::min(min.z, vertex.position.z);
+
+        max.x = std::max(max.x, vertex.position.x);
+        max.y = std::max(max.y, vertex.position.y);
+        max.z = std::max(max.z, vertex.position.z);
+    }
+
+    return AABB(min, max);
+}

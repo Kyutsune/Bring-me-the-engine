@@ -159,10 +159,10 @@ const float * Mat4::ptr() const { return data; }
 float * Mat4::ptr() { return data; }
 
 std::ostream & operator<<(std::ostream & os, const Mat4 & m) {
-    return os << m.data[0] << ", " << m.data[1] << ", " << m.data[2] << ", " << m.data[3] << ")\n"
-              << m.data[4] << ", " << m.data[5] << ", " << m.data[6] << ", " << m.data[7] << ")\n"
-              << m.data[8] << ", " << m.data[9] << ", " << m.data[10] << ", " << m.data[11] << ")\n"
-              << m.data[12] << ", " << m.data[13] << ", " << m.data[14] << ", " << m.data[15] << ")\n";
+    return os << m.data[0] << ", " << m.data[1] << ", " << m.data[2] << ", " << m.data[3] << "\n"
+              << m.data[4] << ", " << m.data[5] << ", " << m.data[6] << ", " << m.data[7] << "\n"
+              << m.data[8] << ", " << m.data[9] << ", " << m.data[10] << ", " << m.data[11] << "\n"
+              << m.data[12] << ", " << m.data[13] << ", " << m.data[14] << ", " << m.data[15] << "\n";
 }
 
 
