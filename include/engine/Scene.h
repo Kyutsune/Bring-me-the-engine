@@ -30,6 +30,8 @@ public:
     float * getFogStart();
     float * getFogEnd();
     float * getFogDensity();
+    void setFogDensity(float density);
+    Color & getFogColor();
 
 private:
     Camera camera;

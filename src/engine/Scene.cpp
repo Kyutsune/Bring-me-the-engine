@@ -123,3 +123,5 @@ void Scene::setFogType(int type) { lightingManager.settings().fogType = type; }
 float * Scene::getFogStart() { return &lightingManager.settings().fogStart; }
 float * Scene::getFogEnd() { return &lightingManager.settings().fogEnd; }
 float * Scene::getFogDensity() { return &lightingManager.settings().fogDensity; }
+void Scene::setFogDensity(float density) { lightingManager.settings().fogDensity = density; }
+Color & Scene::getFogColor() { return lightingManager.settings().fogColor; }
