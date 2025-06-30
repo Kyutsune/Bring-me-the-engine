@@ -19,6 +19,7 @@ public:
 
     // Accès aux paramètres pour pouvoir les modifier
     LightSettings& settings() { return lightingSettings; }
+    const LightSettings& settings() const { return lightingSettings; }
     const std::vector<Light>& getLights() const { return lights; }
 
 

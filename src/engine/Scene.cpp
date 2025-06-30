@@ -67,7 +67,7 @@ void Scene::initObjects() {
 
     std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::rose());
     Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
-    auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2, "","","");
+    auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2, "", "", "");
     entities.push_back(Cube_tout_bleu);
 
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
@@ -116,4 +116,11 @@ void Scene::update() {
         lightingManager.applyPosLights(*lightShader);
         lightEntities[i]->draw_entity(*lightShader, view, projection);
     }
+}
+
+const int Scene::getFogType() const{
+    return lightingManager.settings().fogType;
+};
+void Scene::setFogType(int type) {
+    lightingManager.settings().fogType = type;
 }

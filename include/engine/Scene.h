@@ -24,6 +24,10 @@ public:
     inline Camera * getCamera() { return &camera; }
     inline Mat4 & getView() { return view; }
 
+
+    const int getFogType() const;
+    void setFogType(int type);
+
 private:
     Camera camera;
     //Ici chaque objet de la scène aura sa propre matrice de transformation donc pas de model global

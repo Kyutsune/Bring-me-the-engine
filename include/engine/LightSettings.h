@@ -19,5 +19,5 @@ struct LightSettings {
     float fogStart = 5.0f;   
     float fogEnd = 20.0f;
     float fogDensity = 0.045f;
-    int fogType = 1; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
+    int fogType = 0; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
 };

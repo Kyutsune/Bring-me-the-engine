@@ -1,17 +1,26 @@
 #pragma once
 
+#include "Globals.h"
+#include "engine/Scene.h"
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 class Menu {
 public:
-    Menu(GLFWwindow* window);
+    // Fonctions de base afin d'initialiser, configurer et rendre le menu à l'écran
+    Menu(GLFWwindow * window);
     ~Menu();
 
     void beginFrame();
     void render();
     void endFrame();
 
+    // Chaque section à mettre dans le menu
+    void drawFogSection();
+    void drawQuitButton();
+
 private:
-    GLFWwindow* window;
+    GLFWwindow * window;
     bool show = true;
+    Scene * scene;
 };
