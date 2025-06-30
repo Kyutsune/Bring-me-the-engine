@@ -2,15 +2,17 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "Globals.h"
 #include "base/Shader.h"
 #include "base/Vec.h"
 #include "engine/Camera.h"
 #include "engine/ClavierSouris.h"
-#include "engine/Mesh.h"
 #include "engine/Scene.h"
-#include "tools/Trigo.h"
-#include "utils/Cube.h"
-#include "Globals.h"
+#include "ui/Menu.h"
+
+#include "../external/imgui/backends/imgui_impl_glfw.h"
+#include "../external/imgui/backends/imgui_impl_opengl3.h"
+#include "../external/imgui/imgui.h"
 
 // Cette fonction est un callback pour gérer les événements de clavier crée par GLFW.
 // Concept nouveau et pratique à mes yeux, la manière d'en créer une est donnée en exemple dans le dossier compétences_acquises dans src
@@ -26,7 +28,7 @@ void key_callback(GLFWwindow * window, int key, int scancode, int action, int mo
     }
 }
 
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+void cursor_position_callback(GLFWwindow * window, double xpos, double ypos) {
     ClavierSouris::handleMouse(window, xpos, ypos);
 }
 
@@ -51,10 +53,10 @@ int main() {
         std::cerr << "Problème à l'initialisation de GLAD\n";
         return -1;
     }
+    glfwSwapInterval(1); // V-Sync
 
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, cursor_position_callback);
-
 
     // Set viewport
     glViewport(0, 0, 1600, 800);
@@ -71,13 +73,21 @@ int main() {
     // C'est pratique pour les callbacks et autres fonctions qui n'ont pas accès à la scène
     g_scene = gameScene.get();
 
+    // Création du menu et donc du contexte ImGui
+    std::unique_ptr<Menu> menu = std::make_unique<Menu>(window);
+
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.f, 0.f, 0.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ClavierSouris::handleContinuousInput(window); 
+        menu->beginFrame();
+
+        ClavierSouris::handleContinuousInput(window);
         gameScene->update();
+
+        menu->render();
+        menu->endFrame();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -87,6 +97,8 @@ int main() {
     // glfwTerminate() avant, on ne pourra plus désallouer les shaders ensuite.
     gameScene.reset();
     shaders.clear();
+
+    menu.reset();
 
     glfwTerminate();
     return 0;

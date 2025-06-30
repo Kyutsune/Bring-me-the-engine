@@ -17,8 +17,16 @@ add_subdirectory(external/Catch2-3.8.1)
 # Récupère tous les fichiers .cpp dans src/
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
+# Récupère tout ce qu'il faut pour ImGui
+file(GLOB IMGUI_SRC
+    external/imgui/*.cpp
+    external/imgui/backends/imgui_impl_glfw.cpp
+    external/imgui/backends/imgui_impl_opengl3.cpp
+)
+
+
 # Exécutable final
-add_executable(${PROJECT_NAME} ${ENGINE_SOURCES})
+add_executable(${PROJECT_NAME} ${ENGINE_SOURCES} ${IMGUI_SRC})
 
 # Include dirs
 target_include_directories(${PROJECT_NAME}
@@ -26,6 +34,8 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_SOURCE_DIR}/include
         ${CMAKE_SOURCE_DIR}/external/glad/include
         ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/external/imgui
+        ${CMAKE_SOURCE_DIR}/external/imgui/backends
 )
 
 # Lier les bibliothèques
