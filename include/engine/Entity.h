@@ -3,6 +3,7 @@
 #include "base/Shader.h"
 #include "base/Vec.h"
 #include "engine/Mesh.h"
+#include "engine/Material.h"
 #include "base/PlaneBoundingVolume.h"
 #include <filesystem>
 #include <iostream>
@@ -31,8 +32,6 @@ Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
 
     void draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection);
 
-    void setTexture(std::shared_ptr<Texture> tex);
-
     AABB getBoundingBox() { return boundingBox; }
     AABB getTransformedBoundingBox() const;
 
@@ -42,10 +41,5 @@ private:
     std::shared_ptr<Mesh> mesh;
     AABB boundingBox;
 
-    // Pour les textures de chaque entité, on ajoute une texture diffuse pour la couleur de base,
-    // Une normal map pour les détails de surface (souvent pour donner du relief),
-    // et une specular map pour les reflets spéculaires particulier au contact de la surface.
-    std::shared_ptr<Texture> texture;
-    std::shared_ptr<Texture> normalMap; 
-    std::shared_ptr<Texture> specularMap; 
+    Material material;
 };
