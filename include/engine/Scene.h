@@ -26,14 +26,14 @@ public:
     inline Mat4 & getView() { return view; }
     LightingManager & getLightingManager() { return lightingManager; }
 
-    const int getFogType() const;
-    void setFogType(int type);
-    float * getFogStart();
-    float * getFogEnd();
-    float * getFogDensity();
-    void setFogDensity(float density);
-    Color & getFogColor();
 
+    inline const int getFogType() const { return lightingManager.settings().fogType; }
+    inline void setFogType(int type) { lightingManager.settings().fogType = type; }
+    inline float * getFogStart() { return &lightingManager.settings().fogStart; }
+    inline float * getFogEnd() { return &lightingManager.settings().fogEnd; }
+    inline float * getFogDensity() { return &lightingManager.settings().fogDensity; }
+    inline void setFogDensity(float density) { lightingManager.settings().fogDensity = density; }
+    inline Color & getFogColor() { return lightingManager.settings().fogColor; }
 private:
     Camera camera;
     // Ici chaque objet de la scène aura sa propre matrice de transformation donc pas de model global
