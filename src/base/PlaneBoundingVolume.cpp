@@ -1,20 +1,22 @@
 #include "base/PlaneBoundingVolume.h"
 #include <cfloat>
+#include <iostream>
 
 AABB AABB::transform(const Mat4 & matrix) const {
     Vec3 corners[8] = {
-        {min.x, min.y, min.z},
-        {min.x, min.y, max.z},
-        {min.x, max.y, min.z},
-        {min.x, max.y, max.z},
-        {max.x, min.y, min.z},
-        {max.x, min.y, max.z},
-        {max.x, max.y, min.z},
-        {max.x, max.y, max.z}};
+        {min.x, min.y, min.z}, // corner 0
+        {min.x, min.y, max.z}, // corner 1
+        {min.x, max.y, min.z}, // corner 2
+        {min.x, max.y, max.z}, // corner 3
+        {max.x, min.y, min.z}, // corner 4
+        {max.x, min.y, max.z}, // corner 5
+        {max.x, max.y, min.z}, // corner 6
+        {max.x, max.y, max.z}  // corner 7
+    };
 
     AABB transformed;
-    transformed.min = Vec3(FLT_MAX);
-    transformed.max = Vec3(-FLT_MAX);
+    transformed.min = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    transformed.max = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
     for (const auto & corner : corners) {
         Vec3 transformedCorner = matrix * corner;
@@ -33,14 +35,30 @@ AABB AABB::transform(const Mat4 & matrix) const {
 
 void AABB::setupBBoxBuffers() {
     float vertices[] = {
-        min.x, min.y, min.z,
-        max.x, min.y, min.z,
-        min.x, max.y, min.z,
-        max.x, max.y, min.z,
-        min.x, min.y, max.z,
-        max.x, min.y, max.z,
-        min.x, max.y, max.z,
-        max.x, max.y, max.z,
+        min.x,
+        min.y,
+        min.z,
+        max.x,
+        min.y,
+        min.z,
+        min.x,
+        max.y,
+        min.z,
+        max.x,
+        max.y,
+        min.z,
+        min.x,
+        min.y,
+        max.z,
+        max.x,
+        min.y,
+        max.z,
+        min.x,
+        max.y,
+        max.z,
+        max.x,
+        max.y,
+        max.z,
     };
 
     unsigned int indices[] = {

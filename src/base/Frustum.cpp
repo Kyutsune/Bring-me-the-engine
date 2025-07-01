@@ -51,11 +51,44 @@ void Frustum::update(const Mat4 & m) {
     }
 }
 
-//FIXME: Corriger le bug du frustum qui ne détecte pas parfaitement les entités sur leur côté droit 
-//(en regardant côté lumière au début de l'appli)
-//Le problème NE SEMBLE pas venir ni du frustum car en le bougeant a travers la scène on se rend compte
-//que c'est le côté de la boite qui pose soucis pas la cam
-//Mais en affichant le AABB de la boîté ça à l'air bien construit visuellement donc???
+
+Frustum Frustum::updateFromCamera(const Camera & cam) {
+    // Je suis un petit rigolo :)
+    Frustum frutsum;
+
+    const float halfVSide = cam.getFarPlane() * tanf((cam.getFov() * M_PI / 180.0f) * 0.5f);
+
+    const float halfHSide = halfVSide * cam.getAspectRatio();
+    const Vec3 frontMultFar = cam.getFarPlane() * cam.getForward();
+
+    frutsum.planes[4] = Plane( // nearFace
+        cam.getPosition() + cam.getNearPlane() * cam.getForward(),
+        cam.getForward());
+
+    frutsum.planes[5] = Plane( // farFace
+        cam.getPosition() + frontMultFar,
+        -cam.getForward());
+
+    frutsum.planes[1] = Plane( // rightFace
+        cam.getPosition(),
+        (frontMultFar - cam.getRight() * halfHSide).cross(cam.getUp()));
+
+    frutsum.planes[0] = Plane( // leftFace
+        cam.getPosition(),
+        cam.getUp().cross(frontMultFar + cam.getRight() * halfHSide));
+
+    frutsum.planes[3] = Plane( // topFace
+        cam.getPosition(),
+        cam.getRight().cross(frontMultFar - cam.getUp() * halfVSide));
+
+    frutsum.planes[2] = Plane( // bottomFace
+        cam.getPosition(),
+        (frontMultFar + cam.getUp() * halfVSide).cross(cam.getRight()));
+
+
+    return frutsum;
+}
+
 bool Frustum::isBoxInFrustum(const AABB & box) const {
     for (int i = 0; i < 6; i++) {
         const Plane & plane = planes[i];

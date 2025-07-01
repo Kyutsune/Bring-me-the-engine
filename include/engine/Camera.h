@@ -34,9 +34,14 @@ public:
     inline const Vec3 & getTarget() const { return target; }
     inline void setTarget(const Vec3 & tgt) { target = tgt; }
 
-    Vec3 getDirection() const;
-    Vec3 getRight() const;
-    Vec3 getLeft() const;
-    Vec3 getForward() const;
-    Vec3 getBackward() const;
+    inline Vec3 getDirection() const { return (target - position).normalized(); }
+    inline Vec3 getRight() const { return getDirection().cross(up).normalized(); }
+    inline Vec3 getLeft() const { return -getRight(); }
+    inline Vec3 getForward() const { return getDirection(); }
+    inline Vec3 getBackward() const { return -getDirection(); }
+    inline Vec3 getUp() const { return up; }
+    inline float getFov() const { return fov; }
+    inline float getAspectRatio() const { return aspectRatio; }
+    inline float getNearPlane() const { return nearPlane; }
+    inline float getFarPlane() const { return farPlane; }
 };

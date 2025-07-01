@@ -1,16 +1,28 @@
 #pragma once
-#include "base/Vec.h"
 #include "base/Shader.h"
-#include <glad/glad.h>
+#include "base/Vec.h"
 #include <GLFW/glfw3.h>
-
+#include <glad/glad.h>
 
 struct Plane {
     Vec3 normal;
     float distance; // d dans l’équation ax + by + cz + d = 0
 
+    inline Plane() : normal(Vec3(0.0f, 1.0f, 0.0f)), distance(0.0f) {}
+    inline Plane(const Vec3 & normal, float distance) : normal(normal), distance(distance) {}
+
+    inline Plane(const Vec3 & point, const Vec3 & normal) {
+        this->normal = normal.normalized();
+        this->distance = -this->normal.dot(point);
+    }
+
+    inline Plane(const Vec3 & a, const Vec3 & b, const Vec3 & c) {
+        normal = (b - a).cross(c - a).normalized();
+        distance = -normal.dot(a);
+    }
+
     // Calcule la distance signée d’un point au plan
-    float distanceToPoint(const Vec3 & point) const {
+    inline float distanceToPoint(const Vec3 & point) const {
         return normal.dot(point) + distance;
     }
 };

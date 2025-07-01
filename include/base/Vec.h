@@ -43,6 +43,8 @@ struct Vec3 {
     Vec3 operator+(const Vec3 & other) const { return {x + other.x, y + other.y, z + other.z}; }
     Vec3 operator-(const Vec3 & other) const { return {x - other.x, y - other.y, z - other.z}; }
     Vec3 operator*(float scalar) const { return {x * scalar, y * scalar, z * scalar}; }
+    Vec3 operator*(const Vec3 & other) const { return {x * other.x, y * other.y, z * other.z}; }
+    friend Vec3 operator*(float scalar, const Vec3 & v) { return {v.x * scalar, v.y * scalar, v.z * scalar}; }
     Vec3 operator/(float scalar) const { return {x / scalar, y / scalar, z / scalar}; }
     Vec3 operator+=(const Vec3 & other) {
         x += other.x;
@@ -85,6 +87,7 @@ inline Vec3 normalize(Vec3 v) {
     }
     return v;
 }
+
 
 struct Vec4 {
     float x, y, z, w;
@@ -142,5 +145,21 @@ inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {
     float x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12];
     float y = mat.data[1] * vec.x + mat.data[5] * vec.y + mat.data[9] * vec.z + mat.data[13];
     float z = mat.data[2] * vec.x + mat.data[6] * vec.y + mat.data[10] * vec.z + mat.data[14];
+    float w = mat.data[3] * vec.x + mat.data[7] * vec.y + mat.data[11] * vec.z + mat.data[15];
+
+    if (w != 0.0f) {
+        x /= w;
+        y /= w;
+        z /= w;
+    }
+
+    return Vec3(x, y, z);
+}
+
+inline Vec3 transformPoint(const Mat4 & mat, const Vec3 & vec) {
+    float x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12];
+    float y = mat.data[1] * vec.x + mat.data[5] * vec.y + mat.data[9] * vec.z + mat.data[13];
+    float z = mat.data[2] * vec.x + mat.data[6] * vec.y + mat.data[10] * vec.z + mat.data[14];
+    // PAS de division par w !
     return Vec3(x, y, z);
 }

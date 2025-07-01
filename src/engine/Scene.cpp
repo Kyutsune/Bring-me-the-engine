@@ -15,7 +15,7 @@ void Scene::init() {
         Vec3(0, 1, 0),                       // up
         45.0f,                               // FOV
         1600.0f / 800.0f,                    // aspect ratio
-        0.1f, 100.0f);
+        0.1f, 100.0f);                       // near et far planes
 
     this->view = camera.getViewMatrix();
     this->projection = camera.getProjectionMatrix();
@@ -96,12 +96,11 @@ void Scene::update() {
     view = camera.getViewMatrix();
     projection = camera.getProjectionMatrix();
 
-
     if (skybox && skyboxShader) {
         skybox->draw(*skyboxShader, view, projection);
     }
 
-    frustum.update(view * projection);
+    frustum = frustum.updateFromCamera(camera);
 
     lightingManager.applyLightning(*shader, camera.getPosition());
 
@@ -113,10 +112,10 @@ void Scene::update() {
     for (const std::shared_ptr<Entity> & entity : entities) {
         if (frustum.isBoxInFrustum(entity->getTransformedBoundingBox())) {
             entity->draw_entity(*shader, view, projection);
+        } 
+        else if (!frustum.isBoxInFrustum(entity->getTransformedBoundingBox()) && entity->getName() == "Cube_tout_bleu") {
+            std::cout << "L'entité " << entity->getName() << " n'est pas dans le frustum." << std::endl;
         }
-        // else {
-        //     std::cout << "L'entité " << entity->getName() << " n'est pas dans le frustum." << std::endl;
-        // }
     }
 
     for (size_t i = 0; i < lightEntities.size(); ++i) {
