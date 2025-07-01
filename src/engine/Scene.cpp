@@ -4,11 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-Scene::Scene(Shader * shader, Shader * lightShader, Shader * skyboxShader = nullptr, Shader * bboxShader = nullptr) : shader(shader), lightShader(lightShader), skyboxShader(skyboxShader), bboxShader(bboxShader), view(Mat4::identity()), projection(Mat4::identity()) {
-    init();
-}
-
-void Scene::init() {
+Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
     this->camera = Camera(
         Vec3(-5.68114, 0.024997, -0.912596), // position à l'initialisation
         Vec3(0.025365, 0.0263991, -3.00793), // le point ciblé
@@ -47,16 +43,14 @@ void Scene::init() {
         lightEntities.push_back(lightEntity);
     }
 
-    if (skyboxShader) {
-        std::vector<std::string> faces = {
-            "../assets/cubemap/Nuit_bleue/right.jpg",
-            "../assets/cubemap/Nuit_bleue/left.jpg",
-            "../assets/cubemap/Nuit_bleue/bottom.jpg",
-            "../assets/cubemap/Nuit_bleue/top.jpg",
-            "../assets/cubemap/Nuit_bleue/front.jpg",
-            "../assets/cubemap/Nuit_bleue/back.jpg"};
-        skybox = std::make_unique<Skybox>(faces);
-    }
+    std::vector<std::string> faces = {
+        "../assets/cubemap/Nuit_bleue/right.jpg",
+        "../assets/cubemap/Nuit_bleue/left.jpg",
+        "../assets/cubemap/Nuit_bleue/bottom.jpg",
+        "../assets/cubemap/Nuit_bleue/top.jpg",
+        "../assets/cubemap/Nuit_bleue/front.jpg",
+        "../assets/cubemap/Nuit_bleue/back.jpg"};
+    skybox = std::make_unique<Skybox>(faces);
 }
 
 void Scene::initObjects() {
@@ -92,40 +86,18 @@ void Scene::initObjects() {
 }
 
 void Scene::update() {
-
+    // Mise à jour des matrices de vue et de projection
     view = camera.getViewMatrix();
     projection = camera.getProjectionMatrix();
 
-    if (skybox && skyboxShader) {
-        skybox->draw(*skyboxShader, view, projection);
-    }
-
+    // Mise à jour du frustum pour le culling
     frustum = frustum.updateFromCamera(camera);
 
-    lightingManager.applyLightning(*shader, camera.getPosition());
-
     float angle = glfwGetTime();
-
-    entities[0]->setTransform(Mat4::Translation(Vec3(0, 0, -1.f)) * Mat4::rotateY(angle) * Mat4::rotateZ(angle));
-
-    // Dessin de chaque entité avec sa propre matrice de transformation si elle est dans le frustum
-    for (const std::shared_ptr<Entity> & entity : entities) {
-        if (frustum.isBoxInFrustum(entity->getTransformedBoundingBox())) {
-            entity->draw_entity(*shader, view, projection);
-        }
-        // else if (!frustum.isBoxInFrustum(entity->getTransformedBoundingBox()) && entity->getName() == "Cube_tout_bleu") {
-        //     std::cout << "L'entité " << entity->getName() << " n'est pas dans le frustum." << std::endl;
-        // }
-    }
-
-    for (size_t i = 0; i < lightEntities.size(); ++i) {
-        const Light & light = lightingManager.getLights()[i];
-
-        // On ne dessine que les lumières ponctuelles
-        if (light.type != LightType::LIGHT_POINT)
-            continue;
-
-        lightingManager.applyPosLights(*lightShader);
-        lightEntities[i]->draw_entity(*lightShader, view, projection);
+    if (!entities.empty()) {
+        entities[0]->setTransform(
+            Mat4::Translation(Vec3(0, 0, -1.f)) *
+            Mat4::rotateY(angle) *
+            Mat4::rotateZ(angle));
     }
 }

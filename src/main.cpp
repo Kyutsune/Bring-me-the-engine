@@ -9,6 +9,7 @@
 #include "engine/ClavierSouris.h"
 #include "engine/Scene.h"
 #include "ui/Menu.h"
+#include "engine/Renderer.h"
 
 #include "../external/imgui/backends/imgui_impl_glfw.h"
 #include "../external/imgui/backends/imgui_impl_opengl3.h"
@@ -62,14 +63,7 @@ int main() {
     glViewport(0, 0, 1600, 800);
     glEnable(GL_DEPTH_TEST);
 
-    // Ici on alloue des unique_ptr pour gérer la mémoire d'une plus jolie manière, et plus sûre.
-    std::vector<std::unique_ptr<Shader>> shaders;
-    shaders.push_back(std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/light_pos.vert", "../shaders/light_pos.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/skybox.vert", "../shaders/skybox.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/bounding_box.vert", "../shaders/bounding_box.frag"));
-    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get());
-
+    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>();
 
     // On à une variable globale pour la scène, on peut y accéder depuis n'importe où dans le code.
     // C'est pratique pour les callbacks et autres fonctions qui n'ont pas accès à la scène
@@ -77,6 +71,15 @@ int main() {
 
     // Création du menu et donc du contexte ImGui
     std::unique_ptr<Menu> menu = std::make_unique<Menu>(window);
+
+    // On initialise le Renderer avec les shaders, c'est lui qui va dessiner la scène.
+    std::vector<std::unique_ptr<Shader>> shaders;
+    shaders.push_back(std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/light_pos.vert", "../shaders/light_pos.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/skybox.vert", "../shaders/skybox.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/bounding_box.vert", "../shaders/bounding_box.frag"));
+    Renderer renderer(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get());
+
 
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {
@@ -87,6 +90,8 @@ int main() {
 
         ClavierSouris::handleContinuousInput(window);
         gameScene->update();
+
+        renderer.renderScene(*gameScene);
 
         menu->render();
         menu->endFrame();

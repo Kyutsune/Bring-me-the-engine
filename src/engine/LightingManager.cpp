@@ -14,7 +14,7 @@ void LightingManager::clearLights() {
     lights.clear();
 }
 
-void LightingManager::setupLightingOnScene(){
+void LightingManager::setupLightingOnScene() {
     // Paramètres sur la lumière diffuse et ambiante
     lightingSettings.diffuseIntensity = 0.2f;
     lightingSettings.ambientColor = Vec3(1.f, 1.f, 1.f);
@@ -24,20 +24,17 @@ void LightingManager::setupLightingOnScene(){
     lightingSettings.specularStrength = 0.2f;
     lightingSettings.shininess = 64.f;
 
-
     // Paramètres sur le fog
-    lightingSettings.fogColor=Color(126.f, 126.f, 126.f, 1.f); // Gris clair
+    lightingSettings.fogColor = Color(126.f, 126.f, 126.f, 1.f); // Gris clair
     lightingSettings.fogStart = 15.0f;
     lightingSettings.fogEnd = 30.0f;
     lightingSettings.fogDensity = 0.025f;
     lightingSettings.fogType = 0; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
 
-
     colorMeshLight = Color::yellow(); // Couleur par défaut pour les meshes de lumière
 }
 
-
-void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) {
+void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) const {
     shader.use();
 
     int numLights = static_cast<int>(lights.size());
@@ -75,20 +72,18 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) {
     shader.set("shininess", lightingSettings.shininess);
 
     // Paramètres sur le fog
-    shader.setVec3("fogColor", Vec3(lightingSettings.fogColor.r/255.0f, 
-                                    lightingSettings.fogColor.g/255.0f, 
-                                    lightingSettings.fogColor.b/255.0f));
+    shader.setVec3("fogColor", Vec3(lightingSettings.fogColor.r / 255.0f,
+                                    lightingSettings.fogColor.g / 255.0f,
+                                    lightingSettings.fogColor.b / 255.0f));
     shader.setFloat("fogStart", lightingSettings.fogStart);
     shader.setFloat("fogEnd", lightingSettings.fogEnd);
     shader.setFloat("fogDensity", lightingSettings.fogDensity);
     shader.setInt("fogType", lightingSettings.fogType);
 
-
-
     shader.set("viewPos", viewPos);
 }
 
-void LightingManager::applyPosLights(Shader & shader) {
+void LightingManager::applyPosLights(Shader & shader) const {
     shader.use();
     shader.set("color", Vec3(colorMeshLight));
 }

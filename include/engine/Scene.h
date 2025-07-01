@@ -16,15 +16,17 @@
 
 class Scene {
 public:
-    Scene(Shader * shader, Shader * lightShader, Shader * skyboxShader, Shader * BboxShader);
-    void init();
+    Scene();
     void update();
 
     void initObjects();
 
     inline Camera * getCamera() { return &camera; }
+    inline const Camera & getCamera() const { return camera; }
     inline Mat4 & getView() { return view; }
-    LightingManager & getLightingManager() { return lightingManager; }
+    inline LightingManager & getLightingManager() { return lightingManager; }
+    inline const LightingManager & getLightingManager() const { return lightingManager; }
+    const Skybox * getSkybox() const { return skybox.get(); }
 
 
     inline const int getFogType() const { return lightingManager.settings().fogType; }
@@ -34,6 +36,11 @@ public:
     inline float * getFogDensity() { return &lightingManager.settings().fogDensity; }
     inline void setFogDensity(float density) { lightingManager.settings().fogDensity = density; }
     inline Color & getFogColor() { return lightingManager.settings().fogColor; }
+    inline const Frustum & getFrustum() const { return frustum; }
+    inline const std::vector<std::shared_ptr<Entity>> & getEntities() const { return entities; }
+    inline const std::vector<std::shared_ptr<Entity>> & getLightEntities() const { return lightEntities; }
+
+
 private:
     Camera camera;
     // Ici chaque objet de la scène aura sa propre matrice de transformation donc pas de model global
@@ -46,14 +53,7 @@ private:
 
     std::vector<std::shared_ptr<Entity>> lightEntities;
 
-    Shader * shader;
-    // Ce shader va me permettre de dessiner les lumières, on le fait à part pour éviter de mélanger les deux
-    // ainsi que permettre de ne pas faire de lumière sur les lumières elles-mêmes
-    Shader * lightShader;
-
     std::unique_ptr<Skybox> skybox;
-    Shader * skyboxShader;
 
-    Shader * bboxShader;
     Frustum frustum;
 };

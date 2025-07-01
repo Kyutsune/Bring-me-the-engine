@@ -1,7 +1,7 @@
 #include "engine/Renderer.h"
 
-Renderer::Renderer(Shader* entityShader, Shader* lightShader, Shader* skyboxShader)
-    : entityShader(entityShader), lightShader(lightShader), skyboxShader(skyboxShader) {}
+Renderer::Renderer(Shader* entityShader, Shader* lightShader, Shader* skyboxShader, Shader* boundingBoxShader)
+    : entityShader(entityShader), lightShader(lightShader), skyboxShader(skyboxShader), boundingBoxShader(boundingBoxShader) {}
 
 void Renderer::renderScene(const Scene& scene) {
     Mat4 view = scene.getCamera().getViewMatrix();
@@ -29,6 +29,9 @@ void Renderer::renderEntities(const Scene& scene, const Mat4& view, const Mat4& 
         if (frustum.isBoxInFrustum(entity->getTransformedBoundingBox())) {
             entity->draw_entity(*entityShader, view, projection);
         }
+        // else if(!frustum.isBoxInFrustum(entity->getTransformedBoundingBox()) && entity->getName()=="Cube_tout_bleu"){
+        //     std::cout<< "Entité " << entity->getName() << " Pas dans le frustum." << std::endl;
+        // }
     }
 }
 
