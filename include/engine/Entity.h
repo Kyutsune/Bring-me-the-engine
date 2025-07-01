@@ -1,10 +1,10 @@
 #pragma once
 
-#include "base/Shader.h"
-#include "base/Vec.h"
-#include "engine/Mesh.h"
-#include "engine/Material.h"
-#include "base/PlaneBoundingVolume.h"
+#include "rendering/Shader.h"
+#include "math/Vec.h"
+#include "Mesh.h"
+#include "Material.h"
+#include "math/PlaneBoundingVolume.h"
 #include <filesystem>
 #include <iostream>
 

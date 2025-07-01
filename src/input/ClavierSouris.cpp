@@ -1,4 +1,4 @@
-#include "engine/ClavierSouris.h"
+#include "input/ClavierSouris.h"
 #include "Globals.h"
 #include <iostream>
 

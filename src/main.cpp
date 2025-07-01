@@ -3,20 +3,19 @@
 #include <iostream>
 
 #include "Globals.h"
-#include "base/Shader.h"
-#include "base/Vec.h"
-#include "engine/Camera.h"
-#include "engine/ClavierSouris.h"
+#include "rendering/Shader.h"
+#include "math/Vec.h"
+#include "camera/Camera.h"
+#include "input/ClavierSouris.h"
 #include "engine/Scene.h"
 #include "ui/Menu.h"
-#include "engine/Renderer.h"
+#include "rendering/Renderer.h"
 
 #include "../external/imgui/backends/imgui_impl_glfw.h"
 #include "../external/imgui/backends/imgui_impl_opengl3.h"
 #include "../external/imgui/imgui.h"
 
 // Cette fonction est un callback pour gérer les événements de clavier crée par GLFW.
-// Concept nouveau et pratique à mes yeux, la manière d'en créer une est donnée en exemple dans le dossier compétences_acquises dans src
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         const char * name = glfwGetKeyName(key, scancode);

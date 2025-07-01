@@ -1,6 +1,6 @@
 #pragma once
-#include "base/Vec.h"
-#include "tools/Trigo.h"
+#include "math/Vec.h"
+#include "math/Trigo.h"
 
 class Camera {
 private:

@@ -2,8 +2,8 @@
 #include <vector>
 #include <memory>
 #include "engine/Mesh.h"
-#include "base/Color.h"
-#include "tools/Tang_Bitang.h"
+#include "math/Color.h"
+#include "math/Tang_Bitang.h"
 
 template<class> inline constexpr bool always_false = false;
 

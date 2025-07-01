@@ -1,7 +1,7 @@
 #pragma once
-#include "base/Color.h"
+#include "math/Color.h"
 #include "engine/Mesh.h"
-#include "tools/Tang_Bitang.h"
+#include "math/Tang_Bitang.h"
 #include <memory>
 #include <vector>
 #include <type_traits>

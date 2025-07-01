@@ -1,6 +1,6 @@
 #pragma once
-#include "base/Color.h"
-#include "base/Vec.h"
+#include "math/Color.h"
+#include "math/Vec.h"
 
 enum LightType {
     LIGHT_POINT = 0,

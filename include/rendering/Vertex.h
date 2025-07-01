@@ -1,5 +1,5 @@
 #pragma once
-#include "base/Vec.h"
+#include "math/Vec.h"
 
 struct Vertex {
     Vec3 position;

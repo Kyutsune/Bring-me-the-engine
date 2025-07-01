@@ -1,6 +1,6 @@
 #include "engine/Scene.h"
-#include "base/Shader.h"
-#include "base/Vec.h"
+#include "rendering/Shader.h"
+#include "math/Vec.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 

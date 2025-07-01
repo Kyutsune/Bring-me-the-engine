@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
-#include "base/Vec.h"
+#include "math/Vec.h"
 #include "engine/Light.h"
 #include "engine/LightSettings.h"
 

@@ -1,4 +1,4 @@
-#include "base/Frustum.h"
+#include "camera/Frustum.h"
 #include <iostream>
 
 void Frustum::update(const Mat4 & m) {

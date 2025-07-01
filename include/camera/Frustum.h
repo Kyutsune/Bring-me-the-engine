@@ -1,6 +1,6 @@
 #pragma once
-#include "base/PlaneBoundingVolume.h"
-#include "engine/Camera.h"
+#include "math/PlaneBoundingVolume.h"
+#include "camera/Camera.h"
 
 class Frustum {
 public:

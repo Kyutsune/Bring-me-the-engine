@@ -1,6 +1,6 @@
 #pragma once
-#include "base/Shader.h"
-#include "base/Vec.h"
+#include "rendering/Shader.h"
+#include "math/Vec.h"
 #include "engine/Light.h"
 #include "engine/LightSettings.h"
 #include <vector>

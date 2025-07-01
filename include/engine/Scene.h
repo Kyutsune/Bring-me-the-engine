@@ -1,15 +1,16 @@
 #pragma once
 
-#include "base/Shader.h"
-#include "base/Skybox.h"
-#include "engine/Camera.h"
+#include "rendering/Shader.h"
+#include "rendering/Skybox.h"
+#include "camera/Camera.h"
+#include "camera/Frustum.h"
 #include "engine/Entity.h"
 #include "engine/LightingManager.h"
 #include "engine/Mesh.h"
-#include "utils/Cube.h"
-#include "utils/Floor.h"
-#include "utils/Sphere.h"
-#include "base/Frustum.h"
+#include "geometry/Cube.h"
+#include "geometry/Floor.h"
+#include "geometry/Sphere.h"
+
 #include <iostream>
 #include <memory>
 #include <vector>

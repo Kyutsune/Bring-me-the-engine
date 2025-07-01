@@ -5,9 +5,9 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "base/Vertex.h"
-#include "base/Texture.h"
-#include "base/PlaneBoundingVolume.h"
+#include "rendering/Vertex.h"
+#include "rendering/Texture.h"
+#include "math/PlaneBoundingVolume.h"
 
 // Classe qui sera utilisée pour représenter un objet dans l'espace 3D.
 class Mesh {

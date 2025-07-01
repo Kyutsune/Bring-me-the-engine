@@ -2,7 +2,7 @@
 #include <catch2/catch_approx.hpp>
 using namespace Catch;
 
-#include "base/Vec.h"
+#include "math/Vec.h"
 
 TEST_CASE("Vec3 addition works", "[vec3]") {
     Vec3 a(1, 2, 3);

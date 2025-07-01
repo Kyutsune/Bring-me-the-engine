@@ -1,8 +1,8 @@
 #pragma once
 
-#include "base/Shader.h"
-#include "base/Skybox.h"
-#include "engine/Camera.h"
+#include "rendering/Shader.h"
+#include "rendering/Skybox.h"
+#include "camera/Camera.h"
 #include "engine/Entity.h"
 #include "engine/LightingManager.h"
 #include "engine/Scene.h"

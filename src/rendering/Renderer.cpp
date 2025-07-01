@@ -1,4 +1,4 @@
-#include "engine/Renderer.h"
+#include "rendering/Renderer.h"
 
 Renderer::Renderer(Shader* entityShader, Shader* lightShader, Shader* skyboxShader, Shader* boundingBoxShader)
     : entityShader(entityShader), lightShader(lightShader), skyboxShader(skyboxShader), boundingBoxShader(boundingBoxShader) {}

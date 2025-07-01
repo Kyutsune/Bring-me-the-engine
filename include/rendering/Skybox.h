@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <string>
 #include <vector>
-#include "base/Shader.h"
+#include "rendering/Shader.h"
 
 class Skybox {
 public:

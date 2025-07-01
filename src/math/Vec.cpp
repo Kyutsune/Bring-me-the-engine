@@ -2,7 +2,7 @@
 /// En plus de celles de Mat4 mais ses classes étant assez succintes, on peut se permettre de ne laisser
 /// Ici que le coeur intéréssant pour le projet, c'est à dire les implémentations de Mat4
 
-#include "base/Vec.h"
+#include "math/Vec.h"
 
 Mat4::Mat4() {
     for (int i = 0; i < 16; ++i)

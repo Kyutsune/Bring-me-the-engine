@@ -1,5 +1,5 @@
 #pragma once
-#include "base/Color.h"
+#include "math/Color.h"
 #include <cmath>
 #include <ostream>
 

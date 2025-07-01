@@ -1,6 +1,6 @@
-#include "base/Skybox.h"
+#include "rendering/Skybox.h"
 #include "../external/stb/stb_image.h"
-#include "utils/Skybox_mesh.h"
+#include "geometry/Skybox_mesh.h"
 #include <iostream>
 
 Skybox::Skybox(const std::vector<std::string> & faces) {

@@ -1,4 +1,4 @@
-#include "engine/Camera.h"
+#include "camera/Camera.h"
 
 Mat4 Camera::getViewMatrix() const {
     return Mat4::lookAt(position, target, up);

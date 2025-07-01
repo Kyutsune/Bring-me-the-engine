@@ -1,4 +1,4 @@
-#include "base/PlaneBoundingVolume.h"
+#include "math/PlaneBoundingVolume.h"
 #include <cfloat>
 #include <iostream>
 

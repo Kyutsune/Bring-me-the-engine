@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include "base/Vec.h"
-#include "base/Vertex.h" 
+#include "math/Vec.h"
+#include "rendering/Vertex.h"
 
 inline void computeTangentsAndBitangents(std::vector<Vertex> & vertices, const std::vector<unsigned int> & indices) {
     // 1. Initialiser

@@ -1,6 +1,6 @@
 #pragma once
-#include "base/Vec.h"
-#include "base/Color.h"
+#include "math/Vec.h"
+#include "math/Color.h"
 
 struct LightSettings {
     Vec3 ambientColor = Vec3(1.0f, 1.0f, 1.0f);
