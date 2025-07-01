@@ -1,0 +1,58 @@
+Date : 2025-07-01 13:47:07
+Directory : /home/kyutsune/Bring-me-the-engine
+Total : 21 files,  318 codes, 21 comments, 77 blanks, all 416 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         18 |        303 |         21 |         71 |        395 |
+| GLSL     |          2 |         14 |          0 |          5 |         19 |
+| Markdown |          1 |          1 |          0 |          1 |          2 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                     |         21 |        318 |         21 |         77 |        416 |
+| . (Files)                                                             |          1 |          1 |          0 |          1 |          2 |
+| include                                                               |         10 |         91 |          6 |         19 |        116 |
+| include/base                                                          |          4 |         63 |          6 |         18 |         87 |
+| include/engine                                                        |          5 |         23 |          0 |          0 |         23 |
+| include/ui                                                            |          1 |          5 |          0 |          1 |          6 |
+| shaders                                                               |          2 |         14 |          0 |          5 |         19 |
+| src                                                                   |          8 |        212 |         15 |         52 |        279 |
+| src (Files)                                                           |          1 |          1 |          0 |          0 |          1 |
+| src/base                                                              |          2 |        161 |         13 |         40 |        214 |
+| src/engine                                                            |          4 |         20 |         -1 |          5 |         24 |
+| src/ui                                                                |          1 |         30 |          3 |          7 |         40 |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                              | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/kyutsune/Bring-me-the-engine/README.md                          | Markdown |          1 |          0 |          1 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/base/Color.h               | C++      |          2 |          0 |          0 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/base/Frustum.h             | C++      |         11 |          3 |          3 |         17 |
+| /home/kyutsune/Bring-me-the-engine/include/base/PlaneBoundingVolume.h | C++      |         36 |          2 |         11 |         49 |
+| /home/kyutsune/Bring-me-the-engine/include/base/Vec.h                 | C++      |         14 |          1 |          4 |         19 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/Camera.h            | C++      |          5 |          0 |          0 |          5 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/Entity.h            | C++      |          7 |          0 |          1 |          8 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/LightingManager.h   | C++      |          0 |          0 |          1 |          1 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/Mesh.h              | C++      |          2 |          0 |          0 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/Scene.h             | C++      |          9 |          0 |         -2 |          7 |
+| /home/kyutsune/Bring-me-the-engine/include/ui/Menu.h                  | C++      |          5 |          0 |          1 |          6 |
+| /home/kyutsune/Bring-me-the-engine/shaders/bounding_box.frag          | GLSL     |          6 |          0 |          3 |          9 |
+| /home/kyutsune/Bring-me-the-engine/shaders/bounding_box.vert          | GLSL     |          8 |          0 |          2 |         10 |
+| /home/kyutsune/Bring-me-the-engine/src/base/Frustum.cpp               | C++      |         77 |         12 |         25 |        114 |
+| /home/kyutsune/Bring-me-the-engine/src/base/PlaneBoundingVolume.cpp   | C++      |         84 |          1 |         15 |        100 |
+| /home/kyutsune/Bring-me-the-engine/src/engine/Camera.cpp              | C++      |        -15 |         -1 |         -5 |        -21 |
+| /home/kyutsune/Bring-me-the-engine/src/engine/Entity.cpp              | C++      |          8 |          0 |          2 |         10 |
+| /home/kyutsune/Bring-me-the-engine/src/engine/Mesh.cpp                | C++      |         16 |          0 |          6 |         22 |
+| /home/kyutsune/Bring-me-the-engine/src/engine/Scene.cpp               | C++      |         11 |          0 |          2 |         13 |
+| /home/kyutsune/Bring-me-the-engine/src/main.cpp                       | C++      |          1 |          0 |          0 |          1 |
+| /home/kyutsune/Bring-me-the-engine/src/ui/Menu.cpp                    | C++      |         30 |          3 |          7 |         40 |
+| Total                                                                 |          |        318 |         21 |         77 |        416 |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
