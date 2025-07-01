@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Globals.h"
-#include "engine/Scene.h"
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "engine/Scene.h"
+#include "ui/Sections.h"
+#include "Globals.h"
+
 
 class Menu {
 public:
@@ -16,14 +18,12 @@ public:
     void endFrame();
     void setupMenuDisplay();
 
-    // Chaque section à mettre dans le menu
-    void drawFogSection();
-    void drawQuitButton();
+protected:
+    GLFWwindow * window;
+    Scene * scene;
 
 private:
-    GLFWwindow * window;
     bool show = true;
-    Scene * scene;
 
     int taille_minimale_x;
     int taille_minimale_y;
