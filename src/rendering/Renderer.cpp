@@ -77,10 +77,17 @@ void Renderer::initShadowMap() {
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
     glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                            GL_TEXTURE_2D, shadowMap, 0);
+
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cerr << "Erreur: Shadow framebuffer non complete !" << std::endl;
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -99,7 +106,6 @@ void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
 
     const auto & entities = scene.getEntities();
     for (const auto & entity : entities) {
-        std::cout << entity->getName() << " - " << entity->getTransform() << std::endl;
         shadowShader.set("model", entity->getTransform());
         entity->getMesh()->draw();
     }
