@@ -11,18 +11,21 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
         std::cout << "Erreur lors du chargement de la texture : " << filenameTextDiffuse << " La couleur seule sera utilisée" << std::endl;
     } else if (!filenameTextDiffuse.empty()) {
         material.diffuse_text = std::make_shared<Texture>(filenameTextDiffuse);
+        material.useDiffuse = true;
     }
 
     if (!filenameNormalMap.empty() && !std::filesystem::exists(filenameNormalMap)) {
         std::cout << "Erreur lors du chargement de la normal map : " << filenameNormalMap << " La normal map ne sera pas utilisée" << std::endl;
     } else if (!filenameNormalMap.empty()) {
         material.normal_map = std::make_shared<Texture>(filenameNormalMap);
+        material.useNormal = true;
     }
 
     if (!filenameSpecularMap.empty() && !std::filesystem::exists(filenameSpecularMap)) {
         std::cout << "Erreur lors du chargement de la specular map : " << filenameSpecularMap << " La specular map ne sera pas utilisée" << std::endl;
     } else if (!filenameSpecularMap.empty()) {
         material.specular_map = std::make_shared<Texture>(filenameSpecularMap);
+        material.useSpecular = true;
     }
 
     if (this->mesh) {

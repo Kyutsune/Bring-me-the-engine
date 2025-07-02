@@ -38,6 +38,7 @@ public:
     inline void setFogDensity(float density) { lightingManager.settings().fogDensity = density; }
     inline Color & getFogColor() { return lightingManager.settings().fogColor; }
     inline const Frustum & getFrustum() const { return frustum; }
+    inline std::vector<std::shared_ptr<Entity>> & getEntities() { return entities; }
     inline const std::vector<std::shared_ptr<Entity>> & getEntities() const { return entities; }
     inline const std::vector<std::shared_ptr<Entity>> & getLightEntities() const { return lightEntities; }
 

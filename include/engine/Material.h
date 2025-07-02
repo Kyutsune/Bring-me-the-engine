@@ -11,7 +11,7 @@ struct Material {
     std::shared_ptr<Texture> normal_map;
     std::shared_ptr<Texture> specular_map;
 
-    bool useDiffuse = true;
-    bool useNormal = true;
-    bool useSpecular = true;
+    bool useDiffuse;
+    bool useNormal;
+    bool useSpecular;
 };

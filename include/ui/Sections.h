@@ -5,6 +5,7 @@
 
 namespace UI {
 
+void drawTextureSection(Scene * scene);
 void drawSensitivitySection();
 void drawFogSection(Scene* scene);
 void drawQuitButton(GLFWwindow* window);

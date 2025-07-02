@@ -20,30 +20,30 @@ void ClavierSouris::handleContinuousInput(GLFWwindow * window) {
 
     //FIXME: J'utilise du hardcode pour les entiers de touches car le système de GLFW est sur le qwerty et pas azerty.
     // Il pourrait y avoir d'autres moyens plus propre pour gérer cela?
-    if (glfwGetKey(window, 87) == GLFW_PRESS) {
+    if (glfwGetKey(window, 87) == GLFW_PRESS) { //z
         Vec3 dir = cam->getForward();
         cam->setPosition(cam->getPosition() + dir * sensibility_depl);
         cam->setTarget(cam->getTarget() + dir * sensibility_depl);
     }
 
-    if (glfwGetKey(window, 83) == GLFW_PRESS) {
+    if (glfwGetKey(window, 83) == GLFW_PRESS) { //s
         Vec3 dir = cam->getBackward();
         cam->setPosition(cam->getPosition() + dir * sensibility_depl);
         cam->setTarget(cam->getTarget() + dir * sensibility_depl);
     }
 
-    if (glfwGetKey(window, 81) == GLFW_PRESS) {
+    if (glfwGetKey(window, 81) == GLFW_PRESS) { //a
         Vec3 dir = cam->getLeft();
         cam->setPosition(cam->getPosition() + dir * sensibility_depl);
         cam->setTarget(cam->getTarget() + dir * sensibility_depl);
     }
 
-    if (glfwGetKey(window, 68) == GLFW_PRESS) {
+    if (glfwGetKey(window, 68) == GLFW_PRESS) { //d
         Vec3 dir = cam->getRight();
         cam->setPosition(cam->getPosition() + dir * sensibility_depl);
         cam->setTarget(cam->getTarget() + dir * sensibility_depl);
     }
-    if(glfwGetKey(window, 67) == GLFW_PRESS) {
+    if(glfwGetKey(window, 67) == GLFW_PRESS) { //c
         std::cout<< "Position de la caméra: " << cam->getPosition() << std::endl;
     }
 

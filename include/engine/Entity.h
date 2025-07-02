@@ -35,6 +35,9 @@ Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
     AABB getBoundingBox() { return boundingBox; }
     AABB getTransformedBoundingBox() const;
 
+    Material & getMaterial() { return material; }
+    const Material & getMaterial() const { return material; }
+
 private:
     std::string entity_name;
     Mat4 transform;

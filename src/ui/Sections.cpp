@@ -17,7 +17,7 @@ namespace UI {
             if (ImGui::Button("Réinitialisation rotation")) {
                 sensibility_rot = 0.01f;
             }
-            ImGui::SameLine(); 
+            ImGui::SameLine();
             if (ImGui::Button("Réinitialisation déplacement")) {
                 sensibility_depl = 0.10f;
             }
@@ -60,6 +60,28 @@ namespace UI {
     void drawQuitButton(GLFWwindow * window) {
         if (ImGui::Button("Quitter")) {
             glfwSetWindowShouldClose(window, true);
+        }
+    }
+
+    void drawTextureSection(Scene * scene) {
+        if (ImGui::CollapsingHeader("Textures")) {
+            for (std::shared_ptr<Entity> & entityPtr : scene->getEntities()) {
+                ImGui::PushID(entityPtr.get()); // ou entityPtr->getName().c_str()
+
+                std::string * label = new std::string("Entité: " + entityPtr->getName());
+                ImGui::SeparatorText(label->c_str());
+                delete label;
+                Material & material = entityPtr->getMaterial();
+
+                if (material.diffuse_text)
+                    ImGui::Checkbox("Utiliser texture diffuse", &material.useDiffuse);
+                if (material.normal_map)
+                    ImGui::Checkbox("Utiliser normal map", &material.useNormal);
+                if (material.specular_map)
+                    ImGui::Checkbox("Utiliser specular map", &material.useSpecular);
+
+                ImGui::PopID();
+            }
         }
     }
 
