@@ -83,6 +83,12 @@ void Scene::initObjects() {
     auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg", "../assets/sol/brique_recyclee/brique_recyclee_normal.jpg", "", "Sol_beton");
     sol_beton->getBoundingBox().setupBBoxBuffers();
     entities.push_back(sol_beton);
+
+    std::shared_ptr<Mesh> sphereMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::red());
+    Mat4 t5 = Mat4::Translation(Vec3(-2, 0,  -5));
+    Entity * sphere = new Entity(t5, sphereMesh, "../assets/materiaux/petit_caillou/petit_caillou_diffus.jpg", "../assets/materiaux/petit_caillou/petit_caillou_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg", "Sphere_toute_texturee");
+    sphere->getBoundingBox().setupBBoxBuffers();         
+    entities.push_back(std::shared_ptr<Entity>(sphere));
 }
 
 void Scene::update() {
