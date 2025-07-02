@@ -38,6 +38,8 @@ Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
     Material & getMaterial() { return material; }
     const Material & getMaterial() const { return material; }
 
+    inline const std::shared_ptr<Mesh> & getMesh() const { return mesh; }
+
 private:
     std::string entity_name;
     Mat4 transform;

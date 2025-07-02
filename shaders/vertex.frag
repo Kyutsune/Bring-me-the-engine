@@ -42,7 +42,6 @@ uniform float fogEnd;
 uniform float fogDensity;  
 uniform int fogType;       // 0: aucun, 1: linéaire, 2: exp, 3: exp²
 
-
 // Les informations sur le pixel cible
 in vec3 FragPos;
 in vec3 Normal;
@@ -51,8 +50,11 @@ in vec2 TexCoord;
 in vec3 Tangent;
 in vec3 Bitangent;
 
-
 out vec4 FragColor;
+
+// Les informations pour ajouter des ombres
+uniform sampler2D shadowMap;
+in vec4 FragPosLightSpace;
 
 vec3 getNormal() {
     if (!useNormalMap) return normalize(Normal);
@@ -84,7 +86,7 @@ vec3 calcAmbient(vec3 norm) {
     return mix(downColor, upColor, factor) * ambientStrength;
 }
 
-vec3 calcLight(Light light, vec3 norm, vec3 viewDir, vec3 fragPos) {
+vec3 calcLight(Light light, vec3 norm, vec3 viewDir, vec3 fragPos, float shadowFactor) {
     vec3 lightDir;
     float attenuation = 1.0;
     float lightIntensity = light.intensity;
@@ -111,7 +113,52 @@ vec3 calcLight(Light light, vec3 norm, vec3 viewDir, vec3 fragPos) {
     float specMapVal = useSpecularMap ? dot(texture(texture_specular, TexCoord).rgb, vec3(0.299, 0.587, 0.114)) : 1.0;
     vec3 specular = attenuation * specularStrength * specMapVal * spec * specularColor * light.color * lightIntensity;
 
+    // Appliquer l'ombre seulement aux composantes diffuse et spéculaire
+    if (light.type == 1) { // Lumière directionnelle seulement
+        diffuse *= shadowFactor;
+        specular *= shadowFactor;
+    }
+
     return diffuse + specular;
+}
+
+float calculateShadow(vec4 fragPosLightSpace) {
+    // Perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    
+    // Transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    
+    // Si on est en dehors de la shadow map, on considère qu'il n'y a pas d'ombre
+    if (projCoords.z > 1.0 || projCoords.x < 0.0 || projCoords.x > 1.0 || 
+        projCoords.y < 0.0 || projCoords.y > 1.0) {
+        return 1.0; // Pas d'ombre
+    }
+
+    // Get closest depth value from light's perspective
+    float closestDepth = texture(shadowMap, projCoords.xy).r;
+    
+    // Get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+
+    // Calculate bias (fixes shadow acne)
+    vec3 normal = normalize(Normal);
+    vec3 lightDir = normalize(vec3(0, -1, 0)); // Direction de votre lumière directionnelle
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+
+    // Check whether current frag pos is in shadow
+    // PCF (Percentage-closer filtering) pour des ombres plus douces
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+    
+    return clamp(1.0 - shadow, 0.0, 1.0);
 }
 
 void main() {
@@ -123,8 +170,12 @@ void main() {
 
     vec3 result = calcAmbient(norm);
 
+    // Calculer le facteur d'ombre une seule fois
+    float shadowFactor = calculateShadow(FragPosLightSpace);
+
     for (int i = 0; i < numLights; i++) {
-        result += calcLight(lights[i], norm, viewDir, FragPos);
+        vec3 lighting = calcLight(lights[i], norm, viewDir, FragPos, shadowFactor);
+        result += lighting;
     }
 
     vec3 baseColor = useTexture ? texture(texture_diffuse, TexCoord).rgb : vColor;

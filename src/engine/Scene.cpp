@@ -27,14 +27,14 @@ Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
         0.3f,                   // intensité
         0.5f, 0.7f, 1.8f        // Consantes d'atténuation (constant, linear, quadratic)
     });
-    // lightingManager.addLight({
-    //     LightType::LIGHT_DIRECTIONAL,
-    //     Vec3(3, 2, -3),
-    //     Vec3(0, -1, 0),
-    //     Color(255, 255, 255),
-    //     0.1f,
-    //     0.5f, 0.7f, 1.8f
-    // });
+    lightingManager.addLight({
+        LightType::LIGHT_DIRECTIONAL,
+        Vec3(0, 10, 0),
+        Vec3(0, -1, 0),
+        Color(255, 255, 255),
+        0.1f,
+        0.5f, 0.7f, 1.8f
+    });
 
     std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
     for (const Light & light : lightingManager.getLights()) {

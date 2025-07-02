@@ -87,3 +87,13 @@ void LightingManager::applyPosLights(Shader & shader) const {
     shader.use();
     shader.set("color", Vec3(colorMeshLight));
 }
+
+
+const Light & LightingManager::getFirstDirectional() const {
+    for (const auto & light : lights) {
+        if (light.type == LightType::LIGHT_DIRECTIONAL) {
+            return light;
+        }
+    }
+    throw std::runtime_error("No directional light found");
+}

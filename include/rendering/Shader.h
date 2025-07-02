@@ -29,6 +29,8 @@ public:
     void set(const std::string &name, const Vec3 &vec);
     void set(const std::string &name, float value);
     void set(const std::string &name, int value);
+    void set(const std::string &name, const Mat4 &mat);
+
 
 private:
     std::string loadFile(const std::string & path) const;

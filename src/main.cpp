@@ -3,13 +3,13 @@
 #include <iostream>
 
 #include "Globals.h"
-#include "rendering/Shader.h"
-#include "math/Vec.h"
 #include "camera/Camera.h"
-#include "input/ClavierSouris.h"
 #include "engine/Scene.h"
-#include "ui/Menu.h"
+#include "input/ClavierSouris.h"
+#include "math/Vec.h"
 #include "rendering/Renderer.h"
+#include "rendering/Shader.h"
+#include "ui/Menu.h"
 
 #include "../external/imgui/backends/imgui_impl_glfw.h"
 #include "../external/imgui/backends/imgui_impl_opengl3.h"
@@ -59,7 +59,7 @@ int main() {
     glfwSetCursorPosCallback(window, cursor_position_callback);
 
     // Set viewport
-    glViewport(0, 0, 1600, 800);
+    glViewport(0, 0, windowWidth, windowHeight);
     glEnable(GL_DEPTH_TEST);
 
     std::unique_ptr<Scene> gameScene = std::make_unique<Scene>();
@@ -77,8 +77,9 @@ int main() {
     shaders.push_back(std::make_unique<Shader>("../shaders/light_pos.vert", "../shaders/light_pos.frag"));
     shaders.push_back(std::make_unique<Shader>("../shaders/skybox.vert", "../shaders/skybox.frag"));
     shaders.push_back(std::make_unique<Shader>("../shaders/bounding_box.vert", "../shaders/bounding_box.frag"));
-    Renderer renderer(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get());
-
+    shaders.push_back(std::make_unique<Shader>("../shaders/shadow.vert", "../shaders/shadow.frag"));
+    Renderer renderer(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get(), shaders[4].get());
+    renderer.initShadowMap();
 
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {
@@ -90,7 +91,7 @@ int main() {
         ClavierSouris::handleContinuousInput(window);
         gameScene->update();
 
-        renderer.renderScene(*gameScene);
+        renderer.renderFrame(*gameScene);
 
         menu->render();
         menu->endFrame();

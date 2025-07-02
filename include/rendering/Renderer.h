@@ -1,25 +1,37 @@
 #pragma once
 
-#include "rendering/Shader.h"
-#include "rendering/Skybox.h"
 #include "camera/Camera.h"
 #include "engine/Entity.h"
 #include "engine/LightingManager.h"
 #include "engine/Scene.h"
+#include "rendering/Shader.h"
+#include "rendering/Skybox.h"
 
 class Renderer {
 public:
-    Renderer(Shader * entityShader, Shader * lightShader, Shader * skyboxShader, Shader * boundingBoxShader);
+    Renderer(Shader * entityShader, Shader * lightShader, Shader * skyboxShader, Shader * boundingBoxShader, Shader * shadowShader);
 
     void renderScene(const Scene & scene);
+
+    void renderSkybox(const Skybox * skybox, const Mat4 & view, const Mat4 & projection);
+    void renderEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
+    void renderLightEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
+
+    void initShadowMap();
+    void renderShadowMap(const Scene & scene, Shader & shadowShader);
+    void debugSaveShadowMap(const std::string & filename);
+    void renderFrame(const Scene & scene);
 
 private:
     Shader * entityShader;
     Shader * lightShader;
     Shader * skyboxShader;
     Shader * boundingBoxShader;
+    Shader * shadowShader;
 
-    void renderSkybox(const Skybox * skybox, const Mat4 & view, const Mat4 & projection);
-    void renderEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
-    void renderLightEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
+    GLuint shadowFBO;
+    GLuint shadowMap;
+    Mat4 lightSpaceMatrix;
+
+    const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 };

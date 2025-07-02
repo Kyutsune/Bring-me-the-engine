@@ -138,6 +138,9 @@ struct Mat4 {
     float * ptr();
     Mat4 removeTranslation() const;
 
+
+    static Mat4 orthographic(float left, float right, float bottom, float top, float near, float far);
+
     friend std::ostream & operator<<(std::ostream & os, const Mat4 & m);
 };
 

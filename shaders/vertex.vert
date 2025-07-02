@@ -19,6 +19,9 @@ out vec2 TexCoord;
 out vec3 Tangent;
 out vec3 Bitangent;
 
+uniform mat4 lightSpaceMatrix;
+out vec4 FragPosLightSpace;
+
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
@@ -31,4 +34,6 @@ void main()
 
     vColor = aColor;
     TexCoord = aTexCoord;
+
+    FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
 }

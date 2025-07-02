@@ -173,3 +173,15 @@ Mat4 Mat4::removeTranslation() const {
     result.data[14] = 0.0f;
     return result;
 }
+
+Mat4 Mat4::orthographic(float left, float right, float bottom, float top, float near, float far) {
+    Mat4 result;
+    result.data[0] = 2.0f / (right - left);
+    result.data[5] = 2.0f / (top - bottom);
+    result.data[10] = -2.0f / (far - near);
+    result.data[12] = -(right + left) / (right - left);
+    result.data[13] = -(top + bottom) / (top - bottom);
+    result.data[14] = -(far + near) / (far - near);
+    result.data[15] = 1.0f;
+    return result;
+}
