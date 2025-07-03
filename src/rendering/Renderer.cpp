@@ -15,15 +15,20 @@ void Renderer::renderScene(const Scene & scene) {
     }
 
     entityShader->use();
-    // Transmettre la matrice lightSpace (récupérée depuis renderShadowMap)
-    entityShader->set("lightSpaceMatrix", lightSpaceMatrix, false);
-    const Light & dirLight = scene.getLightingManager().getFirstDirectional();
-    entityShader->set("dirLightDirection", dirLight.direction);
 
-    // Activer et binder la shadow map à la bonne unité de texture
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
-    entityShader->set("shadowMap", 3);
+    // Si pas de lumière directionnelle, on ne rend pas les ombres liées à ce type de lumière
+    const Light & dirLight = scene.getLightingManager().getFirstDirectional();
+    if (dirLight.type != LightType::LIGHT_ERROR) {
+        entityShader->set("lightSpaceMatrix", lightSpaceMatrix, false);
+        entityShader->set("dirLightDirection", dirLight.direction);
+
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, shadowMap);
+        entityShader->set("shadowMap", 3);
+        entityShader->set("useDirectionalShadow", true);
+    } else {
+        entityShader->set("useDirectionalShadow", false);
+    }
 
     scene.getLightingManager().applyLightning(*entityShader, scene.getCamera().getPosition());
     renderEntities(scene, view, projection);
@@ -95,12 +100,16 @@ void Renderer::initShadowMap() {
 
 void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
     const Light & dirLight = scene.getLightingManager().getFirstDirectional();
+
+    if (dirLight.type == LightType::LIGHT_ERROR) {
+        return;
+    }
+
     Vec3 lightTarget = dirLight.position + dirLight.direction;
     Vec3 up = std::abs(dirLight.direction.z) > 0.9f ? Vec3(0, 1, 0) : Vec3(0, 0, 1);
     Mat4 lightView = Mat4::lookAt(dirLight.position, lightTarget, up);
     Mat4 lightProjection = Mat4::orthographic(-20, 20, -20, 20, 1.0f, 100.0f);
     this->lightSpaceMatrix = lightView * lightProjection;
-
 
     shadowShader.use();
     shadowShader.set("lightSpaceMatrix", lightSpaceMatrix, false);
@@ -124,7 +133,7 @@ void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
 void Renderer::renderFrame(const Scene & scene) {
     renderShadowMap(scene, *shadowShader);
 
-    // Au besoin on peut afficher la shadow map pour debug dans l'écran, 
+    // Au besoin on peut afficher la shadow map pour debug dans l'écran,
     // ceci nécessite de ne pas dessiner la scène ensuite évidemment sinon ce qu'on à
     //  dessiner en premier est écrasé
     // renderShadowMapOnQuad();
@@ -146,9 +155,8 @@ void Renderer::debugSaveShadowMap(const std::string & filename) {
     stbi_write_png(filename.c_str(), SHADOW_WIDTH, SHADOW_HEIGHT, 1, image.data(), SHADOW_WIDTH);
 }
 
-
-void Renderer::renderShadowMapOnQuad(){
-        // Afficher la shadow map dans un quad pour debug
+void Renderer::renderShadowMapOnQuad() {
+    // Afficher la shadow map dans un quad pour debug
     quadDebugShader.use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, shadowMap);

@@ -91,9 +91,10 @@ void LightingManager::applyPosLights(Shader & shader) const {
 
 const Light & LightingManager::getFirstDirectional() const {
     for (const auto & light : lights) {
-        if (light.type == LightType::LIGHT_DIRECTIONAL) {
+        if (light.type == LightType::LIGHT_DIRECTIONAL && light.active) {
             return light;
         }
     }
-    throw std::runtime_error("No directional light found");
+    static Light dummyLight; dummyLight.type = LightType::LIGHT_ERROR;
+    return dummyLight;
 }

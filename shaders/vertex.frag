@@ -53,6 +53,7 @@ in vec3 Bitangent;
 out vec4 FragColor;
 
 // Les informations pour ajouter des ombres
+uniform bool useDirectionalShadow;
 uniform sampler2D shadowMap;
 in vec4 FragPosLightSpace;
 uniform vec3 dirLightDirection;
@@ -124,6 +125,9 @@ vec3 calcLight(Light light, vec3 norm, vec3 viewDir, vec3 fragPos, float shadowF
 }
 
 float calculateShadow(vec4 fragPosLightSpace) {
+    if (!useDirectionalShadow)
+        return 1.0; // Pas d'ombre si on a pas dans la scène de lumière directionnelle
+
     // Perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     
