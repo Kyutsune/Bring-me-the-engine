@@ -55,6 +55,7 @@ out vec4 FragColor;
 // Les informations pour ajouter des ombres
 uniform sampler2D shadowMap;
 in vec4 FragPosLightSpace;
+uniform vec3 dirLightDirection;
 
 vec3 getNormal() {
     if (!useNormalMap) return normalize(Normal);
@@ -143,8 +144,8 @@ float calculateShadow(vec4 fragPosLightSpace) {
 
     // Calculate bias (fixes shadow acne)
     vec3 normal = normalize(Normal);
-    vec3 lightDir = normalize(vec3(0, -1, 0)); // Direction de votre lumière directionnelle
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    vec3 lightDir = normalize(dirLightDirection);
+    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.001);
 
     // Check whether current frag pos is in shadow
     // PCF (Percentage-closer filtering) pour des ombres plus douces

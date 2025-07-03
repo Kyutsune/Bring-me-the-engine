@@ -20,6 +20,7 @@ public:
     void initShadowMap();
     void renderShadowMap(const Scene & scene, Shader & shadowShader);
     void debugSaveShadowMap(const std::string & filename);
+    void renderShadowMapOnQuad();
     void renderFrame(const Scene & scene);
 
     Shader quadDebugShader = Shader("../shaders/debug/quad.vert", "../shaders/debug/quad.frag");

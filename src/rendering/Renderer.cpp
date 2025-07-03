@@ -16,7 +16,9 @@ void Renderer::renderScene(const Scene & scene) {
 
     entityShader->use();
     // Transmettre la matrice lightSpace (récupérée depuis renderShadowMap)
-    entityShader->set("lightSpaceMatrix", lightSpaceMatrix);
+    entityShader->set("lightSpaceMatrix", lightSpaceMatrix, false);
+    const Light & dirLight = scene.getLightingManager().getFirstDirectional();
+    entityShader->set("dirLightDirection", dirLight.direction);
 
     // Activer et binder la shadow map à la bonne unité de texture
     glActiveTexture(GL_TEXTURE3);
@@ -93,12 +95,15 @@ void Renderer::initShadowMap() {
 
 void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
     const Light & dirLight = scene.getLightingManager().getFirstDirectional();
-    Mat4 lightView = Mat4::lookAt(dirLight.position, dirLight.position + dirLight.direction, Vec3(0, 0, 1));
+    Vec3 lightTarget = dirLight.position + dirLight.direction;
+    Vec3 up = std::abs(dirLight.direction.z) > 0.9f ? Vec3(0, 1, 0) : Vec3(0, 0, 1);
+    Mat4 lightView = Mat4::lookAt(dirLight.position, lightTarget, up);
     Mat4 lightProjection = Mat4::orthographic(-20, 20, -20, 20, 1.0f, 100.0f);
     this->lightSpaceMatrix = lightView * lightProjection;
 
+
     shadowShader.use();
-    shadowShader.set("lightSpaceMatrix", lightSpaceMatrix);
+    shadowShader.set("lightSpaceMatrix", lightSpaceMatrix, false);
 
     glViewport(0, 0, this->SHADOW_WIDTH, this->SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
@@ -106,6 +111,8 @@ void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
 
     const auto & entities = scene.getEntities();
     for (const auto & entity : entities) {
+        if (entity->getName() == "Sol_beton")
+            continue;
         shadowShader.set("model", entity->getTransform(), false);
         entity->getMesh()->draw();
     }
@@ -116,7 +123,32 @@ void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
 
 void Renderer::renderFrame(const Scene & scene) {
     renderShadowMap(scene, *shadowShader);
-    // Afficher la shadow map dans un quad pour debug
+
+    // Au besoin on peut afficher la shadow map pour debug dans l'écran, 
+    // ceci nécessite de ne pas dessiner la scène ensuite évidemment sinon ce qu'on à
+    //  dessiner en premier est écrasé
+    // renderShadowMapOnQuad();
+
+    renderScene(scene);
+}
+
+void Renderer::debugSaveShadowMap(const std::string & filename) {
+    std::vector<float> pixels(SHADOW_WIDTH * SHADOW_HEIGHT);
+    glBindTexture(GL_TEXTURE_2D, shadowMap);
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, pixels.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    std::vector<unsigned char> image(SHADOW_WIDTH * SHADOW_HEIGHT);
+    for (int i = 0; i < SHADOW_WIDTH * SHADOW_HEIGHT; ++i) {
+        image[i] = static_cast<unsigned char>(pixels[i] * 255.0f);
+    }
+
+    stbi_write_png(filename.c_str(), SHADOW_WIDTH, SHADOW_HEIGHT, 1, image.data(), SHADOW_WIDTH);
+}
+
+
+void Renderer::renderShadowMapOnQuad(){
+        // Afficher la shadow map dans un quad pour debug
     quadDebugShader.use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, shadowMap);
@@ -126,10 +158,22 @@ void Renderer::renderFrame(const Scene & scene) {
     if (quadVAO == 0) {
         float quadVertices[] = {
             // positions   // texCoords
-            -1.0f,  1.0f,  0.0f, 1.0f,
-            -1.0f, -1.0f,  0.0f, 0.0f,
-            1.0f,  1.0f,  1.0f, 1.0f,
-            1.0f, -1.0f,  1.0f, 0.0f,
+            -1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            -1.0f,
+            -1.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            1.0f,
+            1.0f,
+            1.0f,
+            1.0f,
+            -1.0f,
+            1.0f,
+            0.0f,
         };
 
         glGenVertexArrays(1, &quadVAO);
@@ -150,20 +194,4 @@ void Renderer::renderFrame(const Scene & scene) {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
-
-    // renderScene(scene);
-}
-
-void Renderer::debugSaveShadowMap(const std::string & filename) {
-    std::vector<float> pixels(SHADOW_WIDTH * SHADOW_HEIGHT);
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, pixels.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    std::vector<unsigned char> image(SHADOW_WIDTH * SHADOW_HEIGHT);
-    for (int i = 0; i < SHADOW_WIDTH * SHADOW_HEIGHT; ++i) {
-        image[i] = static_cast<unsigned char>(pixels[i] * 255.0f);
-    }
-
-    stbi_write_png(filename.c_str(), SHADOW_WIDTH, SHADOW_HEIGHT, 1, image.data(), SHADOW_WIDTH);
 }

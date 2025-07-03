@@ -30,9 +30,9 @@ Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
     lightingManager.addLight({
         LightType::LIGHT_DIRECTIONAL,
         Vec3(0, 10, 0),
-        Vec3(0, -1, 0),
+        Vec3(1, -1, 0),
         Color(255, 255, 255),
-        0.1f,
+        0.09f,
         0.5f, 0.7f, 1.8f
     });
 

@@ -35,5 +35,5 @@ void main()
     vColor = aColor;
     TexCoord = aTexCoord;
 
-    FragPosLightSpace = lightSpaceMatrix  * vec4(FragPos, 1.0);
+    FragPosLightSpace = lightSpaceMatrix * model * vec4(aPos, 1.0);
 }
