@@ -1,0 +1,73 @@
+Date : 2025-07-03 18:17:41
+Directory : /home/kyutsune/Bring-me-the-engine
+Total : 29 files,  485 codes, 14 comments, 106 blanks, all 605 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         22 |        417 |          3 |         86 |        506 |
+| GLSL     |          6 |         67 |         11 |         19 |         97 |
+| Markdown |          1 |          1 |          0 |          1 |          2 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                     |         29 |        485 |         14 |        106 |        605 |
+| . (Files)                                                             |          1 |          1 |          0 |          1 |          2 |
+| include                                                               |         11 |         62 |          2 |         15 |         79 |
+| include (Files)                                                       |          1 |          2 |          0 |          1 |          3 |
+| include/camera                                                        |          1 |          1 |          1 |          1 |          3 |
+| include/engine                                                        |          4 |          8 |          0 |          2 |         10 |
+| include/math                                                          |          2 |         38 |          1 |          6 |         45 |
+| include/rendering                                                     |          2 |         12 |          0 |          5 |         17 |
+| include/ui                                                            |          1 |          1 |          0 |          0 |          1 |
+| shaders                                                               |          6 |         67 |         11 |         19 |         97 |
+| shaders (Files)                                                       |          4 |         50 |         11 |         15 |         76 |
+| shaders/debug                                                         |          2 |         17 |          0 |          4 |         21 |
+| src                                                                   |         11 |        355 |          1 |         71 |        427 |
+| src (Files)                                                           |          2 |          4 |          0 |          0 |          4 |
+| src/camera                                                            |          1 |         24 |          1 |          7 |         32 |
+| src/engine                                                            |          2 |         41 |        -12 |          3 |         32 |
+| src/math                                                              |          2 |        139 |          1 |         28 |        168 |
+| src/rendering                                                         |          2 |        138 |         11 |         31 |        180 |
+| src/ui                                                                |          2 |          9 |          0 |          2 |         11 |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                              | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/kyutsune/Bring-me-the-engine/README.md                          | Markdown |          1 |          0 |          1 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/Globals.h                  | C++      |          2 |          0 |          1 |          3 |
+| /home/kyutsune/Bring-me-the-engine/include/camera/Frustum.h           | C++      |          1 |          1 |          1 |          3 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/Entity.h            | C++      |          1 |          0 |          1 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/Light.h             | C++      |          4 |          0 |          0 |          4 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/LightingManager.h   | C++      |          2 |          0 |          0 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/engine/Mesh.h              | C++      |          1 |          0 |          1 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/math/PlaneBoundingVolume.h | C++      |         14 |          1 |          3 |         18 |
+| /home/kyutsune/Bring-me-the-engine/include/math/Vec.h                 | C++      |         24 |          0 |          3 |         27 |
+| /home/kyutsune/Bring-me-the-engine/include/rendering/Renderer.h       | C++      |         11 |          0 |          4 |         15 |
+| /home/kyutsune/Bring-me-the-engine/include/rendering/Shader.h         | C++      |          1 |          0 |          1 |          2 |
+| /home/kyutsune/Bring-me-the-engine/include/ui/Sections.h              | C++      |          1 |          0 |          0 |          1 |
+| /home/kyutsune/Bring-me-the-engine/shaders/debug/quad.frag            | GLSL     |          8 |          0 |          1 |          9 |
+| /home/kyutsune/Bring-me-the-engine/shaders/debug/quad.vert            | GLSL     |          9 |          0 |          3 |         12 |
+| /home/kyutsune/Bring-me-the-engine/shaders/shadow.frag                | GLSL     |          4 |          0 |          0 |          4 |
+| /home/kyutsune/Bring-me-the-engine/shaders/shadow.vert                | GLSL     |          8 |          0 |          4 |         12 |
+| /home/kyutsune/Bring-me-the-engine/shaders/vertex.frag                | GLSL     |         35 |         11 |          9 |         55 |
+| /home/kyutsune/Bring-me-the-engine/shaders/vertex.vert                | GLSL     |          3 |          0 |          2 |          5 |
+| /home/kyutsune/Bring-me-the-engine/src/Globals.cpp                    | C++      |          2 |          0 |          1 |          3 |
+| /home/kyutsune/Bring-me-the-engine/src/camera/Frustum.cpp             | C++      |         24 |          1 |          7 |         32 |
+| /home/kyutsune/Bring-me-the-engine/src/engine/LightingManager.cpp     | C++      |         26 |         -4 |          2 |         24 |
+| /home/kyutsune/Bring-me-the-engine/src/engine/Scene.cpp               | C++      |         15 |         -8 |          1 |          8 |
+| /home/kyutsune/Bring-me-the-engine/src/main.cpp                       | C++      |          2 |          0 |         -1 |          1 |
+| /home/kyutsune/Bring-me-the-engine/src/math/PlaneBoundingVolume.cpp   | C++      |         11 |          0 |          2 |         13 |
+| /home/kyutsune/Bring-me-the-engine/src/math/Vec.cpp                   | C++      |        128 |          1 |         26 |        155 |
+| /home/kyutsune/Bring-me-the-engine/src/rendering/Renderer.cpp         | C++      |        134 |         11 |         31 |        176 |
+| /home/kyutsune/Bring-me-the-engine/src/rendering/Shader.cpp           | C++      |          4 |          0 |          0 |          4 |
+| /home/kyutsune/Bring-me-the-engine/src/ui/Menu.cpp                    | C++      |          1 |          0 |          0 |          1 |
+| /home/kyutsune/Bring-me-the-engine/src/ui/Sections.cpp                | C++      |          8 |          0 |          2 |         10 |
+| Total                                                                 |          |        485 |         14 |        106 |        605 |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
