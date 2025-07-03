@@ -85,4 +85,14 @@ namespace UI {
         }
     }
 
+    void drawDirectionnalLightSection(Scene * scene) {
+        if (ImGui::CollapsingHeader("Lumière directionnelle")) {
+            ImGui::SeparatorText("Paramètres de la lumière directionnelle");
+            LightingManager & lightingManager = scene->getLightingManager();
+            Light * light = lightingManager.getFirstDirectional();
+
+            ImGui::Checkbox("Activer", &light->active);
+        }
+    }
+
 }

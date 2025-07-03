@@ -9,6 +9,7 @@ Renderer::Renderer(Shader * entityShader, Shader * lightShader, Shader * skyboxS
 void Renderer::renderScene(const Scene & scene) {
     Mat4 view = scene.getCamera().getViewMatrix();
     Mat4 projection = scene.getCamera().getProjectionMatrix();
+    const Light & dirLight = scene.getLightingManager().getFirstDirectional();
 
     if (scene.getSkybox() && skyboxShader) {
         renderSkybox(scene.getSkybox(), view, projection);
@@ -17,8 +18,7 @@ void Renderer::renderScene(const Scene & scene) {
     entityShader->use();
 
     // Si pas de lumière directionnelle, on ne rend pas les ombres liées à ce type de lumière
-    const Light & dirLight = scene.getLightingManager().getFirstDirectional();
-    if (dirLight.type != LightType::LIGHT_ERROR) {
+    if (dirLight.type == LightType::LIGHT_ERROR || dirLight.active) {
         entityShader->set("lightSpaceMatrix", lightSpaceMatrix, false);
         entityShader->set("dirLightDirection", dirLight.direction);
 
@@ -101,7 +101,7 @@ void Renderer::initShadowMap() {
 void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
     const Light & dirLight = scene.getLightingManager().getFirstDirectional();
 
-    if (dirLight.type == LightType::LIGHT_ERROR) {
+    if (dirLight.type == LightType::LIGHT_ERROR || !dirLight.active) {
         return;
     }
 

@@ -22,6 +22,7 @@ public:
     const LightSettings & settings() const { return lightingSettings; }
     const std::vector<Light> & getLights() const { return lights; }
     const Light & getFirstDirectional() const;
+    Light * getFirstDirectional();
 
     void setupLightingOnScene();
 
