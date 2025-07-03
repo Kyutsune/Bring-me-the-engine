@@ -29,7 +29,7 @@ public:
     void set(const std::string &name, const Vec3 &vec);
     void set(const std::string &name, float value);
     void set(const std::string &name, int value);
-    void set(const std::string &name, const Mat4 &mat);
+    void set(const std::string &name, const Mat4 &mat, const bool & should_transpose = false);
 
 
 private:

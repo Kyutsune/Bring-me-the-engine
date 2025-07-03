@@ -93,9 +93,9 @@ void Renderer::initShadowMap() {
 
 void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
     const Light & dirLight = scene.getLightingManager().getFirstDirectional();
-    Mat4 lightView = Mat4::lookAt(dirLight.position, dirLight.position + dirLight.direction, Vec3(0, 1, 0));
-    Mat4 lightProjection = Mat4::orthographic(-20, 20, -20, 20, 0.1f, 100.0f);
-    this->lightSpaceMatrix = lightProjection * lightView;
+    Mat4 lightView = Mat4::lookAt(dirLight.position, dirLight.position + dirLight.direction, Vec3(0, 0, 1));
+    Mat4 lightProjection = Mat4::orthographic(-20, 20, -20, 20, 1.0f, 100.0f);
+    this->lightSpaceMatrix = lightView * lightProjection;
 
     shadowShader.use();
     shadowShader.set("lightSpaceMatrix", lightSpaceMatrix);
@@ -106,33 +106,64 @@ void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
 
     const auto & entities = scene.getEntities();
     for (const auto & entity : entities) {
-        shadowShader.set("model", entity->getTransform());
+        shadowShader.set("model", entity->getTransform(), false);
         entity->getMesh()->draw();
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, windowWidth, windowHeight); // Reset viewport to default size
+    glViewport(0, 0, windowWidth, windowHeight);
 }
 
 void Renderer::renderFrame(const Scene & scene) {
     renderShadowMap(scene, *shadowShader);
-    renderScene(scene);
+    // Afficher la shadow map dans un quad pour debug
+    quadDebugShader.use();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, shadowMap);
+
+    static GLuint quadVAO = 0;
+    static GLuint quadVBO;
+    if (quadVAO == 0) {
+        float quadVertices[] = {
+            // positions   // texCoords
+            -1.0f,  1.0f,  0.0f, 1.0f,
+            -1.0f, -1.0f,  0.0f, 0.0f,
+            1.0f,  1.0f,  1.0f, 1.0f,
+            1.0f, -1.0f,  1.0f, 0.0f,
+        };
+
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)(2 * sizeof(float)));
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    glDisable(GL_DEPTH_TEST);
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+    glEnable(GL_DEPTH_TEST);
+
+    // renderScene(scene);
 }
 
 void Renderer::debugSaveShadowMap(const std::string & filename) {
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
-
     std::vector<float> pixels(SHADOW_WIDTH * SHADOW_HEIGHT);
+    glBindTexture(GL_TEXTURE_2D, shadowMap);
     glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_FLOAT, pixels.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-    // Convertir en image 8-bit pour visualisation
     std::vector<unsigned char> image(SHADOW_WIDTH * SHADOW_HEIGHT);
     for (int i = 0; i < SHADOW_WIDTH * SHADOW_HEIGHT; ++i) {
         image[i] = static_cast<unsigned char>(pixels[i] * 255.0f);
     }
 
-    // Sauvegarde l'image avec stb_image_write
     stbi_write_png(filename.c_str(), SHADOW_WIDTH, SHADOW_HEIGHT, 1, image.data(), SHADOW_WIDTH);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
 }

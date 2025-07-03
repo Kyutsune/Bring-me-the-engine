@@ -18,6 +18,8 @@ public:
     void draw() const;
     AABB getBoundingBox() const;
 
+    inline std::vector<Vertex> getVertices() const{ return vertices;}
+
 private:
     GLuint VAO, VBO, EBO;
     GLsizei indexCount;

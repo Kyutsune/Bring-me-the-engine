@@ -3,6 +3,7 @@
 /// Ici que le coeur intéréssant pour le projet, c'est à dire les implémentations de Mat4
 
 #include "math/Vec.h"
+#include <iostream>
 
 Mat4::Mat4() {
     for (int i = 0; i < 16; ++i)
@@ -165,7 +166,6 @@ std::ostream & operator<<(std::ostream & os, const Mat4 & m) {
               << m.data[12] << ", " << m.data[13] << ", " << m.data[14] << ", " << m.data[15] << "\n";
 }
 
-
 Mat4 Mat4::removeTranslation() const {
     Mat4 result = *this;
     result.data[12] = 0.0f;
@@ -175,13 +175,25 @@ Mat4 Mat4::removeTranslation() const {
 }
 
 Mat4 Mat4::orthographic(float left, float right, float bottom, float top, float near, float far) {
-    Mat4 result;
+    Mat4 result = Mat4::identity();
+
     result.data[0] = 2.0f / (right - left);
     result.data[5] = 2.0f / (top - bottom);
     result.data[10] = -2.0f / (far - near);
     result.data[12] = -(right + left) / (right - left);
     result.data[13] = -(top + bottom) / (top - bottom);
     result.data[14] = -(far + near) / (far - near);
-    result.data[15] = 1.0f;
+
+    return result;
+}
+
+
+Mat4 Mat4::transpose() const {
+    Mat4 result;
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            result.data[i * 4 + j] = data[j * 4 + i];
+        }
+    }
     return result;
 }

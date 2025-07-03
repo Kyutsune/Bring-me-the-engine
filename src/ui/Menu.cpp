@@ -58,8 +58,8 @@ void Menu::render() {
     ImGui::Begin("Bring me the menu", &show);
 
     UI::drawTextureSection(scene);
-    UI::drawSensitivitySection();
     UI::drawFogSection(scene);
+    UI::drawSensitivitySection();
     UI::drawQuitButton(window);
 
     ImGui::End();

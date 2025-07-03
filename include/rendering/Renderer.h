@@ -22,6 +22,8 @@ public:
     void debugSaveShadowMap(const std::string & filename);
     void renderFrame(const Scene & scene);
 
+    Shader quadDebugShader = Shader("../shaders/debug/quad.vert", "../shaders/debug/quad.frag");
+
 private:
     Shader * entityShader;
     Shader * lightShader;
@@ -33,5 +35,5 @@ private:
     GLuint shadowMap;
     Mat4 lightSpaceMatrix;
 
-    const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 };

@@ -88,12 +88,18 @@ inline Vec3 normalize(Vec3 v) {
     return v;
 }
 
-
 struct Vec4 {
     float x, y, z, w;
 
     Vec4(float x = 0, float y = 0, float z = 0, float w = 0)
         : x(x), y(y), z(z), w(w) {}
+
+    Vec4(const Vec3 & v, float w = 1.0f) {
+        x = v.x;
+        y = v.y;
+        z = v.z;
+        this->w = w;
+    }
 
     Vec4 operator+(const Vec4 & o) const { return {x + o.x, y + o.y, z + o.z, w + o.w}; }
     Vec4 operator-(const Vec4 & o) const { return {x - o.x, y - o.y, z - o.z, w - o.w}; }
@@ -138,8 +144,11 @@ struct Mat4 {
     float * ptr();
     Mat4 removeTranslation() const;
 
-
     static Mat4 orthographic(float left, float right, float bottom, float top, float near, float far);
+
+    inline Vec3 getTranslation() const { return Vec3(data[12], data[13], data[14]); }
+
+    Mat4 transpose() const;
 
     friend std::ostream & operator<<(std::ostream & os, const Mat4 & m);
 };
@@ -165,4 +174,13 @@ inline Vec3 transformPoint(const Mat4 & mat, const Vec3 & vec) {
     float z = mat.data[2] * vec.x + mat.data[6] * vec.y + mat.data[10] * vec.z + mat.data[14];
     // PAS de division par w !
     return Vec3(x, y, z);
+}
+
+inline Vec4 operator*(const Mat4 & mat, const Vec4 & vec) {
+    Vec4 result;
+    result.x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12] * vec.w;
+    result.y = mat.data[1] * vec.x + mat.data[5] * vec.y + mat.data[9] * vec.z + mat.data[13] * vec.w;
+    result.z = mat.data[2] * vec.x + mat.data[6] * vec.y + mat.data[10] * vec.z + mat.data[14] * vec.w;
+    result.w = mat.data[3] * vec.x + mat.data[7] * vec.y + mat.data[11] * vec.z + mat.data[15] * vec.w;
+    return result;
 }
