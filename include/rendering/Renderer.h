@@ -36,5 +36,5 @@ private:
     GLuint shadowMap;
     Mat4 lightSpaceMatrix;
 
-    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+    const unsigned int SHADOW_WIDTH = 2024, SHADOW_HEIGHT = 2024;
 };

@@ -98,3 +98,16 @@ void AABB::drawAABB(const Mat4 & model, const Mat4 & view, const Mat4 & projecti
     glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
+
+Vec3 AABB::intersectPlanes(const Plane& p1, const Plane& p2, const Plane& p3) {
+    Mat4 A({
+        p1.normal.x, p1.normal.y, p1.normal.z, 0.0f,
+        p2.normal.x, p2.normal.y, p2.normal.z, 0.0f,
+        p3.normal.x, p3.normal.y, p3.normal.z, 0.0f,
+        0.0f,        0.0f,        0.0f,        1.0f
+    });
+
+    Vec3 b(-p1.distance, -p2.distance, -p3.distance);
+    Vec3 result = A.inverse() * b;
+    return result;
+}

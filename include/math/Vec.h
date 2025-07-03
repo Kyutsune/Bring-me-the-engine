@@ -52,6 +52,12 @@ struct Vec3 {
         z += other.z;
         return *this;
     }
+    Vec3 operator-=(const Vec3 & other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        return *this;
+    }
 
     const float * ptr() const { return &x; }
     float * ptr() { return &x; }
@@ -149,6 +155,7 @@ struct Mat4 {
     inline Vec3 getTranslation() const { return Vec3(data[12], data[13], data[14]); }
 
     Mat4 transpose() const;
+    Mat4 inverse() const;
 
     friend std::ostream & operator<<(std::ostream & os, const Mat4 & m);
 };

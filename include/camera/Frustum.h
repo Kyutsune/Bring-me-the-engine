@@ -1,6 +1,6 @@
 #pragma once
-#include "math/PlaneBoundingVolume.h"
 #include "camera/Camera.h"
+#include "math/PlaneBoundingVolume.h"
 
 class Frustum {
 public:
@@ -14,4 +14,7 @@ public:
 
     // Teste si une AABB intersecte le frustum
     bool isBoxInFrustum(const AABB & box) const;
+
+    // Calcule l'AABB qui englobe le frustum dans l'espace local du frustum (ou dans un espace donné)
+    AABB computeBoundingBox() const;
 };

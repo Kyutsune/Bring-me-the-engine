@@ -1,8 +1,10 @@
 #pragma once
-#include "rendering/Shader.h"
 #include "math/Vec.h"
-#include <GLFW/glfw3.h>
+#include "rendering/Shader.h"
+#include <array>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 
 struct Plane {
     Vec3 normal;
@@ -44,5 +46,21 @@ struct AABB {
     friend std::ostream & operator<<(std::ostream & os, const AABB & box) {
         os << "AABB(min: " << box.min << ", max: " << box.max << ")";
         return os;
+    }
+
+    // Calcule le point d'intersection de trois plans
+    static Vec3 intersectPlanes(const Plane & p1, const Plane & p2, const Plane & p3);
+
+    inline std::array<Vec3, 8> getCorners() const {
+        return {
+            Vec3(min.x, min.y, min.z),
+            Vec3(max.x, min.y, min.z),
+            Vec3(max.x, max.y, min.z),
+            Vec3(min.x, max.y, min.z),
+            Vec3(min.x, min.y, max.z),
+            Vec3(max.x, min.y, max.z),
+            Vec3(max.x, max.y, max.z),
+            Vec3(min.x, max.y, max.z)
+        };
     }
 };

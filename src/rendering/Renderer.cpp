@@ -108,7 +108,28 @@ void Renderer::renderShadowMap(const Scene & scene, Shader & shadowShader) {
     Vec3 lightTarget = dirLight.position + dirLight.direction;
     Vec3 up = std::abs(dirLight.direction.z) > 0.9f ? Vec3(0, 1, 0) : Vec3(0, 0, 1);
     Mat4 lightView = Mat4::lookAt(dirLight.position, lightTarget, up);
-    Mat4 lightProjection = Mat4::orthographic(-20, 20, -20, 20, 1.0f, 100.0f);
+    // Construire un frustum lightCam (virtuel) depuis la position de la lumière
+    Camera lightCam(
+        dirLight.position,
+        lightTarget,
+        up,
+        90.0f,       // FOV 90° pour bien couvrir la zone, ou ajuster selon besoin
+        1.0f,        // ratio 1:1 pour carré (shadow map)
+        1.0f, 10.0f // near/far planes : //FIXME: éventuellement il faudrait calculer dynamiquement ces valeurs
+    );
+
+    // Mettre à jour le frustum de lightCam
+    Frustum lightFrustum = Frustum().updateFromCamera(lightCam);
+
+    // Calculer la bounding box englobante du frustum de la lumière
+    AABB boundingBox = lightFrustum.computeBoundingBox();
+
+    // Construire la matrice orthographique avec les limites crées dynamiquement
+    Mat4 lightProjection = Mat4::orthographic(
+        boundingBox.min.x, boundingBox.max.x,
+        boundingBox.min.y, boundingBox.max.y,
+        boundingBox.min.z, boundingBox.max.z);
+
     this->lightSpaceMatrix = lightView * lightProjection;
 
     shadowShader.use();

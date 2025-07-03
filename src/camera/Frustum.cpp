@@ -1,5 +1,6 @@
 #include "camera/Frustum.h"
 #include <iostream>
+#include <array>
 
 void Frustum::update(const Mat4 & m) {
     // Left plane
@@ -110,4 +111,35 @@ bool Frustum::isBoxInFrustum(const AABB & box) const {
         }
     }
     return true; // Partiellement ou complètement dedans
+}
+
+
+AABB Frustum::computeBoundingBox() const {
+    // Les 8 coins du frustum sont obtenus en intersectant les triplets de plans correspondants
+    std::array<Vec3, 8> corners = {
+        AABB::intersectPlanes(planes[0], planes[2], planes[4]), // left, bottom, near
+        AABB::intersectPlanes(planes[0], planes[3], planes[4]), // left, top, near
+        AABB::intersectPlanes(planes[1], planes[3], planes[4]), // right, top, near
+        AABB::intersectPlanes(planes[1], planes[2], planes[4]), // right, bottom, near
+
+        AABB::intersectPlanes(planes[0], planes[2], planes[5]), // left, bottom, far
+        AABB::intersectPlanes(planes[0], planes[3], planes[5]), // left, top, far
+        AABB::intersectPlanes(planes[1], planes[3], planes[5]), // right, top, far
+        AABB::intersectPlanes(planes[1], planes[2], planes[5])  // right, bottom, far
+    };
+
+    Vec3 minCorner = corners[0];
+    Vec3 maxCorner = corners[0];
+
+    for (const auto& corner : corners) {
+        minCorner.x = std::min(minCorner.x, corner.x);
+        minCorner.y = std::min(minCorner.y, corner.y);
+        minCorner.z = std::min(minCorner.z, corner.z);
+
+        maxCorner.x = std::max(maxCorner.x, corner.x);
+        maxCorner.y = std::max(maxCorner.y, corner.y);
+        maxCorner.z = std::max(maxCorner.z, corner.z);
+    }
+
+    return AABB(minCorner, maxCorner);
 }
