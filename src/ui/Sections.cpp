@@ -92,6 +92,10 @@ namespace UI {
             Light * light = lightingManager.getFirstDirectional();
 
             ImGui::Checkbox("Activer", &light->active);
+            ImGui::SliderFloat("Intensité", &light->intensity, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+
+
+
         }
     }
 
