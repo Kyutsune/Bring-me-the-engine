@@ -6,6 +6,7 @@
 #include "engine/Scene.h"
 #include "rendering/Shader.h"
 #include "rendering/Skybox.h"
+#include "shadows/DirectionalShadowMap.h"
 
 class Renderer {
 public:
@@ -17,8 +18,7 @@ public:
     void renderEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
     void renderLightEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
 
-    void initShadowMap();
-    void renderShadowMap(const Scene & scene, Shader & shadowShader);
+    inline void initShadowMap(){shadowMapperDirectionnal.init();}
     void debugSaveShadowMap(const std::string & filename);
     void renderShadowMapOnQuad();
     void renderFrame(const Scene & scene);
@@ -30,11 +30,8 @@ private:
     Shader * lightShader;
     Shader * skyboxShader;
     Shader * boundingBoxShader;
-    Shader * shadowShader;
 
-    GLuint shadowFBO;
-    GLuint shadowMap;
-    Mat4 lightSpaceMatrix;
+    DirectionalShadowMap shadowMapperDirectionnal;
+    Shader * shadowShaderDirectionnal;
 
-    const unsigned int SHADOW_WIDTH = 2024, SHADOW_HEIGHT = 2024;
 };
