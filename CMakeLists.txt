@@ -6,6 +6,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Option pour activer AddressSanitizer (mettre ON avec -DSANITIZE_ADDRESS=ON)
+option(SANITIZE_ADDRESS "Enable AddressSanitizer" OFF)
+
 # Rechercher GLFW et GLM via le système
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
@@ -23,7 +26,6 @@ file(GLOB IMGUI_SRC
     external/imgui/backends/imgui_impl_glfw.cpp
     external/imgui/backends/imgui_impl_opengl3.cpp
 )
-
 
 # Exécutable final
 add_executable(${PROJECT_NAME} ${ENGINE_SOURCES} ${IMGUI_SRC})
@@ -45,7 +47,6 @@ target_link_libraries(${PROJECT_NAME}
         glfw
         glm::glm
 )
-
 
 # Récupérer tous les fichiers de test
 file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS tests/*.cpp)
@@ -71,3 +72,19 @@ target_link_libraries(BringMeTheEngine-tests
 include(CTest)
 include(Catch)
 catch_discover_tests(BringMeTheEngine-tests)
+
+# Configuration AddressSanitizer
+if(SANITIZE_ADDRESS)
+    message(STATUS "🔍 AddressSanitizer activé")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+        set(SANITIZE_FLAGS "-fsanitize=address" "-g")
+
+        target_compile_options(${PROJECT_NAME} PRIVATE ${SANITIZE_FLAGS})
+        target_link_options(${PROJECT_NAME} PRIVATE "-fsanitize=address")
+
+        target_compile_options(BringMeTheEngine-tests PRIVATE ${SANITIZE_FLAGS})
+        target_link_options(BringMeTheEngine-tests PRIVATE "-fsanitize=address")
+    else()
+        message(WARNING "AddressSanitizer n'est pas pris en charge par ce compilateur.")
+    endif()
+endif()

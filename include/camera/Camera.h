@@ -1,6 +1,6 @@
 #pragma once
-#include "math/Vec.h"
 #include "math/Trigo.h"
+#include "math/Vec.h"
 
 class Camera {
 private:
@@ -11,19 +11,18 @@ private:
     float aspectRatio;
     float nearPlane;
     float farPlane;
-    Mat4 * viewMatrix;
+    Mat4 viewMatrix;
 
 public:
     inline Camera()
         : position(0.0f, 0.0f, 3.0f), target(0.0f, 0.0f, 0.0f), up(0.0f, 1.0f, 0.0f),
           fov(45.0f), aspectRatio(16.0f / 9.0f), nearPlane(0.1f), farPlane(100.0f) {
-        viewMatrix = new Mat4();
     }
 
     inline Camera(const Vec3 & pos, const Vec3 & tgt, const Vec3 & upDir, float fovDegrees, float aspect, float nearP, float farP)
-        : position(pos), target(tgt), up(upDir), fov(fovDegrees), aspectRatio(aspect), nearPlane(nearP), farPlane(farP) {
-        viewMatrix = new Mat4();
-    }
+        : position(pos), target(tgt), up(upDir), fov(fovDegrees), aspectRatio(aspect), nearPlane(nearP), farPlane(farP) {}
+
+    inline ~Camera() = default;
 
     Mat4 getViewMatrix() const;
 
