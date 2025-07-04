@@ -63,6 +63,7 @@ uniform bool usePointShadow;
 uniform samplerCube pointShadowMap;
 uniform vec3 lightPos;
 uniform float farPlane;
+uniform float pointLightIntensity;
 
 vec3 getNormal() {
     if (!useNormalMap) return normalize(Normal);
@@ -190,36 +191,35 @@ float calculatePointShadow(vec3 fragPos) {
     vec3 normal = normalize(Normal);
     vec3 lightDir = normalize(lightToFrag);
 
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.05 * (1.0 - dot(normal, -lightDir)), 0.005);
 
     int samples = 20;
     float viewDistance = length(viewPos - fragPos);
-    float diskRadius = (1.0 + (viewDistance / farPlane)) / 25.0;
+    float diskRadius = 0.05 * (viewDistance / farPlane);
 
     for (int i = 0; i < samples; ++i) {
         vec3 sampleDir = normalize(lightToFrag + sampleOffsetDirections[i] * diskRadius);
-
         float closestDepth = texture(pointShadowMap, sampleDir).r * farPlane;
 
-        if (currentDepth - bias > closestDepth)
-            shadow += 1.0;
+        float diff = currentDepth - bias - closestDepth;
+        float weight = 1.0 - length(sampleOffsetDirections[i]) / sqrt(5.0);
+        shadow += weight * smoothstep(0.0, 0.10, diff);
     }
 
     shadow /= float(samples);
-    return clamp(1.0 - shadow, 0.0, 1.0);
+
+    // Atténuation avec la distance
+    float attenuationFactor = exp(-currentDepth / farPlane);
+    shadow *= attenuationFactor;
+
+    // Renforcer les ombres proches avec une courbe non linéaire
+    shadow = pow(shadow, 0.3); 
+
+    return mix(0.2, 1.0, 1.0 - clamp(shadow, 0.0, 1.0)) * pointLightIntensity;
 }
 
 
 void main() {
-
-    vec3 lightToFrag = FragPos - lightPos;
-    vec3 sampleDir = normalize(lightToFrag);
-    float depthSample = texture(pointShadowMap, sampleDir).r;
-
-    FragColor = vec4(vec3(depthSample), 1.0); // Affiche la profondeur "vue par la lumière"
-    return;
-
-
     vec3 norm = getNormal();
     vec3 viewDir = normalize(viewPos - FragPos);
 

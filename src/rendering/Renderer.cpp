@@ -35,6 +35,7 @@ void Renderer::renderScene(const Scene & scene) {
         entityShader->set("pointShadowMap", 4);
         entityShader->set("lightPos", scene.getLightingManager().getPonctualLight()[0].position);
         entityShader->set("farPlane", scene.getLightingManager().getPonctualLight()[0].computeEffectiveRange(0.01f));
+        entityShader->set("pointLightIntensity", scene.getLightingManager().getPonctualLight()[0].intensity);
         entityShader->set("usePointShadow", true);
     } else {
         entityShader->set("usePointShadow", false);

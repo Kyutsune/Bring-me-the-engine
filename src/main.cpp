@@ -79,7 +79,7 @@ int main() {
     shaders.push_back(std::make_unique<Shader>("../shaders/main_shaders/skybox.vert", "../shaders/main_shaders/skybox.frag"));
     shaders.push_back(std::make_unique<Shader>("../shaders/debug/bounding_box.vert", "../shaders/debug/bounding_box.frag"));
     shaders.push_back(std::make_unique<Shader>("../shaders/shadows/dir_shadow.vert", "../shaders/shadows/dir_shadow.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/shadows/ponc_shadow.vert", "../shaders/shadows/ponc_shadow.frag", "../shaders/shadows/ponc_shadow.geom"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/shadows/ponc_shadow.vert", "../shaders/shadows/ponc_shadow.frag"));
     for (size_t i = 0; i < shaders.size(); ++i) {
         if (!shaders[i]) {
             std::cerr << "Erreur : le shader " << i << " est nullptr.\n";

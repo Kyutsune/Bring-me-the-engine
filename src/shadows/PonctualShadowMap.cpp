@@ -23,8 +23,8 @@ void PonctualShadowMap::init() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    // Test si le framebuffer est complet
     glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+    // Pas besoin de lier ici la texture complète, on fera face par face dans render()
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -40,16 +40,16 @@ void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const
     float nearPlane = 1.0f;
     float farPlane = pointLight.computeEffectiveRange(0.01f);
 
-    Mat4 shadowProj = Mat4::perspective(90.0f, 1.0f, nearPlane, farPlane);
+    Mat4 shadowProj = Mat4::perspective(M_PI / 2.0f, 1.0f, nearPlane, farPlane);
 
-    std::vector<Mat4> shadowTransforms;
     Vec3 pos = pointLight.position;
-    shadowTransforms.push_back(Mat4::lookAt(pos, pos + Vec3(1, 0, 0), Vec3(0, -1, 0))* shadowProj);
-    shadowTransforms.push_back(Mat4::lookAt(pos, pos + Vec3(-1, 0, 0), Vec3(0, -1, 0))* shadowProj);
-    shadowTransforms.push_back(Mat4::lookAt(pos, pos + Vec3(0, 1, 0), Vec3(0, 0, 1))* shadowProj);
-    shadowTransforms.push_back(Mat4::lookAt(pos, pos + Vec3(0, -1, 0), Vec3(0, 0, -1))* shadowProj);
-    shadowTransforms.push_back(Mat4::lookAt(pos, pos + Vec3(0, 0, 1), Vec3(0, -1, 0))* shadowProj);
-    shadowTransforms.push_back(Mat4::lookAt(pos, pos + Vec3(0, 0, -1), Vec3(0, -1, 0))* shadowProj);
+    Mat4 shadowViews[6] = {
+        Mat4::lookAt(pos, pos + Vec3(1, 0, 0), Vec3(0, -1, 0)),
+        Mat4::lookAt(pos, pos + Vec3(-1, 0, 0), Vec3(0, -1, 0)),
+        Mat4::lookAt(pos, pos + Vec3(0, 1, 0), Vec3(0, 0, 1)),
+        Mat4::lookAt(pos, pos + Vec3(0, -1, 0), Vec3(0, 0, -1)),
+        Mat4::lookAt(pos, pos + Vec3(0, 0, 1), Vec3(0, -1, 0)),
+        Mat4::lookAt(pos, pos + Vec3(0, 0, -1), Vec3(0, -1, 0))};
 
     glViewport(0, 0, width, height);
     shadowShader.use();
@@ -57,22 +57,34 @@ void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const
     shadowShader.set("lightPos", lightPosition);
     shadowShader.set("farPlane", farPlane);
 
-    // Attacher toute la cubemap d'un coup
     glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
 
-    glClear(GL_DEPTH_BUFFER_BIT);
+    for (int face = 0; face < 6; ++face) {
+        // Attacher la bonne face de la cubemap
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+                               depthCubemap, 0);
 
-    // Passer toutes les matrices d'un coup
-    for (int i = 0; i < 6; ++i) {
-        shadowShader.set("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
-    }
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+            std::cerr << "Framebuffer incomplete for face " << face << std::endl;
+            continue;
+        }
 
-    // Rendu de toute la scène UNE SEULE FOIS (le geometry shader s'occupe des 6 faces)
-    for (const auto & entity : scene.getEntities()) {
-        std::cout<<entity->getTransform()<<std::endl;
-        shadowShader.set("model", entity->getTransform(), false);
-        entity->getMesh()->draw();
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        Mat4 shadowMatrix = shadowViews[face] * shadowProj;
+
+        Vec4 testPoint = shadowMatrix * Vec4(lightPosition, 1.0f);
+        Vec3 ndc = Vec3(testPoint.x / testPoint.w, testPoint.y / testPoint.w, testPoint.z / testPoint.w);
+
+        shadowShader.set("shadowMatrix", shadowMatrix);
+
+        for (const auto & entity : scene.getEntities()) {
+            shadowShader.set("model", entity->getTransform(), false);
+            entity->getMesh()->draw();
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -4,6 +4,7 @@
 
 #include "math/Vec.h"
 #include <iostream>
+#include <cstring>
 
 Mat4::Mat4() {
     for (int i = 0; i < 16; ++i)
@@ -51,14 +52,17 @@ Mat4 Mat4::lookAt(const Vec3 & eye, const Vec3 & center, const Vec3 & up) {
 
 Mat4 Mat4::perspective(float fovRadians, float aspect, float near, float far) {
     Mat4 result;
+
+        memset(result.data, 0, sizeof(result.data));
+
     float tanHalfFovy = tan(fovRadians / 2.0f);
 
-    result.data[0] = 1.0f / (aspect * tanHalfFovy);
-    result.data[5] = 1.0f / tanHalfFovy;
-    result.data[10] = -(far + near) / (far - near);
-    result.data[11] = -1.0f;
-    result.data[14] = -(2.0f * far * near) / (far - near);
-    result.data[15] = 0.0f;
+    result.data[0] = 1.0f / (aspect * tanHalfFovy);        // [0,0]
+    result.data[5] = 1.0f / tanHalfFovy;                   // [1,1]
+    result.data[10] = -(far + near) / (far - near);        // [2,2]
+    result.data[11] = -1.0f;                               // [3,2] (w = -z)
+    result.data[14] = -(2.0f * far * near) / (far - near); // [2,3]
+    result.data[15] = 0.0f;                                // [3,3]
 
     return result;
 }
@@ -187,7 +191,6 @@ Mat4 Mat4::orthographic(float left, float right, float bottom, float top, float 
     return result;
 }
 
-
 Mat4 Mat4::transpose() const {
     Mat4 result;
     for (int i = 0; i < 4; ++i) {
@@ -200,118 +203,118 @@ Mat4 Mat4::transpose() const {
 
 Mat4 Mat4::inverse() const {
     Mat4 inv;
-    const float* m = data;
+    const float * m = data;
 
-    inv.data[0] = m[5]  * m[10] * m[15] - 
-                  m[5]  * m[11] * m[14] - 
-                  m[9]  * m[6]  * m[15] + 
-                  m[9]  * m[7]  * m[14] +
-                  m[13] * m[6]  * m[11] - 
-                  m[13] * m[7]  * m[10];
+    inv.data[0] = m[5] * m[10] * m[15] -
+                  m[5] * m[11] * m[14] -
+                  m[9] * m[6] * m[15] +
+                  m[9] * m[7] * m[14] +
+                  m[13] * m[6] * m[11] -
+                  m[13] * m[7] * m[10];
 
-    inv.data[4] = -m[4]  * m[10] * m[15] + 
-                   m[4]  * m[11] * m[14] + 
-                   m[8]  * m[6]  * m[15] - 
-                   m[8]  * m[7]  * m[14] - 
-                   m[12] * m[6]  * m[11] + 
-                   m[12] * m[7]  * m[10];
+    inv.data[4] = -m[4] * m[10] * m[15] +
+                  m[4] * m[11] * m[14] +
+                  m[8] * m[6] * m[15] -
+                  m[8] * m[7] * m[14] -
+                  m[12] * m[6] * m[11] +
+                  m[12] * m[7] * m[10];
 
-    inv.data[8] = m[4]  * m[9] * m[15] - 
-                  m[4]  * m[11] * m[13] - 
-                  m[8]  * m[5] * m[15] + 
-                  m[8]  * m[7] * m[13] + 
-                  m[12] * m[5] * m[11] - 
+    inv.data[8] = m[4] * m[9] * m[15] -
+                  m[4] * m[11] * m[13] -
+                  m[8] * m[5] * m[15] +
+                  m[8] * m[7] * m[13] +
+                  m[12] * m[5] * m[11] -
                   m[12] * m[7] * m[9];
 
-    inv.data[12] = -m[4]  * m[9] * m[14] + 
-                    m[4]  * m[10] * m[13] +
-                    m[8]  * m[5] * m[14] - 
-                    m[8]  * m[6] * m[13] - 
-                    m[12] * m[5] * m[10] + 
-                    m[12] * m[6] * m[9];
+    inv.data[12] = -m[4] * m[9] * m[14] +
+                   m[4] * m[10] * m[13] +
+                   m[8] * m[5] * m[14] -
+                   m[8] * m[6] * m[13] -
+                   m[12] * m[5] * m[10] +
+                   m[12] * m[6] * m[9];
 
-    inv.data[1] = -m[1]  * m[10] * m[15] + 
-                   m[1]  * m[11] * m[14] + 
-                   m[9]  * m[2] * m[15] - 
-                   m[9]  * m[3] * m[14] - 
-                   m[13] * m[2] * m[11] + 
-                   m[13] * m[3] * m[10];
+    inv.data[1] = -m[1] * m[10] * m[15] +
+                  m[1] * m[11] * m[14] +
+                  m[9] * m[2] * m[15] -
+                  m[9] * m[3] * m[14] -
+                  m[13] * m[2] * m[11] +
+                  m[13] * m[3] * m[10];
 
-    inv.data[5] = m[0]  * m[10] * m[15] - 
-                  m[0]  * m[11] * m[14] - 
-                  m[8]  * m[2] * m[15] + 
-                  m[8]  * m[3] * m[14] + 
-                  m[12] * m[2] * m[11] - 
+    inv.data[5] = m[0] * m[10] * m[15] -
+                  m[0] * m[11] * m[14] -
+                  m[8] * m[2] * m[15] +
+                  m[8] * m[3] * m[14] +
+                  m[12] * m[2] * m[11] -
                   m[12] * m[3] * m[10];
 
-    inv.data[9] = -m[0]  * m[9] * m[15] + 
-                   m[0]  * m[11] * m[13] + 
-                   m[8]  * m[1] * m[15] - 
-                   m[8]  * m[3] * m[13] - 
-                   m[12] * m[1] * m[11] + 
-                   m[12] * m[3] * m[9];
+    inv.data[9] = -m[0] * m[9] * m[15] +
+                  m[0] * m[11] * m[13] +
+                  m[8] * m[1] * m[15] -
+                  m[8] * m[3] * m[13] -
+                  m[12] * m[1] * m[11] +
+                  m[12] * m[3] * m[9];
 
-    inv.data[13] = m[0]  * m[9] * m[14] - 
-                   m[0]  * m[10] * m[13] - 
-                   m[8]  * m[1] * m[14] + 
-                   m[8]  * m[2] * m[13] + 
-                   m[12] * m[1] * m[10] - 
+    inv.data[13] = m[0] * m[9] * m[14] -
+                   m[0] * m[10] * m[13] -
+                   m[8] * m[1] * m[14] +
+                   m[8] * m[2] * m[13] +
+                   m[12] * m[1] * m[10] -
                    m[12] * m[2] * m[9];
 
-    inv.data[2] = m[1]  * m[6] * m[15] - 
-                  m[1]  * m[7] * m[14] - 
-                  m[5]  * m[2] * m[15] + 
-                  m[5]  * m[3] * m[14] + 
-                  m[13] * m[2] * m[7] - 
+    inv.data[2] = m[1] * m[6] * m[15] -
+                  m[1] * m[7] * m[14] -
+                  m[5] * m[2] * m[15] +
+                  m[5] * m[3] * m[14] +
+                  m[13] * m[2] * m[7] -
                   m[13] * m[3] * m[6];
 
-    inv.data[6] = -m[0]  * m[6] * m[15] + 
-                   m[0]  * m[7] * m[14] + 
-                   m[4]  * m[2] * m[15] - 
-                   m[4]  * m[3] * m[14] - 
-                   m[12] * m[2] * m[7] + 
-                   m[12] * m[3] * m[6];
+    inv.data[6] = -m[0] * m[6] * m[15] +
+                  m[0] * m[7] * m[14] +
+                  m[4] * m[2] * m[15] -
+                  m[4] * m[3] * m[14] -
+                  m[12] * m[2] * m[7] +
+                  m[12] * m[3] * m[6];
 
-    inv.data[10] = m[0]  * m[5] * m[15] - 
-                   m[0]  * m[7] * m[13] - 
-                   m[4]  * m[1] * m[15] + 
-                   m[4]  * m[3] * m[13] + 
-                   m[12] * m[1] * m[7] - 
+    inv.data[10] = m[0] * m[5] * m[15] -
+                   m[0] * m[7] * m[13] -
+                   m[4] * m[1] * m[15] +
+                   m[4] * m[3] * m[13] +
+                   m[12] * m[1] * m[7] -
                    m[12] * m[3] * m[5];
 
-    inv.data[14] = -m[0]  * m[5] * m[14] + 
-                    m[0]  * m[6] * m[13] + 
-                    m[4]  * m[1] * m[14] - 
-                    m[4]  * m[2] * m[13] - 
-                    m[12] * m[1] * m[6] + 
-                    m[12] * m[2] * m[5];
+    inv.data[14] = -m[0] * m[5] * m[14] +
+                   m[0] * m[6] * m[13] +
+                   m[4] * m[1] * m[14] -
+                   m[4] * m[2] * m[13] -
+                   m[12] * m[1] * m[6] +
+                   m[12] * m[2] * m[5];
 
-    inv.data[3] = -m[1] * m[6] * m[11] + 
-                   m[1] * m[7] * m[10] + 
-                   m[5] * m[2] * m[11] - 
-                   m[5] * m[3] * m[10] - 
-                   m[9] * m[2] * m[7] + 
-                   m[9] * m[3] * m[6];
+    inv.data[3] = -m[1] * m[6] * m[11] +
+                  m[1] * m[7] * m[10] +
+                  m[5] * m[2] * m[11] -
+                  m[5] * m[3] * m[10] -
+                  m[9] * m[2] * m[7] +
+                  m[9] * m[3] * m[6];
 
-    inv.data[7] = m[0] * m[6] * m[11] - 
-                  m[0] * m[7] * m[10] - 
-                  m[4] * m[2] * m[11] + 
-                  m[4] * m[3] * m[10] + 
-                  m[8] * m[2] * m[7] - 
+    inv.data[7] = m[0] * m[6] * m[11] -
+                  m[0] * m[7] * m[10] -
+                  m[4] * m[2] * m[11] +
+                  m[4] * m[3] * m[10] +
+                  m[8] * m[2] * m[7] -
                   m[8] * m[3] * m[6];
 
-    inv.data[11] = -m[0] * m[5] * m[11] + 
-                    m[0] * m[7] * m[9] + 
-                    m[4] * m[1] * m[11] - 
-                    m[4] * m[3] * m[9] - 
-                    m[8] * m[1] * m[7] + 
-                    m[8] * m[3] * m[5];
+    inv.data[11] = -m[0] * m[5] * m[11] +
+                   m[0] * m[7] * m[9] +
+                   m[4] * m[1] * m[11] -
+                   m[4] * m[3] * m[9] -
+                   m[8] * m[1] * m[7] +
+                   m[8] * m[3] * m[5];
 
-    inv.data[15] = m[0] * m[5] * m[10] - 
-                   m[0] * m[6] * m[9] - 
-                   m[4] * m[1] * m[10] + 
-                   m[4] * m[2] * m[9] + 
-                   m[8] * m[1] * m[6] - 
+    inv.data[15] = m[0] * m[5] * m[10] -
+                   m[0] * m[6] * m[9] -
+                   m[4] * m[1] * m[10] +
+                   m[4] * m[2] * m[9] +
+                   m[8] * m[1] * m[6] -
                    m[8] * m[2] * m[5];
 
     float det = m[0] * inv.data[0] + m[1] * inv.data[4] + m[2] * inv.data[8] + m[3] * inv.data[12];
