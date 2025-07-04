@@ -3,8 +3,9 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../external/stb/stb_image_write.h"
 
-Renderer::Renderer(Shader * entityShader, Shader * lightShader, Shader * skyboxShader, Shader * boundingBoxShader, Shader * shadowShaderDirectionnal)
-    : entityShader(entityShader), lightShader(lightShader), skyboxShader(skyboxShader), boundingBoxShader(boundingBoxShader), shadowShaderDirectionnal(shadowShaderDirectionnal) {}
+Renderer::Renderer(Shader * entityShader, Shader * lightShader, Shader * skyboxShader, Shader * boundingBoxShader, Shader * shadowShaderDirectionnal, Shader * shadowShaderPonctual)
+    : entityShader(entityShader), lightShader(lightShader), skyboxShader(skyboxShader), boundingBoxShader(boundingBoxShader), shadowShaderDirectionnal(shadowShaderDirectionnal), shadowShaderPonctual(shadowShaderPonctual) {
+}
 
 void Renderer::renderScene(const Scene & scene) {
     Mat4 view = scene.getCamera().getViewMatrix();
@@ -29,6 +30,16 @@ void Renderer::renderScene(const Scene & scene) {
         entityShader->set("useDirectionalShadow", false);
     }
 
+    if (!shadowMapperPonctuals.empty()) {
+        shadowMapperPonctuals[0].bindTexture(GL_TEXTURE4);
+        entityShader->set("pointShadowMap", 4);
+        entityShader->set("lightPos", scene.getLightingManager().getPonctualLight()[0].position);
+        entityShader->set("farPlane", scene.getLightingManager().getPonctualLight()[0].computeEffectiveRange(0.01f));
+        entityShader->set("usePointShadow", true);
+    } else {
+        entityShader->set("usePointShadow", false);
+    }
+
     scene.getLightingManager().applyLightning(*entityShader, scene.getCamera().getPosition());
     renderEntities(scene, view, projection);
 
@@ -36,6 +47,8 @@ void Renderer::renderScene(const Scene & scene) {
 }
 
 void Renderer::renderSkybox(const Skybox * skybox, const Mat4 & view, const Mat4 & projection) {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->textureID);
     skybox->draw(*skyboxShader, view, projection);
 }
 
@@ -66,7 +79,30 @@ void Renderer::renderLightEntities(const Scene & scene, const Mat4 & view, const
     }
 }
 
+void Renderer::renderPonctualShadowMaps(const Scene & scene) {
+    const auto & pointLights = scene.getLightingManager().getPonctualLight();
+
+    // Redimensionner si nécessaire
+    if (shadowMapperPonctuals.size() < pointLights.size()) {
+        size_t oldSize = shadowMapperPonctuals.size();
+        shadowMapperPonctuals.resize(pointLights.size());
+
+        // Initialiser les nouvelles shadow maps
+        for (size_t i = oldSize; i < pointLights.size(); ++i) {
+            shadowMapperPonctuals[i] = PonctualShadowMap(1024, 1024);
+        }
+    }
+
+    // Rendu de chaque shadow map
+    for (size_t i = 0; i < pointLights.size(); ++i) {
+        if (!pointLights[i].active)
+            continue;
+        shadowMapperPonctuals[i].render(scene, *shadowShaderPonctual, pointLights[i]);
+    }
+}
+
 void Renderer::renderFrame(const Scene & scene) {
     shadowMapperDirectionnal.render(scene, *shadowShaderDirectionnal);
+    renderPonctualShadowMaps(scene);
     renderScene(scene);
 }

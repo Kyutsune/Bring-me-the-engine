@@ -21,8 +21,12 @@ public:
     LightSettings & settings() { return lightingSettings; }
     const LightSettings & settings() const { return lightingSettings; }
     const std::vector<Light> & getLights() const { return lights; }
+
     const Light & getFirstDirectional() const;
     Light * getFirstDirectional();
+
+    const std::vector<Light> getPonctualLight() const;
+    std::vector<Light> * getPonctualLight();
 
     void setupLightingOnScene();
 
@@ -32,7 +36,7 @@ private:
     static constexpr int MAX_LIGHTS = 8;
     LightSettings lightingSettings;
 
-    // TODO: Pour l'instant on considère qu'une lumière ponctuelle est représentée avec la couleur rouge
+    // TODO: Pour l'instant on considère qu'une lumière ponctuelle est représentée par cette couleur
     //  On pourrait éventuellement rajouter une texture pour cette lumière
-    Color colorMeshLight = Color::red();
+    Color colorMeshLight;
 };

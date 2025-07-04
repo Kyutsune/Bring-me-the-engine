@@ -43,4 +43,24 @@ struct Light {
           linear(linear),
           quadratic(quadratic),
           active(active) {}
+
+    inline float computeEffectiveRange(float epsilon) const {
+        float threshold = intensity / epsilon;
+
+        float A = quadratic;
+        float B = linear;
+        float C = constant - threshold;
+
+        if (A == 0.0f) {
+            if (B == 0.0f)
+                return (C < 0.0f) ? 100.0f : 0.0f;
+            return -C / B;
+        }
+
+        float discriminant = B * B - 4 * A * C;
+        if (discriminant < 0.0f)
+            return 0.0f;
+
+        return (-B + std::sqrt(discriminant)) / (2 * A);
+    }
 };

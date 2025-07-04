@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
 
 #include "Globals.h"
@@ -73,12 +74,23 @@ int main() {
 
     // On initialise le Renderer avec les shaders, c'est lui qui va dessiner la scène.
     std::vector<std::unique_ptr<Shader>> shaders;
-    shaders.push_back(std::make_unique<Shader>("../shaders/vertex.vert", "../shaders/vertex.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/light_pos.vert", "../shaders/light_pos.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/skybox.vert", "../shaders/skybox.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/bounding_box.vert", "../shaders/bounding_box.frag"));
-    shaders.push_back(std::make_unique<Shader>("../shaders/shadow.vert", "../shaders/shadow.frag"));
-    Renderer renderer(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get(), shaders[4].get());
+    shaders.push_back(std::make_unique<Shader>("../shaders/main_shaders/vertex.vert", "../shaders/main_shaders/vertex.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/main_shaders/light_pos.vert", "../shaders/main_shaders/light_pos.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/main_shaders/skybox.vert", "../shaders/main_shaders/skybox.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/debug/bounding_box.vert", "../shaders/debug/bounding_box.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/shadows/dir_shadow.vert", "../shaders/shadows/dir_shadow.frag"));
+    shaders.push_back(std::make_unique<Shader>("../shaders/shadows/ponc_shadow.vert", "../shaders/shadows/ponc_shadow.frag", "../shaders/shadows/ponc_shadow.geom"));
+    for (size_t i = 0; i < shaders.size(); ++i) {
+        if (!shaders[i]) {
+            std::cerr << "Erreur : le shader " << i << " est nullptr.\n";
+            return -1;
+        }
+        if (shaders[i]->ID == 0) {
+            std::cerr << "Erreur : le shader " << i << " n'a pas été compilé correctement (ID == 0).\n";
+            return -1;
+        }
+    }
+    Renderer renderer(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get(), shaders[4].get(), shaders[5].get());
     renderer.initShadowMap();
 
     // boucle de rendu

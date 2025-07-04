@@ -27,7 +27,7 @@ public:
     inline Mat4 & getView() { return view; }
     inline LightingManager & getLightingManager() { return lightingManager; }
     inline const LightingManager & getLightingManager() const { return lightingManager; }
-    const Skybox * getSkybox() const { return skybox.get(); }
+    inline const Skybox * getSkybox() const { return skybox.get(); }
 
 
     inline const int getFogType() const { return lightingManager.settings().fogType; }
@@ -52,7 +52,6 @@ private:
     std::vector<std::shared_ptr<Entity>> entities;
 
     LightingManager lightingManager;
-
     std::vector<std::shared_ptr<Entity>> lightEntities;
 
     std::unique_ptr<Skybox> skybox;

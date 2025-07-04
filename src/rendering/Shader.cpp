@@ -8,7 +8,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Shader::Shader(const std::string & vertexPath, const std::string & fragmentPath) {
+Shader::Shader(const std::string & vertexPath, const std::string & fragmentPath, const std::string & geometryPath) {
+
     std::string vertCode = loadFile(vertexPath);
     std::string fragCode = loadFile(fragmentPath);
 
@@ -18,6 +19,20 @@ Shader::Shader(const std::string & vertexPath, const std::string & fragmentPath)
     ID = glCreateProgram();
     glAttachShader(ID, vertexShader);
     glAttachShader(ID, fragmentShader);
+
+    GLuint geometryShader = 0;
+    if (!geometryPath.empty()) {
+        std::string geomCode = loadFile(geometryPath);
+        if (geomCode.empty()) {
+            std::cerr << "Erreur: Shader geometry vide ou non trouvé: " << geometryPath << std::endl;
+        } else {
+            geometryShader = compileShader(GL_GEOMETRY_SHADER, geomCode);
+            if (geometryShader) {
+                glAttachShader(ID, geometryShader); // ✅ NE PAS OUBLIER CETTE LIGNE !
+            }
+        }
+    }
+
     glLinkProgram(ID);
 
     GLint success;
@@ -31,6 +46,14 @@ Shader::Shader(const std::string & vertexPath, const std::string & fragmentPath)
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    if (geometryShader)
+        glDeleteShader(geometryShader);
+
+    if (vertexShader == 0 || fragmentShader == 0 || (!geometryPath.empty() && geometryShader == 0)) {
+        std::cerr << "Compilation échouée, shader non valide\n";
+        ID = 0;
+        return;
+    }
 }
 
 Shader::~Shader() {

@@ -52,11 +52,17 @@ in vec3 Bitangent;
 
 out vec4 FragColor;
 
-// Les informations pour ajouter des ombres
+// Les informations pour ajouter des ombres sur les lumières directionnelles
 uniform bool useDirectionalShadow;
 uniform sampler2D shadowMap;
 in vec4 FragPosLightSpace;
 uniform vec3 dirLightDirection;
+
+// Les informations pour ajouter des ombres sur les lumières ponctuelles
+uniform bool usePointShadow;
+uniform samplerCube pointShadowMap;
+uniform vec3 lightPos;
+uniform float farPlane;
 
 vec3 getNormal() {
     if (!useNormalMap) return normalize(Normal);
@@ -124,7 +130,7 @@ vec3 calcLight(Light light, vec3 norm, vec3 viewDir, vec3 fragPos, float shadowF
     return diffuse + specular;
 }
 
-float calculateShadow(vec4 fragPosLightSpace) {
+float calculateDirShadow(vec4 fragPosLightSpace) {
     if (!useDirectionalShadow)
         return 1.0; // Pas d'ombre si on a pas dans la scène de lumière directionnelle
 
@@ -166,6 +172,45 @@ float calculateShadow(vec4 fragPosLightSpace) {
     return clamp(1.0 - shadow, 0.0, 1.0);
 }
 
+
+const vec3 sampleOffsetDirections[20] = vec3[](
+    vec3( 1,  1,  1), vec3( -1,  1,  1), vec3( 1, -1,  1), vec3( -1, -1,  1),
+    vec3( 1,  1, -1), vec3( -1,  1, -1), vec3( 1, -1, -1), vec3( -1, -1, -1),
+    vec3( 1,  0,  0), vec3( -1,  0,  0), vec3( 0,  1,  0), vec3( 0, -1,  0),
+    vec3( 0,  0,  1), vec3( 0,  0, -1), vec3( 1,  1,  0), vec3( -1,  1,  0),
+    vec3( 1, -1,  0), vec3( -1, -1,  0), vec3( 0,  1,  1), vec3( 0, -1, -1)
+);
+
+
+float calculatePointShadow(vec3 fragPos) {
+    vec3 fragToLight = fragPos - lightPos;
+    float currentDepth = length(fragToLight);
+
+    float shadow = 0.0;
+    vec3 normal = normalize(Normal);
+    vec3 lightDir = normalize(fragToLight);
+
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+
+    int samples = 20;
+    float viewDistance = length(viewPos - fragPos);
+    float diskRadius = (1.0 + (viewDistance / farPlane)) / 25.0;
+
+    for (int i = 0; i < samples; ++i) {
+        vec3 sampleDir = normalize(fragToLight + sampleOffsetDirections[i] * diskRadius);
+
+        float closestDepth = texture(pointShadowMap, sampleDir).r * farPlane;
+
+        if (currentDepth - bias > closestDepth) // si fragment plus loin que la profondeur dans la shadow map => dans l'ombre
+            shadow += 1.0;
+    }
+
+    shadow /= float(samples);
+    return clamp(1.0 - shadow, 0.0, 1.0);
+}
+
+
+
 void main() {
     vec3 norm = getNormal();
     vec3 viewDir = normalize(viewPos - FragPos);
@@ -176,10 +221,17 @@ void main() {
     vec3 result = calcAmbient(norm);
 
     // Calculer le facteur d'ombre une seule fois
-    float shadowFactor = calculateShadow(FragPosLightSpace);
+    float shadowFactor = calculateDirShadow(FragPosLightSpace);
+    
+    float pointShadow = usePointShadow ? calculatePointShadow(FragPos) : 1.0;
+
 
     for (int i = 0; i < numLights; i++) {
         vec3 lighting = calcLight(lights[i], norm, viewDir, FragPos, shadowFactor);
+
+        if (lights[i].type == 0) { // Si c'est une lumière ponctuelle
+            lighting *= pointShadow;
+        }
         result += lighting;
     }
 

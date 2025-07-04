@@ -112,3 +112,23 @@ Light * LightingManager::getFirstDirectional() {
     dummyLight.type = LightType::LIGHT_ERROR;
     return &dummyLight;
 }
+
+const std::vector<Light> LightingManager::getPonctualLight() const {
+    std::vector<Light> ponctualLights;
+    for (const Light & light : lights) {
+        if (light.type == LightType::LIGHT_POINT) {
+            ponctualLights.emplace_back(light);
+        }
+    }
+    return ponctualLights;
+}
+
+std::vector<Light> * LightingManager::getPonctualLight() {
+    std::vector<Light> * ponctualLights = new std::vector<Light>();
+    for (Light & light : lights) {
+        if (light.type == LightType::LIGHT_POINT) {
+            ponctualLights->emplace_back(light);
+        }
+    }
+    return ponctualLights;
+}
