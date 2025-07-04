@@ -183,12 +183,12 @@ const vec3 sampleOffsetDirections[20] = vec3[](
 
 
 float calculatePointShadow(vec3 fragPos) {
-    vec3 fragToLight = fragPos - lightPos;
-    float currentDepth = length(fragToLight);
+    vec3 lightToFrag = fragPos - lightPos;
+    float currentDepth = length(lightToFrag);
 
     float shadow = 0.0;
     vec3 normal = normalize(Normal);
-    vec3 lightDir = normalize(fragToLight);
+    vec3 lightDir = normalize(lightToFrag);
 
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 
@@ -197,11 +197,11 @@ float calculatePointShadow(vec3 fragPos) {
     float diskRadius = (1.0 + (viewDistance / farPlane)) / 25.0;
 
     for (int i = 0; i < samples; ++i) {
-        vec3 sampleDir = normalize(fragToLight + sampleOffsetDirections[i] * diskRadius);
+        vec3 sampleDir = normalize(lightToFrag + sampleOffsetDirections[i] * diskRadius);
 
         float closestDepth = texture(pointShadowMap, sampleDir).r * farPlane;
 
-        if (currentDepth - bias > closestDepth) // si fragment plus loin que la profondeur dans la shadow map => dans l'ombre
+        if (currentDepth - bias > closestDepth)
             shadow += 1.0;
     }
 
@@ -210,8 +210,16 @@ float calculatePointShadow(vec3 fragPos) {
 }
 
 
-
 void main() {
+
+    vec3 lightToFrag = FragPos - lightPos;
+    vec3 sampleDir = normalize(lightToFrag);
+    float depthSample = texture(pointShadowMap, sampleDir).r;
+
+    FragColor = vec4(vec3(depthSample), 1.0); // Affiche la profondeur "vue par la lumière"
+    return;
+
+
     vec3 norm = getNormal();
     vec3 viewDir = normalize(viewPos - FragPos);
 
