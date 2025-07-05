@@ -31,6 +31,11 @@ public:
     void set(const std::string &name, int value);
     void set(const std::string &name, const Mat4 &mat, const bool & should_transpose = false);
 
+    void setArray(const std::string& name, const GLint* values, int count);
+
+    void setVec3Array(const std::string& name, const glm::vec3* values, int count);
+    void setFloatArray(const std::string& name, const float* values, int count);
+
 
 private:
     std::string loadFile(const std::string & path) const;

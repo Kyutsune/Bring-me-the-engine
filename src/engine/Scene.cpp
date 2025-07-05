@@ -1,6 +1,6 @@
 #include "engine/Scene.h"
-#include "rendering/Shader.h"
 #include "math/Vec.h"
+#include "rendering/Shader.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -20,23 +20,36 @@ Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
     lightingManager.setupLightingOnScene();
 
     lightingManager.addLight({
-        true,                   // active ou non
-        LightType::LIGHT_POINT, // type 0=ponctuelle, 1= directionnelle
-        Vec3(-1, 1,  -3),        // position
-        Vec3(0, -1, 0),         // direction vers le bas
-        Color(255, 255, 255),   // couleur blanche
-        0.8f,                   // intensité
-        1.0f, 0.7f, 1.8f        // Constantes d'atténuation (constant, linear, quadratic)
+                            true,                   // active ou non
+                            LightType::LIGHT_POINT, // type 0=ponctuelle, 1= directionnelle
+                            Vec3(3, 1, -1),        // position
+                            Vec3(0, -1, 0),         // direction vers le bas
+                            Color(255, 255, 255),   // couleur blanche
+                            1.f,                   // intensité
+                            1.0f, 0.7f, 1.8f        // Constantes d'atténuation (constant, linear, quadratic)
     });
+
+
+    lightingManager.addLight({false,
+                              LightType::LIGHT_DIRECTIONAL,
+                              Vec3(0, 10, 0),
+                              Vec3(1, -1, 0),
+                              Color(255, 255, 255),
+                              0.06f,
+                              0.5f, 0.7f, 1.8f});
+
     lightingManager.addLight({
-        false,
-        LightType::LIGHT_DIRECTIONAL,
-        Vec3(0, 10, 0),
-        Vec3(1, -1, 0),
-        Color(255, 255, 255),
-        0.06f,
-        0.5f, 0.7f, 1.8f
+                            true,                   // active ou non
+                            LightType::LIGHT_POINT, // type 0=ponctuelle, 1= directionnelle
+                            Vec3(-1, 1, -3),        // position
+                            Vec3(0, -1, 0),         // direction vers le bas
+                            Color(255, 255, 255),   // couleur blanche
+                            1.f,                   // intensité
+                            1.0f, 0.7f, 1.8f        // Constantes d'atténuation (constant, linear, quadratic)
     });
+
+
+
 
     std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
     for (const Light & light : lightingManager.getLights()) {
@@ -87,9 +100,9 @@ void Scene::initObjects() {
     entities.push_back(sol_beton);
 
     std::shared_ptr<Mesh> sphereMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::red());
-    Mat4 t5 = Mat4::Translation(Vec3(-2, 0,  -5));
+    Mat4 t5 = Mat4::Translation(Vec3(-2, 0, -5));
     Entity * sphere = new Entity(t5, sphereMesh, "../assets/materiaux/petit_caillou/petit_caillou_diffus.jpg", "../assets/materiaux/petit_caillou/petit_caillou_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg", "Sphere_toute_texturee");
-    sphere->getBoundingBox().setupBBoxBuffers();         
+    sphere->getBoundingBox().setupBBoxBuffers();
     entities.push_back(std::shared_ptr<Entity>(sphere));
 }
 

@@ -23,4 +23,6 @@ private:
 
     Shader* dirShadowShader;
     Shader* pointShadowShader;
+
+    bool punctualShadowEnabled = true;
 };

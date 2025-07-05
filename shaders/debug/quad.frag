@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 uniform sampler2D depthMap;
 in vec2 TexCoords;
 out vec4 FragColor;

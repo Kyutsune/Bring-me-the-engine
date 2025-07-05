@@ -38,17 +38,19 @@ int main() {
         std::cerr << "Problème à l'initialisation de GLFW\n";
         return -1;
     }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow * window = glfwCreateWindow(1600, 800, "Bring Me The Engine", nullptr, nullptr);
     if (!window) {
-        std::cerr << "Problème à la création de la fenêtre GLFW\n";
+        const char * description;
+        int code = glfwGetError(&description);
+        std::cerr << "Problème à la création de la fenêtre: " << (description ? description : "Erreur inconnue") << std::endl;
         glfwTerminate();
         return -1;
     }
-
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cerr << "Problème à l'initialisation de GLAD\n";

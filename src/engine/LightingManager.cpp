@@ -48,7 +48,7 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) cons
     shader.set("numLights", activeCount);
 
     int sentIndex = 0;
-    for (int i = 0; i < (int)lights.size() && sentIndex < activeCount; i++) {
+    for (int i = 0; i < (int)lights.size(); i++) {
         if (!lights[i].isActive())
             continue;
         std::string idx = std::to_string(sentIndex);
@@ -116,7 +116,7 @@ Light * LightingManager::getFirstDirectional() {
 const std::vector<Light> LightingManager::getPonctualLight() const {
     std::vector<Light> ponctualLights;
     for (const Light & light : lights) {
-        if (light.getType() == LightType::LIGHT_POINT) {
+        if (light.getType() == LightType::LIGHT_POINT && light.isActive()) {
             ponctualLights.emplace_back(light);
         }
     }

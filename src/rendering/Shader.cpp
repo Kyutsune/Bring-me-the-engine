@@ -131,3 +131,25 @@ void Shader::set(const std::string & name, const Mat4 & mat, const bool & should
     GLint loc = glGetUniformLocation(ID, name.c_str());
     glUniformMatrix4fv(loc, 1, should_transpose ? GL_TRUE : GL_FALSE, mat.ptr());
 }
+
+void Shader::setArray(const std::string & name, const GLint * values, int count) {
+    GLint location = glGetUniformLocation(ID, name.c_str());
+    if (location != -1) {
+        glUniform1iv(location, count, values);
+    }
+}
+
+
+void Shader::setVec3Array(const std::string& name, const glm::vec3* values, int count) {
+    GLint location = glGetUniformLocation(ID, name.c_str());
+    if (location != -1) {
+        glUniform3fv(location, count, glm::value_ptr(values[0]));
+    }
+}
+
+void Shader::setFloatArray(const std::string& name, const float* values, int count) {
+    GLint location = glGetUniformLocation(ID, name.c_str());
+    if (location != -1) {
+        glUniform1fv(location, count, values);
+    }
+}

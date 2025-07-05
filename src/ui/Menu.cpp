@@ -21,7 +21,7 @@ Menu::Menu(GLFWwindow * window) : window(window), scene(g_scene) {
     ImGui::LoadIniSettingsFromDisk(io.IniFilename);
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImGui_ImplOpenGL3_Init("#version 410 core");
 
     taille_minimale_x = 300;
     taille_minimale_y = 100;
