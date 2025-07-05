@@ -4,47 +4,38 @@
 #include "../external/stb/stb_image_write.h"
 
 Renderer::Renderer(Shader * entityShader, Shader * lightShader, Shader * skyboxShader, Shader * boundingBoxShader, Shader * shadowShaderDirectionnal, Shader * shadowShaderPonctual)
-    : entityShader(entityShader), lightShader(lightShader), skyboxShader(skyboxShader), boundingBoxShader(boundingBoxShader), shadowShaderDirectionnal(shadowShaderDirectionnal), shadowShaderPonctual(shadowShaderPonctual) {
+    : entityShader(entityShader),
+      lightShader(lightShader),
+      skyboxShader(skyboxShader),
+      boundingBoxShader(boundingBoxShader),
+      shadowShaderDirectionnal(shadowShaderDirectionnal),
+      shadowShaderPonctual(shadowShaderPonctual),
+      shadowManager(shadowShaderDirectionnal, shadowShaderPonctual) {
+        initShadowMap();
 }
 
 void Renderer::renderScene(const Scene & scene) {
     Mat4 view = scene.getCamera().getViewMatrix();
     Mat4 projection = scene.getCamera().getProjectionMatrix();
-    const Light & dirLight = scene.getLightingManager().getFirstDirectional();
 
+    // Skybox
     if (scene.getSkybox() && skyboxShader) {
         renderSkybox(scene.getSkybox(), view, projection);
     }
 
+    // Shader principal
     entityShader->use();
 
-    // Si pas de lumière directionnelle, on ne rend pas les ombres liées à ce type de lumière
-    if (dirLight.getType() == LightType::LIGHT_ERROR || dirLight.isActive()) {
-        entityShader->set("lightSpaceMatrix", shadowMapperDirectionnal.getLightSpaceMatrix(), false);
-        entityShader->set("dirLightDirection", dirLight.getDirection());
+    // Shadow manager : bind les ombres actives dans le shader
+    shadowManager.bindShadows(*entityShader, scene);
 
-        shadowMapperDirectionnal.bindTexture(GL_TEXTURE3);
-        entityShader->set("shadowMap", 3);
-        entityShader->set("useDirectionalShadow", true);
-    } else {
-        entityShader->set("useDirectionalShadow", false);
-    }
-
-    //TODO: Ici on ne gère que la première lumière ponctuelle, il faudrait toutes les gérer
-    if (!shadowMapperPonctuals.empty()) {
-        shadowMapperPonctuals[0].bindTexture(GL_TEXTURE4);
-        entityShader->set("pointShadowMap", 4);
-        entityShader->set("lightPos", scene.getLightingManager().getPonctualLight()[0].getPosition());
-        entityShader->set("farPlane", scene.getLightingManager().getPonctualLight()[0].computeEffectiveRange(0.01f));
-        entityShader->set("pointLightIntensity", scene.getLightingManager().getPonctualLight()[0].getIntensity());
-        entityShader->set("usePointShadow", true);
-    } else {
-        entityShader->set("usePointShadow", false);
-    }
-
+    // Envoyer les lumières classiques
     scene.getLightingManager().applyLightning(*entityShader, scene.getCamera().getPosition());
+
+    // Rendu des entités visibles
     renderEntities(scene, view, projection);
 
+    // Dessin des entités représentant les lumières
     renderLightEntities(scene, view, projection);
 }
 
@@ -81,30 +72,8 @@ void Renderer::renderLightEntities(const Scene & scene, const Mat4 & view, const
     }
 }
 
-void Renderer::renderPonctualShadowMaps(const Scene & scene) {
-    const std::vector<Light> & pointLights = scene.getLightingManager().getPonctualLight();
-
-    // Redimensionner si nécessaire
-    if (shadowMapperPonctuals.size() < pointLights.size()) {
-        size_t oldSize = shadowMapperPonctuals.size();
-        shadowMapperPonctuals.resize(pointLights.size());
-
-        // Initialiser les nouvelles shadow maps
-        for (size_t i = oldSize; i < pointLights.size(); ++i) {
-            shadowMapperPonctuals[i] = PonctualShadowMap(1024, 1024);
-        }
-    }
-
-    // Rendu de chaque shadow map
-    for (size_t i = 0; i < pointLights.size(); ++i) {
-        if (!pointLights[i].isActive())
-            continue;
-        shadowMapperPonctuals[i].render(scene, *shadowShaderPonctual, pointLights[i]);
-    }
-}
 
 void Renderer::renderFrame(const Scene & scene) {
-    shadowMapperDirectionnal.render(scene, *shadowShaderDirectionnal);
-    renderPonctualShadowMaps(scene);
+    shadowManager.renderShadows(scene);
     renderScene(scene);
 }

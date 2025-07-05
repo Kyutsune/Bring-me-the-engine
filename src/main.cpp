@@ -91,7 +91,6 @@ int main() {
         }
     }
     Renderer renderer(shaders[0].get(), shaders[1].get(), shaders[2].get(), shaders[3].get(), shaders[4].get(), shaders[5].get());
-    renderer.initShadowMap();
 
     // boucle de rendu
     while (!glfwWindowShouldClose(window)) {

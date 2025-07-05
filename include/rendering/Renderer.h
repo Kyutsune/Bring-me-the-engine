@@ -6,8 +6,7 @@
 #include "engine/Scene.h"
 #include "rendering/Shader.h"
 #include "rendering/Skybox.h"
-#include "shadows/DirectionalShadowMap.h"
-#include "shadows/PonctualShadowMap.h"
+#include "rendering/ShadowManager.h"
 
 class Renderer {
 public:
@@ -19,12 +18,11 @@ public:
     void renderEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
     void renderLightEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
 
-    inline void initShadowMap() { shadowMapperDirectionnal.init(); }
+    inline void initShadowMap() { shadowManager.init_directionnal_shadows(); }
     void debugSaveShadowMap(const std::string & filename);
     void renderShadowMapOnQuad();
     void renderFrame(const Scene & scene);
 
-    void renderPonctualShadowMaps(const Scene & scene);
 
     Shader quadDebugShader = Shader("../shaders/debug/quad.vert", "../shaders/debug/quad.frag");
 
@@ -33,10 +31,8 @@ private:
     Shader * lightShader;
     Shader * skyboxShader;
     Shader * boundingBoxShader;
-
-    DirectionalShadowMap shadowMapperDirectionnal;
     Shader * shadowShaderDirectionnal;
-
-    std::vector<PonctualShadowMap> shadowMapperPonctuals;
     Shader * shadowShaderPonctual;
+
+    ShadowManager shadowManager;
 };
