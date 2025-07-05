@@ -25,4 +25,7 @@ private:
     Shader* pointShadowShader;
 
     bool punctualShadowEnabled = true;
+    // Nombre maximum de lumières ponctuelles supportées, ce nombre est en réalité un copier
+    // coller de ce qui est défini dans le shader.
+    static constexpr size_t MAX_PONC_LIGHTS = 8; 
 };

@@ -48,7 +48,7 @@ void ShadowManager::bindShadows(Shader & shader, const Scene & scene) {
 
     const auto & pointLights = scene.getLightingManager().getPonctualLight();
     size_t realCount = std::min(punctualShadows.size(), pointLights.size());
-    constexpr size_t MAX_PONC_LIGHTS = 8;
+
     size_t count = std::min(realCount, MAX_PONC_LIGHTS);
 
     shader.set("pointLightNumber", static_cast<int>(count));

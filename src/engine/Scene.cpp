@@ -44,7 +44,7 @@ Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
                             Vec3(-1, 1, -3),        // position
                             Vec3(0, -1, 0),         // direction vers le bas
                             Color(255, 255, 255),   // couleur blanche
-                            1.f,                   // intensité
+                            0.7f,                   // intensité
                             1.0f, 0.7f, 1.8f        // Constantes d'atténuation (constant, linear, quadratic)
     });
 
