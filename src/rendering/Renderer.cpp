@@ -30,6 +30,7 @@ void Renderer::renderScene(const Scene & scene) {
         entityShader->set("useDirectionalShadow", false);
     }
 
+    //TODO: Ici on ne gère que la première lumière ponctuelle, il faudrait toutes les gérer
     if (!shadowMapperPonctuals.empty()) {
         shadowMapperPonctuals[0].bindTexture(GL_TEXTURE4);
         entityShader->set("pointShadowMap", 4);
@@ -81,7 +82,7 @@ void Renderer::renderLightEntities(const Scene & scene, const Mat4 & view, const
 }
 
 void Renderer::renderPonctualShadowMaps(const Scene & scene) {
-    const auto & pointLights = scene.getLightingManager().getPonctualLight();
+    const std::vector<Light> & pointLights = scene.getLightingManager().getPonctualLight();
 
     // Redimensionner si nécessaire
     if (shadowMapperPonctuals.size() < pointLights.size()) {

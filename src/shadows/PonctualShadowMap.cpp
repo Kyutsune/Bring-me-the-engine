@@ -1,5 +1,6 @@
 #include "shadows/PonctualShadowMap.h"
 #include "Globals.h"
+#include "math/Trigo.h"
 
 PonctualShadowMap::PonctualShadowMap(unsigned int width, unsigned int height)
     : width(width), height(height), lightPosition(0.0f, 0.0f, 0.0f) {
@@ -24,7 +25,6 @@ void PonctualShadowMap::init() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-    // Pas besoin de lier ici la texture complète, on fera face par face dans render()
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -40,7 +40,7 @@ void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const
     float nearPlane = 1.0f;
     float farPlane = pointLight.computeEffectiveRange(0.01f);
 
-    Mat4 shadowProj = Mat4::perspective(M_PI / 2.0f, 1.0f, nearPlane, farPlane);
+    Mat4 shadowProj = Mat4::perspective(radians(90.0f), 1.0f, nearPlane, farPlane);
 
     Vec3 pos = pointLight.position;
     Mat4 shadowViews[6] = {
