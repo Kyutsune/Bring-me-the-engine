@@ -35,14 +35,14 @@ void PonctualShadowMap::init() {
 }
 
 void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const Light & pointLight) {
-    lightPosition = pointLight.position;
+    lightPosition = pointLight.getPosition();
 
     float nearPlane = 1.0f;
     float farPlane = pointLight.computeEffectiveRange(0.01f);
 
     Mat4 shadowProj = Mat4::perspective(radians(90.0f), 1.0f, nearPlane, farPlane);
 
-    Vec3 pos = pointLight.position;
+    Vec3 pos = pointLight.getPosition();
     Mat4 shadowViews[6] = {
         Mat4::lookAt(pos, pos + Vec3(1, 0, 0), Vec3(0, -1, 0)),
         Mat4::lookAt(pos, pos + Vec3(-1, 0, 0), Vec3(0, -1, 0)),

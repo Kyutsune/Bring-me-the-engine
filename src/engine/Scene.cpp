@@ -40,7 +40,7 @@ Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
 
     std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
     for (const Light & light : lightingManager.getLights()) {
-        Mat4 lightTransform = Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.position);
+        Mat4 lightTransform = Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.getPosition());
         std::shared_ptr<Entity> lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
         lightEntities.push_back(lightEntity);
     }

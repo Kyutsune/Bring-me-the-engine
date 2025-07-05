@@ -39,7 +39,7 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) cons
 
     int activeCount = 0;
     for (const auto & light : lights) {
-        if (light.active)
+        if (light.isActive())
             activeCount++;
     }
     if (activeCount > MAX_LIGHTS)
@@ -49,17 +49,17 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) cons
 
     int sentIndex = 0;
     for (int i = 0; i < (int)lights.size() && sentIndex < activeCount; i++) {
-        if (!lights[i].active)
+        if (!lights[i].isActive())
             continue;
         std::string idx = std::to_string(sentIndex);
-        shader.set("lights[" + idx + "].type", (int)lights[i].type);
-        shader.set("lights[" + idx + "].position", lights[i].position);
-        shader.set("lights[" + idx + "].direction", lights[i].direction.normalized());
-        shader.set("lights[" + idx + "].color", Vec3(lights[i].color.r, lights[i].color.g, lights[i].color.b));
-        shader.set("lights[" + idx + "].intensity", lights[i].intensity);
-        shader.set("lights[" + idx + "].constant", lights[i].constant);
-        shader.set("lights[" + idx + "].linear", lights[i].linear);
-        shader.set("lights[" + idx + "].quadratic", lights[i].quadratic);
+        shader.set("lights[" + idx + "].type", (int)lights[i].getType());
+        shader.set("lights[" + idx + "].position", lights[i].getPosition());
+        shader.set("lights[" + idx + "].direction", lights[i].getDirection().normalized());
+        shader.set("lights[" + idx + "].color", Vec3(lights[i].getColor().r, lights[i].getColor().g, lights[i].getColor().b));
+        shader.set("lights[" + idx + "].intensity", lights[i].getIntensity());
+        shader.set("lights[" + idx + "].constant", lights[i].getConstant());
+        shader.set("lights[" + idx + "].linear", lights[i].getLinear());
+        shader.set("lights[" + idx + "].quadratic", lights[i].getQuadratic());
         sentIndex++;
     }
 
@@ -93,30 +93,30 @@ void LightingManager::applyPosLights(Shader & shader) const {
 
 const Light & LightingManager::getFirstDirectional() const {
     for (const Light & light : lights) {
-        if (light.type == LightType::LIGHT_DIRECTIONAL) {
+        if (light.getType() == LightType::LIGHT_DIRECTIONAL) {
             return light;
         }
     }
     static Light dummyLight;
-    dummyLight.type = LightType::LIGHT_ERROR;
+    dummyLight.setType(LightType::LIGHT_ERROR);
     return dummyLight;
 }
 
 Light * LightingManager::getFirstDirectional() {
     for (Light & light : lights) {
-        if (light.type == LightType::LIGHT_DIRECTIONAL) {
+        if (light.getType() == LightType::LIGHT_DIRECTIONAL) {
             return &light;
         }
     }
     static Light dummyLight;
-    dummyLight.type = LightType::LIGHT_ERROR;
+    dummyLight.setType(LightType::LIGHT_ERROR);
     return &dummyLight;
 }
 
 const std::vector<Light> LightingManager::getPonctualLight() const {
     std::vector<Light> ponctualLights;
     for (const Light & light : lights) {
-        if (light.type == LightType::LIGHT_POINT) {
+        if (light.getType() == LightType::LIGHT_POINT) {
             ponctualLights.emplace_back(light);
         }
     }
@@ -126,7 +126,7 @@ const std::vector<Light> LightingManager::getPonctualLight() const {
 std::vector<Light> * LightingManager::getPonctualLight() {
     std::vector<Light> * ponctualLights = new std::vector<Light>();
     for (Light & light : lights) {
-        if (light.type == LightType::LIGHT_POINT) {
+        if (light.getType() == LightType::LIGHT_POINT) {
             ponctualLights->emplace_back(light);
         }
     }

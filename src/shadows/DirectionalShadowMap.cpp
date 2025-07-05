@@ -41,14 +41,14 @@ void DirectionalShadowMap::init() {
 
 void DirectionalShadowMap::render(const Scene& scene, Shader& shadowShader) {
     const Light& dirLight = scene.getLightingManager().getFirstDirectional();
-    if (dirLight.type == LightType::LIGHT_ERROR || !dirLight.active)
+    if (dirLight.getType() == LightType::LIGHT_ERROR || !dirLight.isActive())
         return;
 
-    Vec3 lightTarget = dirLight.position + dirLight.direction;
-    Vec3 up = std::abs(dirLight.direction.z) > 0.9f ? Vec3(0, 1, 0) : Vec3(0, 0, 1);
-    Mat4 lightView = Mat4::lookAt(dirLight.position, lightTarget, up);
+    Vec3 lightTarget = dirLight.getPosition() + dirLight.getDirection();
+    Vec3 up = std::abs(dirLight.getDirection().z) > 0.9f ? Vec3(0, 1, 0) : Vec3(0, 0, 1);
+    Mat4 lightView = Mat4::lookAt(dirLight.getPosition(), lightTarget, up);
 
-    Camera lightCam(dirLight.position, lightTarget, up, 90.0f, 1.0f, 1.0f, 10.0f);
+    Camera lightCam(dirLight.getPosition(), lightTarget, up, 90.0f, 1.0f, 1.0f, 10.0f);
     Frustum lightFrustum = Frustum().updateFromCamera(lightCam);
     AABB boundingBox = lightFrustum.computeBoundingBox();
 

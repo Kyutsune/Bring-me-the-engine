@@ -19,9 +19,9 @@ void Renderer::renderScene(const Scene & scene) {
     entityShader->use();
 
     // Si pas de lumière directionnelle, on ne rend pas les ombres liées à ce type de lumière
-    if (dirLight.type == LightType::LIGHT_ERROR || dirLight.active) {
+    if (dirLight.getType() == LightType::LIGHT_ERROR || dirLight.isActive()) {
         entityShader->set("lightSpaceMatrix", shadowMapperDirectionnal.getLightSpaceMatrix(), false);
-        entityShader->set("dirLightDirection", dirLight.direction);
+        entityShader->set("dirLightDirection", dirLight.getDirection());
 
         shadowMapperDirectionnal.bindTexture(GL_TEXTURE3);
         entityShader->set("shadowMap", 3);
@@ -34,9 +34,9 @@ void Renderer::renderScene(const Scene & scene) {
     if (!shadowMapperPonctuals.empty()) {
         shadowMapperPonctuals[0].bindTexture(GL_TEXTURE4);
         entityShader->set("pointShadowMap", 4);
-        entityShader->set("lightPos", scene.getLightingManager().getPonctualLight()[0].position);
+        entityShader->set("lightPos", scene.getLightingManager().getPonctualLight()[0].getPosition());
         entityShader->set("farPlane", scene.getLightingManager().getPonctualLight()[0].computeEffectiveRange(0.01f));
-        entityShader->set("pointLightIntensity", scene.getLightingManager().getPonctualLight()[0].intensity);
+        entityShader->set("pointLightIntensity", scene.getLightingManager().getPonctualLight()[0].getIntensity());
         entityShader->set("usePointShadow", true);
     } else {
         entityShader->set("usePointShadow", false);
@@ -73,7 +73,7 @@ void Renderer::renderLightEntities(const Scene & scene, const Mat4 & view, const
     const auto & lightEntities = scene.getLightEntities();
 
     for (size_t i = 0; i < lightEntities.size(); ++i) {
-        if (lights[i].type != LightType::LIGHT_POINT)
+        if (lights[i].getType() != LightType::LIGHT_POINT)
             continue;
 
         scene.getLightingManager().applyPosLights(*lightShader);
@@ -97,7 +97,7 @@ void Renderer::renderPonctualShadowMaps(const Scene & scene) {
 
     // Rendu de chaque shadow map
     for (size_t i = 0; i < pointLights.size(); ++i) {
-        if (!pointLights[i].active)
+        if (!pointLights[i].isActive())
             continue;
         shadowMapperPonctuals[i].render(scene, *shadowShaderPonctual, pointLights[i]);
     }
