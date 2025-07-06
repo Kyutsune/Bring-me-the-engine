@@ -57,11 +57,11 @@ void Menu::render() {
     setupMenuDisplay();
     ImGui::Begin("Bring me the menu", &m_show);
 
-    UI::drawTextureSection(scene);
-    UI::drawDirectionnalLightSection(scene);
-    UI::drawFogSection(scene);
-    UI::drawSensitivitySection();
-    UI::drawQuitButton(window);
+    Sections::textureSection(scene);
+    Sections::directionnalLightSection(scene);
+    Sections::fogSection(scene);
+    Sections::sensitivitySection();
+    Sections::quitButton(window);
 
     ImGui::End();
 }

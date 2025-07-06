@@ -3,10 +3,10 @@
 #include "Globals.h"
 #include "engine/Scene.h"
 
-namespace UI {
-    void drawTextureSection(Scene * scene);
-    void drawDirectionnalLightSection(Scene * scene);
-    void drawSensitivitySection();
-    void drawFogSection(Scene * scene);
-    void drawQuitButton(GLFWwindow * window);
+namespace Sections {
+    void textureSection(Scene * scene);
+    void directionnalLightSection(Scene * scene);
+    void sensitivitySection();
+    void fogSection(Scene * scene);
+    void quitButton(GLFWwindow * window);
 }

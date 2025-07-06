@@ -3,9 +3,9 @@
 #include "engine/Scene.h"
 #include "imgui.h"
 
-namespace UI {
+namespace Sections {
 
-    void drawSensitivitySection() {
+    void sensitivitySection() {
         if (ImGui::CollapsingHeader("Sensibilité")) {
             ImGui::SeparatorText("Sensibilité de la souris");
             ImGui::SliderFloat("Sensibilité rotation##SliderRot", &g_sensibility_rot, 0.01f, 0.5f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
@@ -24,7 +24,7 @@ namespace UI {
         }
     }
 
-    void drawFogSection(Scene * scene) {
+    void fogSection(Scene * scene) {
         if (ImGui::CollapsingHeader("Fog")) {
             ImGui::SeparatorText("Type de fog actif");
             static const char * items[] = {"Aucun", "Linéaire", "Exponentiel", "Exponentiel²"};
@@ -57,13 +57,13 @@ namespace UI {
         }
     }
 
-    void drawQuitButton(GLFWwindow * window) {
+    void quitButton(GLFWwindow * window) {
         if (ImGui::Button("Quitter")) {
             glfwSetWindowShouldClose(window, true);
         }
     }
 
-    void drawTextureSection(Scene * scene) {
+    void textureSection(Scene * scene) {
         if (ImGui::CollapsingHeader("Textures")) {
             for (std::shared_ptr<Entity> & entityPtr : scene->getEntities()) {
                 ImGui::PushID(entityPtr.get()); // ou entityPtr->getName().c_str()
@@ -85,7 +85,7 @@ namespace UI {
         }
     }
 
-    void drawDirectionnalLightSection(Scene * scene) {
+    void directionnalLightSection(Scene * scene) {
         if (ImGui::CollapsingHeader("Lumière directionnelle")) {
             ImGui::SeparatorText("Paramètres de la lumière directionnelle");
             LightingManager & lightingManager = scene->getLightingManager();
@@ -99,9 +99,6 @@ namespace UI {
             if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
                 light->setIntensity(intensity);
             }
-
-
-
         }
     }
 
