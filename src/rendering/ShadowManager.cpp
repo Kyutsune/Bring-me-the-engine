@@ -59,6 +59,9 @@ void ShadowManager::bindShadows(Shader & shader, const Scene & scene) {
     }
     // Si il y a moins que MAX_PONC_LIGHTS, binder les autres vides
     // OpenGL n'aime pas forcément binder des textures "vides" donc on les remplis de vide
+    //TODO: binder une texture vide pour ne pas laisser les count->maxponclights indéfinis et éviter les bugs 
+
+
 
     // Préparer un tableau complet de MAX_PONC_LIGHTS unités de texture
     std::vector<GLint> units(MAX_PONC_LIGHTS);
