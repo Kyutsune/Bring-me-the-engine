@@ -4,30 +4,30 @@
 
 AABB AABB::transform(const Mat4 & matrix) const {
     Vec3 corners[8] = {
-        {min.x, min.y, min.z}, // corner 0
-        {min.x, min.y, max.z}, // corner 1
-        {min.x, max.y, min.z}, // corner 2
-        {min.x, max.y, max.z}, // corner 3
-        {max.x, min.y, min.z}, // corner 4
-        {max.x, min.y, max.z}, // corner 5
-        {max.x, max.y, min.z}, // corner 6
-        {max.x, max.y, max.z}  // corner 7
+        {m_min.x, m_min.y, m_min.z}, // corner 0
+        {m_min.x, m_min.y, m_max.z}, // corner 1
+        {m_min.x, m_max.y, m_min.z}, // corner 2
+        {m_min.x, m_max.y, m_max.z}, // corner 3
+        {m_max.x, m_min.y, m_min.z}, // corner 4
+        {m_max.x, m_min.y, m_max.z}, // corner 5
+        {m_max.x, m_max.y, m_min.z}, // corner 6
+        {m_max.x, m_max.y, m_max.z}  // corner 7
     };
 
     AABB transformed;
-    transformed.min = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
-    transformed.max = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    transformed.m_min = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    transformed.m_max = Vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
     for (const auto & corner : corners) {
         Vec3 transformedCorner = matrix * corner;
-        transformed.min = Vec3(
-            std::min(transformed.min.x, transformedCorner.x),
-            std::min(transformed.min.y, transformedCorner.y),
-            std::min(transformed.min.z, transformedCorner.z));
-        transformed.max = Vec3(
-            std::max(transformed.max.x, transformedCorner.x),
-            std::max(transformed.max.y, transformedCorner.y),
-            std::max(transformed.max.z, transformedCorner.z));
+        transformed.m_min = Vec3(
+            std::min(transformed.m_min.x, transformedCorner.x),
+            std::min(transformed.m_min.y, transformedCorner.y),
+            std::min(transformed.m_min.z, transformedCorner.z));
+        transformed.m_max = Vec3(
+            std::max(transformed.m_max.x, transformedCorner.x),
+            std::max(transformed.m_max.y, transformedCorner.y),
+            std::max(transformed.m_max.z, transformedCorner.z));
     }
 
     return transformed;
@@ -35,30 +35,30 @@ AABB AABB::transform(const Mat4 & matrix) const {
 
 void AABB::setupBBoxBuffers() {
     float vertices[] = {
-        min.x,
-        min.y,
-        min.z,
-        max.x,
-        min.y,
-        min.z,
-        min.x,
-        max.y,
-        min.z,
-        max.x,
-        max.y,
-        min.z,
-        min.x,
-        min.y,
-        max.z,
-        max.x,
-        min.y,
-        max.z,
-        min.x,
-        max.y,
-        max.z,
-        max.x,
-        max.y,
-        max.z,
+        m_min.x,
+        m_min.y,
+        m_min.z,
+        m_max.x,
+        m_min.y,
+        m_min.z,
+        m_min.x,
+        m_max.y,
+        m_min.z,
+        m_max.x,
+        m_max.y,
+        m_min.z,
+        m_min.x,
+        m_min.y,
+        m_max.z,
+        m_max.x,
+        m_min.y,
+        m_max.z,
+        m_min.x,
+        m_max.y,
+        m_max.z,
+        m_max.x,
+        m_max.y,
+        m_max.z,
     };
 
     unsigned int indices[] = {
@@ -101,13 +101,13 @@ void AABB::drawAABB(const Mat4 & model, const Mat4 & view, const Mat4 & projecti
 
 Vec3 AABB::intersectPlanes(const Plane& p1, const Plane& p2, const Plane& p3) {
     Mat4 A({
-        p1.normal.x, p1.normal.y, p1.normal.z, 0.0f,
-        p2.normal.x, p2.normal.y, p2.normal.z, 0.0f,
-        p3.normal.x, p3.normal.y, p3.normal.z, 0.0f,
+        p1.m_normal.x, p1.m_normal.y, p1.m_normal.z, 0.0f,
+        p2.m_normal.x, p2.m_normal.y, p2.m_normal.z, 0.0f,
+        p3.m_normal.x, p3.m_normal.y, p3.m_normal.z, 0.0f,
         0.0f,        0.0f,        0.0f,        1.0f
     });
 
-    Vec3 b(-p1.distance, -p2.distance, -p3.distance);
+    Vec3 b(-p1.m_distance, -p2.m_distance, -p3.m_distance);
     Vec3 result = A.inverse() * b;
     return result;
 }

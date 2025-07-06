@@ -22,26 +22,26 @@ void ClavierSouris::handleContinuousInput(GLFWwindow * window) {
     // Il pourrait y avoir d'autres moyens plus propre pour gérer cela?
     if (glfwGetKey(window, 87) == GLFW_PRESS) { //z
         Vec3 dir = cam->getForward();
-        cam->setPosition(cam->getPosition() + dir * sensibility_depl);
-        cam->setTarget(cam->getTarget() + dir * sensibility_depl);
+        cam->setPosition(cam->getPosition() + dir * g_sensibility_depl);
+        cam->setTarget(cam->getTarget() + dir * g_sensibility_depl);
     }
 
     if (glfwGetKey(window, 83) == GLFW_PRESS) { //s
         Vec3 dir = cam->getBackward();
-        cam->setPosition(cam->getPosition() + dir * sensibility_depl);
-        cam->setTarget(cam->getTarget() + dir * sensibility_depl);
+        cam->setPosition(cam->getPosition() + dir * g_sensibility_depl);
+        cam->setTarget(cam->getTarget() + dir * g_sensibility_depl);
     }
 
     if (glfwGetKey(window, 81) == GLFW_PRESS) { //a
         Vec3 dir = cam->getLeft();
-        cam->setPosition(cam->getPosition() + dir * sensibility_depl);
-        cam->setTarget(cam->getTarget() + dir * sensibility_depl);
+        cam->setPosition(cam->getPosition() + dir * g_sensibility_depl);
+        cam->setTarget(cam->getTarget() + dir * g_sensibility_depl);
     }
 
     if (glfwGetKey(window, 68) == GLFW_PRESS) { //d
         Vec3 dir = cam->getRight();
-        cam->setPosition(cam->getPosition() + dir * sensibility_depl);
-        cam->setTarget(cam->getTarget() + dir * sensibility_depl);
+        cam->setPosition(cam->getPosition() + dir * g_sensibility_depl);
+        cam->setTarget(cam->getTarget() + dir * g_sensibility_depl);
     }
     if(glfwGetKey(window, 67) == GLFW_PRESS) { //c
         std::cout<< "Position de la caméra: " << cam->getPosition() << std::endl;
@@ -58,25 +58,25 @@ void ClavierSouris::handleMouse(GLFWwindow * window, double xpos, double ypos) {
     if (!cam)
         return;
 
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
+    if (m_firstMouse) {
+        m_lastX = xpos;
+        m_lastY = ypos;
+        m_firstMouse = false;
         return;
     }
 
-    double dx = xpos - lastX;
-    double dy = ypos - lastY;
+    double dx = xpos - m_lastX;
+    double dy = ypos - m_lastY;
 
     // Déplacement latéral + vertical avec Ctrl
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS ||
         glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS) {
 
-        cam->setPosition(cam->getPosition() - cam->getRight() * static_cast<float>(dx) * sensibility_depl);
-        cam->setTarget(cam->getTarget() - cam->getRight() * static_cast<float>(dx) * sensibility_depl);
+        cam->setPosition(cam->getPosition() - cam->getRight() * static_cast<float>(dx) * g_sensibility_depl);
+        cam->setTarget(cam->getTarget() - cam->getRight() * static_cast<float>(dx) * g_sensibility_depl);
 
-        cam->setPosition(cam->getPosition() + Vec3(0, 1, 0) * static_cast<float>(dy) * sensibility_depl);
-        cam->setTarget(cam->getTarget() + Vec3(0, 1, 0) * static_cast<float>(dy) * sensibility_depl);
+        cam->setPosition(cam->getPosition() + Vec3(0, 1, 0) * static_cast<float>(dy) * g_sensibility_depl);
+        cam->setTarget(cam->getTarget() + Vec3(0, 1, 0) * static_cast<float>(dy) * g_sensibility_depl);
     }
 
     // Rotation caméra avec clic droit
@@ -85,8 +85,8 @@ void ClavierSouris::handleMouse(GLFWwindow * window, double xpos, double ypos) {
         Vec3 right = cam->getRight();
         Vec3 up = Vec3(0, 1, 0); 
 
-        float yaw = static_cast<float>(dx) * sensibility_rot;
-        float pitch = static_cast<float>(dy) * sensibility_rot;
+        float yaw = static_cast<float>(dx) * g_sensibility_rot;
+        float pitch = static_cast<float>(dy) * g_sensibility_rot;
 
         Mat4 yawRotation;
         yawRotation = yawRotation.rotate(up, yaw); 
@@ -99,6 +99,6 @@ void ClavierSouris::handleMouse(GLFWwindow * window, double xpos, double ypos) {
         cam->setTarget(cam->getPosition() + rotatedDir.normalized());
     }
 
-    lastX = xpos;
-    lastY = ypos;
+    m_lastX = xpos;
+    m_lastY = ypos;
 }

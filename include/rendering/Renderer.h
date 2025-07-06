@@ -18,21 +18,19 @@ public:
     void renderEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
     void renderLightEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection);
 
-    inline void initShadowMap() { shadowManager.init_directionnal_shadows(); }
+    inline void initShadowMap() { m_shadowManager.init_directionnal_shadows(); }
     void debugSaveShadowMap(const std::string & filename);
     void renderShadowMapOnQuad();
     void renderFrame(const Scene & scene);
 
-
-    Shader quadDebugShader = Shader("../shaders/debug/quad.vert", "../shaders/debug/quad.frag");
-
 private:
-    Shader * entityShader;
-    Shader * lightShader;
-    Shader * skyboxShader;
-    Shader * boundingBoxShader;
-    Shader * shadowShaderDirectionnal;
-    Shader * shadowShaderPonctual;
+    Shader * m_entityShader;
+    Shader * m_lightShader;
+    Shader * m_skyboxShader;
+    Shader * m_boundingBoxShader;
+    Shader * m_shadowShaderDirectionnal;
+    Shader * m_shadowShaderPonctual;
 
-    ShadowManager shadowManager;
+    ShadowManager m_shadowManager;
+    Shader m_quadDebugShader = Shader("../shaders/debug/quad.vert", "../shaders/debug/quad.frag");
 };

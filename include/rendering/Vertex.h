@@ -2,10 +2,10 @@
 #include "math/Vec.h"
 
 struct Vertex {
-    Vec3 position;
-    Vec3 normal;
-    Vec3 color;
-    Vec2 texCoords;
-    Vec3 tangent;    
-    Vec3 bitangent; 
+    Vec3 m_position;
+    Vec3 m_normal;
+    Vec3 m_color;
+    Vec2 m_texCoords;
+    Vec3 m_tangent;    
+    Vec3 m_bitangent; 
 };

@@ -3,19 +3,19 @@
 #include "math/Trigo.h"
 
 PonctualShadowMap::PonctualShadowMap(unsigned int width, unsigned int height)
-    : width(width), height(height), lightPosition(0.0f, 0.0f, 0.0f) {
+    : m_width(width), m_height(height), m_lightPosition(0.0f, 0.0f, 0.0f) {
     init();
 }
 
 void PonctualShadowMap::init() {
-    glGenFramebuffers(1, &shadowFBO);
+    glGenFramebuffers(1, &m_shadowFBO);
 
-    glGenTextures(1, &depthCubemap);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+    glGenTextures(1, &m_depthCubemap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthCubemap);
 
     for (unsigned int i = 0; i < 6; ++i) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT32F,
-                     width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+                     m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     }
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -24,8 +24,8 @@ void PonctualShadowMap::init() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFBO);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_depthCubemap, 0);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cerr << "Framebuffer not complete!" << std::endl;
@@ -35,7 +35,7 @@ void PonctualShadowMap::init() {
 }
 
 void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const Light & pointLight) {
-    lightPosition = pointLight.getPosition();
+    m_lightPosition = pointLight.getPosition();
 
     float nearPlane = 1.0f;
     float farPlane = pointLight.computeEffectiveRange(0.01f);
@@ -51,13 +51,13 @@ void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const
         Mat4::lookAt(pos, pos + Vec3(0, 0, 1), Vec3(0, -1, 0)),
         Mat4::lookAt(pos, pos + Vec3(0, 0, -1), Vec3(0, -1, 0))};
 
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, m_width, m_height);
     shadowShader.use();
 
-    shadowShader.set("lightPos", lightPosition);
+    shadowShader.set("lightPos", m_lightPosition);
     shadowShader.set("farPlane", farPlane);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFBO);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
 
@@ -65,7 +65,7 @@ void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const
         // Attacher la bonne face de la cubemap
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
-                               depthCubemap, 0);
+                               m_depthCubemap, 0);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             std::cerr << "Framebuffer incomplete for face " << face << std::endl;
@@ -76,7 +76,7 @@ void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const
 
         Mat4 shadowMatrix = shadowViews[face] * shadowProj;
 
-        Vec4 testPoint = shadowMatrix * Vec4(lightPosition, 1.0f);
+        Vec4 testPoint = shadowMatrix * Vec4(m_lightPosition, 1.0f);
         Vec3 ndc = Vec3(testPoint.x / testPoint.w, testPoint.y / testPoint.w, testPoint.z / testPoint.w);
 
         shadowShader.set("shadowMatrix", shadowMatrix);
@@ -88,10 +88,10 @@ void PonctualShadowMap::render(const Scene & scene, Shader & shadowShader, const
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, windowWidth, windowHeight);
+    glViewport(0, 0, g_windowWidth, g_windowHeight);
 }
 
 void PonctualShadowMap::bindTexture(GLenum textureUnit) const {
     glActiveTexture(textureUnit);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_depthCubemap);
 }

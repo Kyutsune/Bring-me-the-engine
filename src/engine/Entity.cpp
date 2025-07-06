@@ -5,65 +5,65 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
                const std::string & filenameNormalMap,
                const std::string & filenameSpecularMap,
                const std::string & name)
-    : transform(transform), mesh(std::move(mesh)) {
+    : m_transform(transform), m_mesh(std::move(mesh)) {
 
     if (!filenameTextDiffuse.empty() && !std::filesystem::exists(filenameTextDiffuse)) {
         std::cout << "Erreur lors du chargement de la texture : " << filenameTextDiffuse << " La couleur seule sera utilisée" << std::endl;
     } else if (!filenameTextDiffuse.empty()) {
-        material.diffuse_text = std::make_shared<Texture>(filenameTextDiffuse);
-        material.useDiffuse = true;
+        m_material.m_diffuseTexture = std::make_shared<Texture>(filenameTextDiffuse);
+        m_material.m_useDiffuse = true;
     }
 
     if (!filenameNormalMap.empty() && !std::filesystem::exists(filenameNormalMap)) {
         std::cout << "Erreur lors du chargement de la normal map : " << filenameNormalMap << " La normal map ne sera pas utilisée" << std::endl;
     } else if (!filenameNormalMap.empty()) {
-        material.normal_map = std::make_shared<Texture>(filenameNormalMap);
-        material.useNormal = true;
+        m_material.m_normalMap = std::make_shared<Texture>(filenameNormalMap);
+        m_material.m_useNormal = true;
     }
 
     if (!filenameSpecularMap.empty() && !std::filesystem::exists(filenameSpecularMap)) {
         std::cout << "Erreur lors du chargement de la specular map : " << filenameSpecularMap << " La specular map ne sera pas utilisée" << std::endl;
     } else if (!filenameSpecularMap.empty()) {
-        material.specular_map = std::make_shared<Texture>(filenameSpecularMap);
-        material.useSpecular = true;
+        m_material.m_specularMap = std::make_shared<Texture>(filenameSpecularMap);
+        m_material.m_useSpecular = true;
     }
 
-    if (this->mesh) {
-        boundingBox = this->mesh->getBoundingBox();
+    if (this->m_mesh) {
+        m_boundingBox = this->m_mesh->getBoundingBox();
     }
-    entity_name = name.empty() ? "Unnamed Entity" : name;
+    m_entity_name = name.empty() ? "Unnamed Entity" : name;
 }
 
 void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection) {
-    updateCameraUniforms(shader, transform, view, projection);
+    updateCameraUniforms(shader, m_transform, view, projection);
 
-    if (material.diffuse_text && material.useDiffuse) {
+    if (m_material.m_diffuseTexture && m_material.m_useDiffuse) {
         shader.set("useTexture", 1);
         shader.set("texture_diffuse", 0);
-        material.diffuse_text->bind();
+        m_material.m_diffuseTexture->bind();
     } else {
         shader.set("useTexture", 0);
     }
 
-    if (material.normal_map && material.useNormal) {
+    if (m_material.m_normalMap && m_material.m_useNormal) {
         shader.set("useNormalMap", 1);
         shader.set("texture_normal", 1);
-        material.normal_map->bind(1);
+        m_material.m_normalMap->bind(1);
     } else {
         shader.set("useNormalMap", 0);
     }
 
-    if (material.specular_map && material.useSpecular) {
+    if (m_material.m_specularMap && m_material.m_useSpecular) {
         shader.set("useSpecularMap", 1);
         shader.set("texture_specular", 2);
-        material.specular_map->bind(2);
+        m_material.m_specularMap->bind(2);
     } else {
         shader.set("useSpecularMap", 0);
     }
 
-    mesh->draw();
+    m_mesh->draw();
 }
 
 AABB Entity::getTransformedBoundingBox() const {
-    return boundingBox.transform(transform);
+    return m_boundingBox.transform(m_transform);
 }

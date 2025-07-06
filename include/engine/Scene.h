@@ -19,42 +19,39 @@ class Scene {
 public:
     Scene();
     void update();
-
     void initObjects();
 
-    inline Camera * getCamera() { return &camera; }
-    inline const Camera & getCamera() const { return camera; }
-    inline Mat4 & getView() { return view; }
-    inline LightingManager & getLightingManager() { return lightingManager; }
-    inline const LightingManager & getLightingManager() const { return lightingManager; }
-    inline const Skybox * getSkybox() const { return skybox.get(); }
+    inline Camera * getCamera() { return &m_camera; }
+    inline const Camera & getCamera() const { return m_camera; }
+    inline Mat4 & getView() { return m_view; }
+    inline LightingManager & getLightingManager() { return m_lightingManager; }
+    inline const LightingManager & getLightingManager() const { return m_lightingManager; }
+    inline const Skybox * getSkybox() const { return m_skybox.get(); }
+    inline std::vector<std::shared_ptr<Entity>> & getEntities() { return m_entities; }
+    inline const std::vector<std::shared_ptr<Entity>> & getEntities() const { return m_entities; }
+    inline const std::vector<std::shared_ptr<Entity>> & getLightEntities() const { return m_lightEntities; }
+    inline const Frustum & getFrustum() const { return m_frustum; }
 
-
-    inline const int getFogType() const { return lightingManager.settings().fogType; }
-    inline void setFogType(int type) { lightingManager.settings().fogType = type; }
-    inline float * getFogStart() { return &lightingManager.settings().fogStart; }
-    inline float * getFogEnd() { return &lightingManager.settings().fogEnd; }
-    inline float * getFogDensity() { return &lightingManager.settings().fogDensity; }
-    inline void setFogDensity(float density) { lightingManager.settings().fogDensity = density; }
-    inline Color & getFogColor() { return lightingManager.settings().fogColor; }
-    inline const Frustum & getFrustum() const { return frustum; }
-    inline std::vector<std::shared_ptr<Entity>> & getEntities() { return entities; }
-    inline const std::vector<std::shared_ptr<Entity>> & getEntities() const { return entities; }
-    inline const std::vector<std::shared_ptr<Entity>> & getLightEntities() const { return lightEntities; }
+    inline const int getFogType() const { return m_lightingManager.settings().m_fogType; }
+    inline void setFogType(int type) { m_lightingManager.settings().m_fogType = type; }
+    inline float * getFogStart() { return &m_lightingManager.settings().m_fogStart; }
+    inline float * getFogEnd() { return &m_lightingManager.settings().m_fogEnd; }
+    inline float * getFogDensity() { return &m_lightingManager.settings().m_fogDensity; }
+    inline void setFogDensity(float density) { m_lightingManager.settings().m_fogDensity = density; }
+    inline Color & getFogColor() { return m_lightingManager.settings().m_fogColor; }
 
 
 private:
-    Camera camera;
-    // Ici chaque objet de la scène aura sa propre matrice de transformation donc pas de model global
-    Mat4 view;
-    Mat4 projection;
+    Camera m_camera;
+    Mat4 m_view;
+    Mat4 m_projection;
 
-    std::vector<std::shared_ptr<Entity>> entities;
+    std::vector<std::shared_ptr<Entity>> m_entities;
 
-    LightingManager lightingManager;
-    std::vector<std::shared_ptr<Entity>> lightEntities;
+    LightingManager m_lightingManager;
+    std::vector<std::shared_ptr<Entity>> m_lightEntities;
 
-    std::unique_ptr<Skybox> skybox;
+    std::unique_ptr<Skybox> m_skybox;
 
-    Frustum frustum;
+    Frustum m_frustum;
 };

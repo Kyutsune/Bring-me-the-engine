@@ -6,8 +6,8 @@
 
 class Skybox {
 public:
-    GLuint textureID;
-    GLuint VAO, VBO;
+    GLuint m_textureID;
+    GLuint m_VAO, m_VBO;
 
     Skybox(const std::vector<std::string> & faces);
     ~Skybox();

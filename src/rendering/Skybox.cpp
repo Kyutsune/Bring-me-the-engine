@@ -4,8 +4,8 @@
 #include <iostream>
 
 Skybox::Skybox(const std::vector<std::string> & faces) {
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    glGenTextures(1, &m_textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
 
     int width, height, nrChannels;
     for (unsigned int i = 0; i < faces.size(); i++) {
@@ -31,12 +31,12 @@ Skybox::Skybox(const std::vector<std::string> & faces) {
 }
 
 Skybox::~Skybox() {
-    glDeleteTextures(1, &textureID);
+    glDeleteTextures(1, &m_textureID);
 }
 
 void Skybox::bind(unsigned int unit) const {
     glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
 }
 
 void Skybox::unbind() const {
@@ -87,12 +87,12 @@ void Skybox::setupCube() {
         -1.0f, -1.0f, 1.0f,
         1.0f, -1.0f, 1.0f};
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &m_VAO);
+    glGenBuffers(1, &m_VBO);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -110,7 +110,7 @@ void Skybox::draw(const Shader & shader, const Mat4 & view, const Mat4 & project
 
     shader.setInt("skybox", 0);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 

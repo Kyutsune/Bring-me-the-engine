@@ -18,13 +18,13 @@ public:
     void renderDebugQuad();
 
 private:
-    DirectionalShadowMap directionalShadow;
-    std::vector<PonctualShadowMap> punctualShadows;
+    DirectionalShadowMap m_directionalShadow;
+    std::vector<PonctualShadowMap> m_punctualShadows;
 
-    Shader* dirShadowShader;
-    Shader* pointShadowShader;
+    Shader* m_dirShadowShader;
+    Shader* m_pointShadowShader;
 
-    bool punctualShadowEnabled = true;
+    bool m_punctualShadowEnabled = true;
     // Nombre maximum de lumières ponctuelles supportées, ce nombre est en réalité un copier
     // coller de ce qui est défini dans le shader.
     static constexpr size_t MAX_PONC_LIGHTS = 8; 

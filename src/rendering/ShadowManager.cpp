@@ -1,32 +1,32 @@
 #include "rendering/ShadowManager.h"
 
 ShadowManager::ShadowManager(Shader * dirShadowShader, Shader * pointShadowShader)
-    : dirShadowShader(dirShadowShader), pointShadowShader(pointShadowShader) {}
+    : m_dirShadowShader(dirShadowShader), m_pointShadowShader(pointShadowShader) {}
 
 void ShadowManager::init_directionnal_shadows() {
-    directionalShadow.init();
+    m_directionalShadow.init();
 }
 
 void ShadowManager::renderShadows(const Scene & scene) {
     // Shadow map directionnelle
-    directionalShadow.render(scene, *dirShadowShader);
+    m_directionalShadow.render(scene, *m_dirShadowShader);
 
     // Shadow maps cubemap ponctuelles
     const auto & pointLights = scene.getLightingManager().getPonctualLight();
 
     // Resize si besoin
-    if (punctualShadows.size() < pointLights.size()) {
-        size_t oldSize = punctualShadows.size();
-        punctualShadows.resize(pointLights.size());
+    if (m_punctualShadows.size() < pointLights.size()) {
+        size_t oldSize = m_punctualShadows.size();
+        m_punctualShadows.resize(pointLights.size());
         for (size_t i = oldSize; i < pointLights.size(); ++i)
-            punctualShadows[i] = PonctualShadowMap(1024, 1024);
+            m_punctualShadows[i] = PonctualShadowMap(1024, 1024);
     }
 
     // Rendu de chaque light active
     for (size_t i = 0; i < pointLights.size(); ++i) {
         if (!pointLights[i].isActive())
             continue;
-        punctualShadows[i].render(scene, *pointShadowShader, pointLights[i]);
+        m_punctualShadows[i].render(scene, *m_pointShadowShader, pointLights[i]);
     }
 }
 
@@ -34,20 +34,20 @@ void ShadowManager::bindShadows(Shader & shader, const Scene & scene) {
     const Light & dirLight = scene.getLightingManager().getFirstDirectional();
 
     if (dirLight.getType() != LightType::LIGHT_ERROR && dirLight.isActive()) {
-        shader.set("lightSpaceMatrix", directionalShadow.getLightSpaceMatrix(), false);
+        shader.set("lightSpaceMatrix", m_directionalShadow.getLightSpaceMatrix(), false);
         shader.set("dirLightDirection", dirLight.getDirection());
 
-        directionalShadow.bindTexture(GL_TEXTURE3);
+        m_directionalShadow.bindTexture(GL_TEXTURE3);
         shader.set("shadowMap", 3);
         shader.set("useDirectionalShadow", true);
     } else {
         shader.set("useDirectionalShadow", false);
     }
 
-    shader.set("usePointShadow", punctualShadowEnabled);
+    shader.set("usePointShadow", m_punctualShadowEnabled);
 
     const auto & pointLights = scene.getLightingManager().getPonctualLight();
-    size_t realCount = std::min(punctualShadows.size(), pointLights.size());
+    size_t realCount = std::min(m_punctualShadows.size(), pointLights.size());
 
     size_t count = std::min(realCount, MAX_PONC_LIGHTS);
 
@@ -55,7 +55,7 @@ void ShadowManager::bindShadows(Shader & shader, const Scene & scene) {
 
     // Bind les shadow maps actives (jusqu'à count)
     for (size_t i = 0; i < count; ++i) {
-        punctualShadows[i].bindTexture(GL_TEXTURE4 + i);
+        m_punctualShadows[i].bindTexture(GL_TEXTURE4 + i);
     }
     // Si il y a moins que MAX_PONC_LIGHTS, binder les autres à 0 ou rien (optionnel)
     // OpenGL n'aime pas forcément binder des textures "vides" donc on peut laisser vide

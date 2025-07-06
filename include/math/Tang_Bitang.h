@@ -6,8 +6,8 @@
 inline void computeTangentsAndBitangents(std::vector<Vertex> & vertices, const std::vector<unsigned int> & indices) {
     // 1. Initialiser
     for (auto & v : vertices) {
-        v.tangent = Vec3(0.0f, 0.0f, 0.0f);
-        v.bitangent = Vec3(0.0f, 0.0f, 0.0f);
+        v.m_tangent = Vec3(0.0f, 0.0f, 0.0f);
+        v.m_bitangent = Vec3(0.0f, 0.0f, 0.0f);
     }
 
     // 2. Calculer par triangle
@@ -16,13 +16,13 @@ inline void computeTangentsAndBitangents(std::vector<Vertex> & vertices, const s
         unsigned int i1 = indices[i + 1];
         unsigned int i2 = indices[i + 2];
 
-        const Vec3 & pos0 = vertices[i0].position;
-        const Vec3 & pos1 = vertices[i1].position;
-        const Vec3 & pos2 = vertices[i2].position;
+        const Vec3 & pos0 = vertices[i0].m_position;
+        const Vec3 & pos1 = vertices[i1].m_position;
+        const Vec3 & pos2 = vertices[i2].m_position;
 
-        const Vec2 & uv0 = vertices[i0].texCoords;
-        const Vec2 & uv1 = vertices[i1].texCoords;
-        const Vec2 & uv2 = vertices[i2].texCoords;
+        const Vec2 & uv0 = vertices[i0].m_texCoords;
+        const Vec2 & uv1 = vertices[i1].m_texCoords;
+        const Vec2 & uv2 = vertices[i2].m_texCoords;
 
         Vec3 edge1 = pos1 - pos0;
         Vec3 edge2 = pos2 - pos0;
@@ -45,18 +45,18 @@ inline void computeTangentsAndBitangents(std::vector<Vertex> & vertices, const s
             f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z)
         };
 
-        vertices[i0].tangent += tangent;
-        vertices[i1].tangent += tangent;
-        vertices[i2].tangent += tangent;
+        vertices[i0].m_tangent += tangent;
+        vertices[i1].m_tangent += tangent;
+        vertices[i2].m_tangent += tangent;
 
-        vertices[i0].bitangent += bitangent;
-        vertices[i1].bitangent += bitangent;
-        vertices[i2].bitangent += bitangent;
+        vertices[i0].m_bitangent += bitangent;
+        vertices[i1].m_bitangent += bitangent;
+        vertices[i2].m_bitangent += bitangent;
     }
 
     // Une étape de normalisation
     for (auto & v : vertices) {
-        v.tangent = v.tangent.normalized();
-        v.bitangent = v.bitangent.normalized();
+        v.m_tangent = v.m_tangent.normalized();
+        v.m_bitangent = v.m_bitangent.normalized();
     }
 }

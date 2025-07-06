@@ -7,38 +7,38 @@ LightingManager::LightingManager() {
 }
 
 void LightingManager::addLight(const Light & light) {
-    lights.push_back(light);
+    m_lights.push_back(light);
 }
 
 void LightingManager::clearLights() {
-    lights.clear();
+    m_lights.clear();
 }
 
 void LightingManager::setupLightingOnScene() {
     // Paramètres sur la lumière diffuse et ambiante
-    lightingSettings.diffuseIntensity = 0.2f;
-    lightingSettings.ambientColor = Vec3(1.f, 1.f, 1.f);
-    lightingSettings.ambientStrength = 0.4f;
+    m_lightingSettings.m_diffuseIntensity = 0.2f;
+    m_lightingSettings.m_ambientColor = Vec3(1.f, 1.f, 1.f);
+    m_lightingSettings.m_ambientStrength = 0.4f;
 
     // Paramètres sur la lumière spéculaire
-    lightingSettings.specularStrength = 0.2f;
-    lightingSettings.shininess = 64.f;
+    m_lightingSettings.m_specularStrength = 0.2f;
+    m_lightingSettings.m_shininess = 64.f;
 
     // Paramètres sur le fog
-    lightingSettings.fogColor = Color(126.f, 126.f, 126.f, 1.f); // Gris clair
-    lightingSettings.fogStart = 15.0f;
-    lightingSettings.fogEnd = 30.0f;
-    lightingSettings.fogDensity = 0.025f;
-    lightingSettings.fogType = 0; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
+    m_lightingSettings.m_fogColor = Color(126.f, 126.f, 126.f, 1.f); // Gris clair
+    m_lightingSettings.m_fogStart = 15.0f;
+    m_lightingSettings.m_fogEnd = 30.0f;
+    m_lightingSettings.m_fogDensity = 0.025f;
+    m_lightingSettings.m_fogType = 0; // 0: aucun, 1: linéaire, 2: exp, 3: exp²
 
-    colorMeshLight = Color::yellow(); // Couleur par défaut pour les meshes de lumière
+    m_colorMeshLight = Color::yellow(); // Couleur par défaut pour les meshes de lumière
 }
 
 void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) const {
     shader.use();
 
     int activeCount = 0;
-    for (const auto & light : lights) {
+    for (const auto & light : m_lights) {
         if (light.isActive())
             activeCount++;
     }
@@ -48,51 +48,51 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) cons
     shader.set("numLights", activeCount);
 
     int sentIndex = 0;
-    for (int i = 0; i < (int)lights.size(); i++) {
-        if (!lights[i].isActive())
+    for (int i = 0; i < (int)m_lights.size(); i++) {
+        if (!m_lights[i].isActive())
             continue;
         std::string idx = std::to_string(sentIndex);
-        shader.set("lights[" + idx + "].type", (int)lights[i].getType());
-        shader.set("lights[" + idx + "].position", lights[i].getPosition());
-        shader.set("lights[" + idx + "].direction", lights[i].getDirection().normalized());
-        shader.set("lights[" + idx + "].color", Vec3(lights[i].getColor().r, lights[i].getColor().g, lights[i].getColor().b));
-        shader.set("lights[" + idx + "].intensity", lights[i].getIntensity());
-        shader.set("lights[" + idx + "].constant", lights[i].getConstant());
-        shader.set("lights[" + idx + "].linear", lights[i].getLinear());
-        shader.set("lights[" + idx + "].quadratic", lights[i].getQuadratic());
+        shader.set("lights[" + idx + "].type", (int)m_lights[i].getType());
+        shader.set("lights[" + idx + "].position", m_lights[i].getPosition());
+        shader.set("lights[" + idx + "].direction", m_lights[i].getDirection().normalized());
+        shader.set("lights[" + idx + "].color", Vec3(m_lights[i].getColor().r, m_lights[i].getColor().g, m_lights[i].getColor().b));
+        shader.set("lights[" + idx + "].intensity", m_lights[i].getIntensity());
+        shader.set("lights[" + idx + "].constant", m_lights[i].getConstant());
+        shader.set("lights[" + idx + "].linear", m_lights[i].getLinear());
+        shader.set("lights[" + idx + "].quadratic", m_lights[i].getQuadratic());
         sentIndex++;
     }
 
     // Paramètres globaux
-    shader.set("ambientColor", lightingSettings.ambientColor);
-    shader.set("ambientStrength", lightingSettings.ambientStrength);
+    shader.set("ambientColor", m_lightingSettings.m_ambientColor);
+    shader.set("ambientStrength", m_lightingSettings.m_ambientStrength);
 
-    shader.set("diffuseColor", lightingSettings.diffuseColor);
-    shader.set("diffuseIntensity", lightingSettings.diffuseIntensity);
+    shader.set("diffuseColor", m_lightingSettings.m_diffuseColor);
+    shader.set("diffuseIntensity", m_lightingSettings.m_diffuseIntensity);
 
-    shader.set("specularColor", lightingSettings.specularColor);
-    shader.set("specularStrength", lightingSettings.specularStrength);
-    shader.set("shininess", lightingSettings.shininess);
+    shader.set("specularColor", m_lightingSettings.m_specularColor);
+    shader.set("specularStrength", m_lightingSettings.m_specularStrength);
+    shader.set("shininess", m_lightingSettings.m_shininess);
 
     // Paramètres sur le fog
-    shader.setVec3("fogColor", Vec3(lightingSettings.fogColor.r / 255.0f,
-                                    lightingSettings.fogColor.g / 255.0f,
-                                    lightingSettings.fogColor.b / 255.0f));
-    shader.setFloat("fogStart", lightingSettings.fogStart);
-    shader.setFloat("fogEnd", lightingSettings.fogEnd);
-    shader.setFloat("fogDensity", lightingSettings.fogDensity);
-    shader.setInt("fogType", lightingSettings.fogType);
+    shader.setVec3("fogColor", Vec3(m_lightingSettings.m_fogColor.r / 255.0f,
+                                    m_lightingSettings.m_fogColor.g / 255.0f,
+                                    m_lightingSettings.m_fogColor.b / 255.0f));
+    shader.setFloat("fogStart", m_lightingSettings.m_fogStart);
+    shader.setFloat("fogEnd", m_lightingSettings.m_fogEnd);
+    shader.setFloat("fogDensity", m_lightingSettings.m_fogDensity);
+    shader.setInt("fogType", m_lightingSettings.m_fogType);
 
     shader.set("viewPos", viewPos);
 }
 
 void LightingManager::applyPosLights(Shader & shader) const {
     shader.use();
-    shader.set("color", Vec3(colorMeshLight));
+    shader.set("color", Vec3(m_colorMeshLight));
 }
 
 const Light & LightingManager::getFirstDirectional() const {
-    for (const Light & light : lights) {
+    for (const Light & light : m_lights) {
         if (light.getType() == LightType::LIGHT_DIRECTIONAL) {
             return light;
         }
@@ -103,7 +103,7 @@ const Light & LightingManager::getFirstDirectional() const {
 }
 
 Light * LightingManager::getFirstDirectional() {
-    for (Light & light : lights) {
+    for (Light & light : m_lights) {
         if (light.getType() == LightType::LIGHT_DIRECTIONAL) {
             return &light;
         }
@@ -115,7 +115,7 @@ Light * LightingManager::getFirstDirectional() {
 
 const std::vector<Light> LightingManager::getPonctualLight() const {
     std::vector<Light> ponctualLights;
-    for (const Light & light : lights) {
+    for (const Light & light : m_lights) {
         if (light.getType() == LightType::LIGHT_POINT && light.isActive()) {
             ponctualLights.emplace_back(light);
         }
@@ -125,7 +125,7 @@ const std::vector<Light> LightingManager::getPonctualLight() const {
 
 std::vector<Light> * LightingManager::getPonctualLight() {
     std::vector<Light> * ponctualLights = new std::vector<Light>();
-    for (Light & light : lights) {
+    for (Light & light : m_lights) {
         if (light.getType() == LightType::LIGHT_POINT) {
             ponctualLights->emplace_back(light);
         }

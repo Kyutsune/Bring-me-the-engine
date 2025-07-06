@@ -18,9 +18,9 @@ public:
     void applyPosLights(Shader & shader) const;
 
     // Accès aux paramètres pour pouvoir les modifier
-    LightSettings & settings() { return lightingSettings; }
-    const LightSettings & settings() const { return lightingSettings; }
-    const std::vector<Light> & getLights() const { return lights; }
+    LightSettings & settings() { return m_lightingSettings; }
+    const LightSettings & settings() const { return m_lightingSettings; }
+    const std::vector<Light> & getLights() const { return m_lights; }
 
     const Light & getFirstDirectional() const;
     Light * getFirstDirectional();
@@ -32,11 +32,11 @@ public:
 
 private:
     // Liste des lumières dans la scène, côté glsl on à un MAX_LIGHTS = 8 donc attention
-    std::vector<Light> lights;
+    std::vector<Light> m_lights;
     static constexpr int MAX_LIGHTS = 8;
-    LightSettings lightingSettings;
+    LightSettings m_lightingSettings;
 
     // TODO: Pour l'instant on considère qu'une lumière ponctuelle est représentée par cette couleur
     //  On pourrait éventuellement rajouter une texture pour cette lumière
-    Color colorMeshLight;
+    Color m_colorMeshLight;
 };

@@ -4,23 +4,23 @@
 
 class Camera {
 private:
-    Vec3 position;
-    Vec3 target;
-    Vec3 up;
-    float fov;
-    float aspectRatio;
-    float nearPlane;
-    float farPlane;
-    Mat4 viewMatrix;
+    Vec3 m_position;
+    Vec3 m_target;
+    Vec3 m_up;
+    float m_fov;
+    float m_aspectRatio;
+    float m_nearPlane;
+    float m_farPlane;
+    Mat4 m_viewMatrix;
 
 public:
     inline Camera()
-        : position(0.0f, 0.0f, 3.0f), target(0.0f, 0.0f, 0.0f), up(0.0f, 1.0f, 0.0f),
-          fov(45.0f), aspectRatio(16.0f / 9.0f), nearPlane(0.1f), farPlane(100.0f) {
+        : m_position(0.0f, 0.0f, 3.0f), m_target(0.0f, 0.0f, 0.0f), m_up(0.0f, 1.0f, 0.0f),
+          m_fov(45.0f), m_aspectRatio(16.0f / 9.0f), m_nearPlane(0.1f), m_farPlane(100.0f) {
     }
 
     inline Camera(const Vec3 & pos, const Vec3 & tgt, const Vec3 & upDir, float fovDegrees, float aspect, float nearP, float farP)
-        : position(pos), target(tgt), up(upDir), fov(fovDegrees), aspectRatio(aspect), nearPlane(nearP), farPlane(farP) {}
+        : m_position(pos), m_target(tgt), m_up(upDir), m_fov(fovDegrees), m_aspectRatio(aspect), m_nearPlane(nearP), m_farPlane(farP) {}
 
     inline ~Camera() = default;
 
@@ -28,19 +28,19 @@ public:
 
     Mat4 getProjectionMatrix() const;
 
-    inline const Vec3 & getPosition() const { return position; }
-    inline void setPosition(const Vec3 & pos) { position = pos; }
-    inline const Vec3 & getTarget() const { return target; }
-    inline void setTarget(const Vec3 & tgt) { target = tgt; }
+    inline const Vec3 & getPosition() const { return m_position; }
+    inline void setPosition(const Vec3 & pos) { m_position = pos; }
+    inline const Vec3 & getTarget() const { return m_target; }
+    inline void setTarget(const Vec3 & tgt) { m_target = tgt; }
 
-    inline Vec3 getDirection() const { return (target - position).normalized(); }
-    inline Vec3 getRight() const { return getDirection().cross(up).normalized(); }
+    inline Vec3 getDirection() const { return (m_target - m_position).normalized(); }
+    inline Vec3 getRight() const { return getDirection().cross(m_up).normalized(); }
     inline Vec3 getLeft() const { return -getRight(); }
     inline Vec3 getForward() const { return getDirection(); }
     inline Vec3 getBackward() const { return -getDirection(); }
-    inline Vec3 getUp() const { return up; }
-    inline float getFov() const { return fov; }
-    inline float getAspectRatio() const { return aspectRatio; }
-    inline float getNearPlane() const { return nearPlane; }
-    inline float getFarPlane() const { return farPlane; }
+    inline Vec3 getUp() const { return m_up; }
+    inline float getFov() const { return m_fov; }
+    inline float getAspectRatio() const { return m_aspectRatio; }
+    inline float getNearPlane() const { return m_nearPlane; }
+    inline float getFarPlane() const { return m_farPlane; }
 };

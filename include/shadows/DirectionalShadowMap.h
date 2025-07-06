@@ -12,12 +12,12 @@ public:
     void init();
     void render(const Scene& scene, Shader& shadowShader);
     void bindTexture(GLenum textureUnit) const;
-    const Mat4& getLightSpaceMatrix() const { return lightSpaceMatrix; }
+    const Mat4& getLightSpaceMatrix() const { return m_lightSpaceMatrix; }
 
 private:
-    unsigned int shadowFBO;
-    unsigned int shadowMap;
-    unsigned int width, height;
+    unsigned int m_shadowFBO;
+    unsigned int m_shadowMap;
+    unsigned int m_width, m_height;
 
-    Mat4 lightSpaceMatrix;
+    Mat4 m_lightSpaceMatrix;
 };

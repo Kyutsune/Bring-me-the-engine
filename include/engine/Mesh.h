@@ -18,14 +18,14 @@ public:
     void draw() const;
     AABB getBoundingBox() const;
 
-    inline std::vector<Vertex> getVertices() const{ return vertices;}
+    inline std::vector<Vertex> getVertices() const{ return m_vertices;}
 
 private:
-    GLuint VAO, VBO, EBO;
-    GLsizei indexCount;
+    GLuint m_VAO, m_VBO, m_EBO;
+    GLsizei m_indexCount;
 
     void setupMesh();
     
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<Vertex> m_vertices;
+    std::vector<unsigned int> m_indices;
 };

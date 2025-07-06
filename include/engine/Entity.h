@@ -16,7 +16,7 @@ inline void updateCameraUniforms(Shader & shader, const Mat4 & model, const Mat4
 
 class Entity {
 public:
-    Entity() : transform(Mat4::identity()), mesh(nullptr) {}
+    Entity() : m_transform(Mat4::identity()), m_mesh(nullptr) {}
 
 Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
        const std::string & filenameTextDiffuse = "",
@@ -26,25 +26,25 @@ Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
 
     virtual ~Entity() = default;
 
-    const std::string & getName() const { return entity_name; }
-    const Mat4 & getTransform() const { return transform; }
-    void setTransform(const Mat4 & newTransform) { transform = newTransform; }
+    const std::string & getName() const { return m_entity_name; }
+    const Mat4 & getTransform() const { return m_transform; }
+    void setTransform(const Mat4 & newTransform) { m_transform = newTransform; }
 
     void draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection);
 
-    AABB getBoundingBox() { return boundingBox; }
+    AABB getBoundingBox() { return m_boundingBox; }
     AABB getTransformedBoundingBox() const;
 
-    Material & getMaterial() { return material; }
-    const Material & getMaterial() const { return material; }
+    Material & getMaterial() { return m_material; }
+    const Material & getMaterial() const { return m_material; }
 
-    inline const std::shared_ptr<Mesh> & getMesh() const { return mesh; }
+    inline const std::shared_ptr<Mesh> & getMesh() const { return m_mesh; }
 
 private:
-    std::string entity_name;
-    Mat4 transform;
-    std::shared_ptr<Mesh> mesh;
-    AABB boundingBox;
+    std::string m_entity_name;
+    Mat4 m_transform;
+    std::shared_ptr<Mesh> m_mesh;
+    AABB m_boundingBox;
 
-    Material material;
+    Material m_material;
 };

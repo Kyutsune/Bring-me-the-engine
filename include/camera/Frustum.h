@@ -4,7 +4,7 @@
 
 class Frustum {
 public:
-    Plane planes[6]; // left, right, bottom, top, near, far
+    Plane m_planes[6]; // left, right, bottom, top, near, far
 public:
     // Met à jour les plans à partir de la matrice projection * view
     void update(const Mat4 & projectionViewMatrix);

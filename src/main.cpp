@@ -47,7 +47,7 @@ int main() {
     if (!window) {
         const char * description;
         int code = glfwGetError(&description);
-        std::cerr << "Problème à la création de la fenêtre: " << (description ? description : "Erreur inconnue") << std::endl;
+        std::cerr << "Problème à la création de la fenêtre: " << (description ? description : "Erreur inconnue")<<" code : " << code << std::endl;
         glfwTerminate();
         return -1;
     }
@@ -62,7 +62,7 @@ int main() {
     glfwSetCursorPosCallback(window, cursor_position_callback);
 
     // Set viewport
-    glViewport(0, 0, windowWidth, windowHeight);
+    glViewport(0, 0, g_windowWidth, g_windowHeight);
     glEnable(GL_DEPTH_TEST);
 
     std::unique_ptr<Scene> gameScene = std::make_unique<Scene>();

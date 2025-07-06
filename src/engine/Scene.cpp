@@ -4,8 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
-    this->camera = Camera(
+Scene::Scene() : m_view(Mat4::identity()), m_projection(Mat4::identity()) {
+    m_camera = Camera(
         Vec3(-5.68114, 0.024997, -0.912596), // position à l'initialisation
         Vec3(0.025365, 0.0263991, -3.00793), // le point ciblé
         Vec3(0, 1, 0),                       // up
@@ -13,49 +13,41 @@ Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
         1600.0f / 800.0f,                    // aspect ratio
         0.1f, 100.0f);                       // near et far planes
 
-    this->view = camera.getViewMatrix();
-    this->projection = camera.getProjectionMatrix();
-    this->initObjects();
+    m_view = m_camera.getViewMatrix();
+    m_projection = m_camera.getProjectionMatrix();
+    initObjects();
 
-    lightingManager.setupLightingOnScene();
+    m_lightingManager.setupLightingOnScene();
 
-    lightingManager.addLight({
-                            true,                   // active ou non
-                            LightType::LIGHT_POINT, // type 0=ponctuelle, 1= directionnelle
-                            Vec3(3, 1, -1),        // position
-                            Vec3(0, -1, 0),         // direction vers le bas
-                            Color(255, 255, 255),   // couleur blanche
-                            1.f,                   // intensité
-                            1.0f, 0.7f, 1.8f        // Constantes d'atténuation (constant, linear, quadratic)
-    });
+    m_lightingManager.addLight({true,
+                                    LightType::LIGHT_POINT,
+                                    Vec3(3, 1, -1),
+                                    Vec3(0, -1, 0),
+                                    Color(255, 255, 255),
+                                    1.f,
+                                    1.0f, 0.7f, 1.8f});
 
+    m_lightingManager.addLight({false,
+                                    LightType::LIGHT_DIRECTIONAL,
+                                    Vec3(0, 10, 0),
+                                    Vec3(1, -1, 0),
+                                    Color(255, 255, 255),
+                                    0.06f,
+                                    0.5f, 0.7f, 1.8f});
 
-    lightingManager.addLight({false,
-                              LightType::LIGHT_DIRECTIONAL,
-                              Vec3(0, 10, 0),
-                              Vec3(1, -1, 0),
-                              Color(255, 255, 255),
-                              0.06f,
-                              0.5f, 0.7f, 1.8f});
-
-    lightingManager.addLight({
-                            true,                   // active ou non
-                            LightType::LIGHT_POINT, // type 0=ponctuelle, 1= directionnelle
-                            Vec3(-1, 1, -3),        // position
-                            Vec3(0, -1, 0),         // direction vers le bas
-                            Color(255, 255, 255),   // couleur blanche
-                            0.7f,                   // intensité
-                            1.0f, 0.7f, 1.8f        // Constantes d'atténuation (constant, linear, quadratic)
-    });
-
-
-
+    m_lightingManager.addLight({true,
+                                    LightType::LIGHT_POINT,
+                                    Vec3(-1, 1, -3),
+                                    Vec3(0, -1, 0),
+                                    Color(255, 255, 255),
+                                    0.7f,
+                                    1.0f, 0.7f, 1.8f});
 
     std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
-    for (const Light & light : lightingManager.getLights()) {
+    for (const Light & light : m_lightingManager.getLights()) {
         Mat4 lightTransform = Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.getPosition());
         std::shared_ptr<Entity> lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
-        lightEntities.push_back(lightEntity);
+        m_lightEntities.push_back(lightEntity);
     }
 
     std::vector<std::string> faces = {
@@ -65,27 +57,38 @@ Scene::Scene() : view(Mat4::identity()), projection(Mat4::identity()) {
         "../assets/cubemap/Nuit_bleue/top.jpg",
         "../assets/cubemap/Nuit_bleue/front.jpg",
         "../assets/cubemap/Nuit_bleue/back.jpg"};
-    skybox = std::make_unique<Skybox>(faces);
+    m_skybox = std::make_unique<Skybox>(faces);
 }
 
 void Scene::initObjects() {
     std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::cyan());
-    Mat4 t;
-    auto cube_qui_tourne = std::make_shared<Entity>(t, cubeMesh, "../assets/materiaux/cuivre_diffus.jpg", "../assets/materiaux/cuivre_normal.jpg", "../assets/materiaux/cuivre_specular.jpg", "Cube_qui_tourne");
+    std::shared_ptr<Entity> cube_qui_tourne = std::make_shared<Entity>(Mat4::identity(), cubeMesh,
+                                                                       "../assets/materiaux/cuivre_diffus.jpg",
+                                                                       "../assets/materiaux/cuivre_normal.jpg",
+                                                                       "../assets/materiaux/cuivre_specular.jpg",
+                                                                       "Cube_qui_tourne");
     cube_qui_tourne->getBoundingBox().setupBBoxBuffers();
-    entities.push_back(cube_qui_tourne);
+    m_entities.push_back(cube_qui_tourne);
 
     std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::rose());
     Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
-    auto Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2, "", "", "", "Cube_tout_bleu");
+    std::shared_ptr<Entity> Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2,
+                                                                      "",
+                                                                      "",
+                                                                      "",
+                                                                      "Cube_tout_bleu");
     Cube_tout_bleu->getBoundingBox().setupBBoxBuffers();
-    entities.push_back(Cube_tout_bleu);
+    m_entities.push_back(Cube_tout_bleu);
 
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
     Mat4 t4 = Mat4::Translation(Vec3(3, 0, -3));
-    auto Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3, "../assets/materiaux/bois.jpg", "", "", "Cube_plein_de_texture");
+    std::shared_ptr<Entity> Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3,
+                                                                             "../assets/materiaux/bois.jpg",
+                                                                             "",
+                                                                             "",
+                                                                             "Cube_plein_de_texture");
     Cube_plein_de_texture->getBoundingBox().setupBBoxBuffers();
-    entities.push_back(Cube_plein_de_texture);
+    m_entities.push_back(Cube_plein_de_texture);
 
     // std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     // Mat4 t3;
@@ -93,30 +96,37 @@ void Scene::initObjects() {
     // entities.push_back(sol_beton);
 
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
-    Mat4 t3;
     // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/sol_cobble/sol_cobble.jpg", "../assets/sol/sol_cobble/sol_cobble_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg");
-    auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg", "../assets/sol/brique_recyclee/brique_recyclee_normal.jpg", "", "Sol_beton");
+    std::shared_ptr<Entity> sol_beton = std::make_shared<Entity>(Mat4::identity(), floorMesh,
+                                                                 "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg",
+                                                                 "../assets/sol/brique_recyclee/brique_recyclee_normal.jpg",
+                                                                 "",
+                                                                 "Sol_beton");
     sol_beton->getBoundingBox().setupBBoxBuffers();
-    entities.push_back(sol_beton);
+    m_entities.push_back(sol_beton);
 
     std::shared_ptr<Mesh> sphereMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::red());
     Mat4 t5 = Mat4::Translation(Vec3(-2, 0, -5));
-    Entity * sphere = new Entity(t5, sphereMesh, "../assets/materiaux/petit_caillou/petit_caillou_diffus.jpg", "../assets/materiaux/petit_caillou/petit_caillou_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg", "Sphere_toute_texturee");
+    std::shared_ptr<Entity> sphere = std::make_shared<Entity>(t5, sphereMesh,
+                                                              "../assets/materiaux/petit_caillou/petit_caillou_diffus.jpg",
+                                                              "../assets/materiaux/petit_caillou/petit_caillou_normal.jpg",
+                                                              "../assets/sol/sol_cobble/sol_cobble_specular.jpg",
+                                                              "Sphere_toute_texturee");
     sphere->getBoundingBox().setupBBoxBuffers();
-    entities.push_back(std::shared_ptr<Entity>(sphere));
+    m_entities.push_back(sphere);
 }
 
 void Scene::update() {
     // Mise à jour des matrices de vue et de projection
-    view = camera.getViewMatrix();
-    projection = camera.getProjectionMatrix();
+    m_view = m_camera.getViewMatrix();
+    m_projection = m_camera.getProjectionMatrix();
 
     // Mise à jour du frustum pour le culling
-    frustum = frustum.updateFromCamera(camera);
+    m_frustum = m_frustum.updateFromCamera(m_camera);
 
     float angle = glfwGetTime();
-    if (!entities.empty()) {
-        entities[0]->setTransform(
+    if (!m_entities.empty()) {
+        m_entities[0]->setTransform(
             Mat4::Translation(Vec3(0, 0, -1.f)) *
             Mat4::rotateY(angle) *
             Mat4::rotateZ(angle));

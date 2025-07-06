@@ -23,10 +23,10 @@ protected:
     Scene * scene;
 
 private:
-    bool show = true;
+    bool m_show = true;
 
-    int taille_minimale_x;
-    int taille_minimale_y;
-    int taille_maximale_x;
-    int taille_maximale_y;
+    int m_taille_minimale_x;
+    int m_taille_minimale_y;
+    int m_taille_maximale_x;
+    int m_taille_maximale_y;
 };

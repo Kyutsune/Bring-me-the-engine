@@ -8,18 +8,18 @@ namespace UI {
     void drawSensitivitySection() {
         if (ImGui::CollapsingHeader("Sensibilité")) {
             ImGui::SeparatorText("Sensibilité de la souris");
-            ImGui::SliderFloat("Sensibilité rotation##SliderRot", &sensibility_rot, 0.01f, 0.5f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-            ImGui::InputFloat("Sensibilité rotation##InputRot", &sensibility_rot, 0.01f, 0.5f, "%.2f");
+            ImGui::SliderFloat("Sensibilité rotation##SliderRot", &g_sensibility_rot, 0.01f, 0.5f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::InputFloat("Sensibilité rotation##InputRot", &g_sensibility_rot, 0.01f, 0.5f, "%.2f");
             ImGui::SeparatorText("Sensibilité du clavier");
-            ImGui::SliderFloat("Sensibilité déplacement##Sliderdepl", &sensibility_depl, 0.1f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
-            ImGui::InputFloat("Sensibilité déplacement##Inputdepl", &sensibility_depl, 0.1f, 1.f, "%.2f");
+            ImGui::SliderFloat("Sensibilité déplacement##Sliderdepl", &g_sensibility_depl, 0.1f, 1.f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+            ImGui::InputFloat("Sensibilité déplacement##Inputdepl", &g_sensibility_depl, 0.1f, 1.f, "%.2f");
             ImGui::Separator();
             if (ImGui::Button("Réinitialisation rotation")) {
-                sensibility_rot = 0.01f;
+                g_sensibility_rot = 0.01f;
             }
             ImGui::SameLine();
             if (ImGui::Button("Réinitialisation déplacement")) {
-                sensibility_depl = 0.10f;
+                g_sensibility_depl = 0.10f;
             }
         }
     }
@@ -73,12 +73,12 @@ namespace UI {
                 delete label;
                 Material & material = entityPtr->getMaterial();
 
-                if (material.diffuse_text)
-                    ImGui::Checkbox("Utiliser texture diffuse", &material.useDiffuse);
-                if (material.normal_map)
-                    ImGui::Checkbox("Utiliser normal map", &material.useNormal);
-                if (material.specular_map)
-                    ImGui::Checkbox("Utiliser specular map", &material.useSpecular);
+                if (material.m_diffuseTexture)
+                    ImGui::Checkbox("Utiliser texture diffuse", &material.m_useDiffuse);
+                if (material.m_normalMap)
+                    ImGui::Checkbox("Utiliser normal map", &material.m_useNormal);
+                if (material.m_specularMap)
+                    ImGui::Checkbox("Utiliser specular map", &material.m_useSpecular);
 
                 ImGui::PopID();
             }

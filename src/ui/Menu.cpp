@@ -23,10 +23,10 @@ Menu::Menu(GLFWwindow * window) : window(window), scene(g_scene) {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 410 core");
 
-    taille_minimale_x = 300;
-    taille_minimale_y = 100;
-    taille_maximale_x = 800;
-    taille_maximale_y = 400;
+    m_taille_minimale_x = 300;
+    m_taille_minimale_y = 100;
+    m_taille_maximale_x = 800;
+    m_taille_maximale_y = 400;
 }
 
 Menu::~Menu() {
@@ -46,16 +46,16 @@ void Menu::setupMenuDisplay() {
     ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_Always);
     // Et on fixe des contraintes maximales et minimales pour la taille de ce menu
     ImGui::SetNextWindowSizeConstraints(
-        ImVec2(taille_minimale_x, taille_minimale_y),
-        ImVec2(taille_maximale_x, taille_maximale_y));
+        ImVec2(m_taille_minimale_x, m_taille_minimale_y),
+        ImVec2(m_taille_maximale_x, m_taille_maximale_y));
 }
 
 void Menu::render() {
-    if (!show)
+    if (!m_show)
         return;
 
     setupMenuDisplay();
-    ImGui::Begin("Bring me the menu", &show);
+    ImGui::Begin("Bring me the menu", &m_show);
 
     UI::drawTextureSection(scene);
     UI::drawDirectionnalLightSection(scene);

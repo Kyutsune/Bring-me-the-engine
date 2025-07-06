@@ -6,9 +6,9 @@
 class PonctualShadowMap {
 public:
     inline PonctualShadowMap() {
-        width = height = 0;
-        shadowFBO = depthCubemap = 0;
-        lightPosition = Vec3(0.0f, 0.0f, 0.0f);
+        m_width = m_height = 0;
+        m_shadowFBO = m_depthCubemap = 0;
+        m_lightPosition = Vec3(0.0f, 0.0f, 0.0f);
     };
     PonctualShadowMap(unsigned int width, unsigned int height);
     ~PonctualShadowMap() = default;
@@ -25,15 +25,15 @@ public:
     void debugRenderFace(int faceIndex);
 
 private:
-    unsigned int shadowFBO;
-    unsigned int depthCubemap;
-    unsigned int width, height;
-    Vec3 lightPosition;
+    unsigned int m_shadowFBO;
+    unsigned int m_depthCubemap;
+    unsigned int m_width, m_height;
+    Vec3 m_lightPosition;
 
     // IDs pour quad fullscreen (debug)
-    GLuint debugQuadVAO = 0;
-    GLuint debugQuadVBO = 0;
+    GLuint m_debugQuadVAO = 0;
+    GLuint m_debugQuadVBO = 0;
 
     // Shader debug simple
-    Shader * debugShader;
+    Shader * m_debugShader = nullptr;
 };

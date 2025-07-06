@@ -15,6 +15,6 @@ public:
     static void handleContinuousInput(GLFWwindow * window);
 
 private:
-    inline static double lastX = 0.0, lastY = 0.0;
-    inline static bool firstMouse = true;
+    inline static double m_lastX = 0.0, m_lastY = 0.0;
+    inline static bool m_firstMouse = true;
 };

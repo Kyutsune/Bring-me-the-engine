@@ -4,19 +4,19 @@
 #include <iostream>
 
 DirectionalShadowMap::DirectionalShadowMap(unsigned int width, unsigned int height)
-    : width(width), height(height), shadowFBO(0), shadowMap(0) {}
+    : m_width(width), m_height(height), m_shadowFBO(0), m_shadowMap(0) {}
 
 DirectionalShadowMap::~DirectionalShadowMap() {
-    if (shadowMap) glDeleteTextures(1, &shadowMap);
-    if (shadowFBO) glDeleteFramebuffers(1, &shadowFBO);
+    if (m_shadowMap) glDeleteTextures(1, &m_shadowMap);
+    if (m_shadowFBO) glDeleteFramebuffers(1, &m_shadowFBO);
 }
 
 void DirectionalShadowMap::init() {
-    glGenFramebuffers(1, &shadowFBO);
+    glGenFramebuffers(1, &m_shadowFBO);
 
-    glGenTextures(1, &shadowMap);
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0,
+    glGenTextures(1, &m_shadowMap);
+    glBindTexture(GL_TEXTURE_2D, m_shadowMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
                  GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -26,9 +26,9 @@ void DirectionalShadowMap::init() {
     float borderColor[] = {1.0, 1.0, 1.0, 1.0};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                           GL_TEXTURE_2D, shadowMap, 0);
+                           GL_TEXTURE_2D, m_shadowMap, 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
 
@@ -53,17 +53,17 @@ void DirectionalShadowMap::render(const Scene& scene, Shader& shadowShader) {
     AABB boundingBox = lightFrustum.computeBoundingBox();
 
     Mat4 lightProjection = Mat4::orthographic(
-        boundingBox.min.x, boundingBox.max.x,
-        boundingBox.min.y, boundingBox.max.y,
-        boundingBox.min.z, boundingBox.max.z);
+        boundingBox.m_min.x, boundingBox.m_max.x,
+        boundingBox.m_min.y, boundingBox.m_max.y,
+        boundingBox.m_min.z, boundingBox.m_max.z);
 
-    lightSpaceMatrix = lightView * lightProjection;
+    m_lightSpaceMatrix = lightView * lightProjection;
 
     shadowShader.use();
-    shadowShader.set("lightSpaceMatrix", lightSpaceMatrix, false);
+    shadowShader.set("lightSpaceMatrix", m_lightSpaceMatrix, false);
 
-    glViewport(0, 0, width, height);
-    glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+    glViewport(0, 0, m_width, m_height);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadowFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
 
     for (const auto& entity : scene.getEntities()) {
@@ -74,10 +74,10 @@ void DirectionalShadowMap::render(const Scene& scene, Shader& shadowShader) {
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, windowWidth, windowHeight);
+    glViewport(0, 0, g_windowWidth, g_windowHeight);
 }
     
 void DirectionalShadowMap::bindTexture(GLenum textureUnit) const {
     glActiveTexture(textureUnit);
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
+    glBindTexture(GL_TEXTURE_2D, m_shadowMap);
 }
