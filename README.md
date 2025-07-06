@@ -61,3 +61,7 @@ https://opengl.developpez.com/tutoriels/apprendre-opengl-2/?page=eclairage-simpl
 https://learnopengl.com/Guest-Articles/2021/Scene/Frustum-Culling
 
 http://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
+
+https://learnopengl.com/Advanced-Lighting/Shadows/Point-Shadows
+
+https://www.youtube.com/@TheCherno
