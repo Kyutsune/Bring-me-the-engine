@@ -1,4 +1,5 @@
 #include "engine/LightingManager.h"
+#include "Globals.h"
 #include <iostream>
 
 LightingManager::LightingManager() {
@@ -42,8 +43,10 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) cons
         if (light.isActive())
             activeCount++;
     }
-    if (activeCount > MAX_LIGHTS)
+    if (activeCount > MAX_LIGHTS) {
+        std::cerr << "Warning: More active lights than MAX_LIGHTS (" << MAX_LIGHTS << "). Clamping to " << MAX_LIGHTS << ".\n";
         activeCount = MAX_LIGHTS;
+    }
 
     shader.set("numLights", activeCount);
 

@@ -1,8 +1,8 @@
 #pragma once
-#include "rendering/Shader.h"
-#include "math/Vec.h"
 #include "engine/Light.h"
 #include "engine/LightSettings.h"
+#include "math/Vec.h"
+#include "rendering/Shader.h"
 #include <vector>
 
 class LightingManager {
@@ -33,7 +33,6 @@ public:
 private:
     // Liste des lumières dans la scène, côté glsl on à un MAX_LIGHTS = 8 donc attention
     std::vector<Light> m_lights;
-    static constexpr int MAX_LIGHTS = 8;
     LightSettings m_lightingSettings;
 
     // TODO: Pour l'instant on considère qu'une lumière ponctuelle est représentée par cette couleur

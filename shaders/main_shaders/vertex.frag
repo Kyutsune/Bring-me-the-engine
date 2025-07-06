@@ -1,5 +1,7 @@
 #version 410 core
+
 #define MAX_LIGHTS 8
+#define MAX_POINT_LIGHTS 8
 
 struct Light {
     int type;        // 0 = ponctuelle, 1 = directionnelle
@@ -59,7 +61,6 @@ in vec4 FragPosLightSpace;
 uniform vec3 dirLightDirection;
 
 // Les informations pour ajouter des ombres sur les lumières ponctuelles
-#define MAX_POINT_LIGHTS 8
 uniform bool usePointShadow;
 uniform int pointLightNumber;
 uniform samplerCube pointShadowMaps[MAX_POINT_LIGHTS];

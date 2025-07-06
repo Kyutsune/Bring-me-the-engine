@@ -66,11 +66,9 @@ namespace Sections {
     void textureSection(Scene * scene) {
         if (ImGui::CollapsingHeader("Textures")) {
             for (std::shared_ptr<Entity> & entityPtr : scene->getEntities()) {
-                ImGui::PushID(entityPtr.get()); // ou entityPtr->getName().c_str()
+                ImGui::PushID(entityPtr.get());
 
-                std::string * label = new std::string("Entité: " + entityPtr->getName());
-                ImGui::SeparatorText(label->c_str());
-                delete label;
+                ImGui::SeparatorText(("Entité: " + entityPtr->getName()).c_str());
                 Material & material = entityPtr->getMaterial();
 
                 if (material.m_diffuseTexture)

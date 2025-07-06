@@ -1,4 +1,5 @@
 #include "rendering/ShadowManager.h"
+#include "Globals.h"
 
 ShadowManager::ShadowManager(Shader * dirShadowShader, Shader * pointShadowShader)
     : m_dirShadowShader(dirShadowShader), m_pointShadowShader(pointShadowShader) {}
@@ -62,7 +63,7 @@ void ShadowManager::bindShadows(Shader & shader, const Scene & scene) {
     // complet sinon le rendu du shader sera bizarre
     for (size_t i = count; i < MAX_PONC_LIGHTS; ++i) {
         glActiveTexture(GL_TEXTURE4 + i);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, 0); 
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
 
     // Préparer un tableau complet de MAX_PONC_LIGHTS unités de texture
