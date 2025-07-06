@@ -32,9 +32,9 @@ struct Plane {
 struct AABB {
     Vec3 m_min;
     Vec3 m_max;
-    unsigned int bboxVAO = 0, bboxVBO = 0, bboxEBO = 0;
+    unsigned int bboxVAO, bboxVBO, bboxEBO;
 
-    AABB() : m_min(Vec3(0.0f)), m_max(Vec3(0.0f)) {}
+    AABB() : m_min(Vec3(0.0f)), m_max(Vec3(0.0f)), bboxVAO(0), bboxVBO(0), bboxEBO(0) {}
     AABB(const Vec3 & min, const Vec3 & max) : m_min(min), m_max(max) {}
 
     // Transforme la box par une matrice (transforme les 8 coins et recalcule min/max)

@@ -3,6 +3,8 @@
 #include <cmath>
 #include <ostream>
 
+//TODO: Mettre de l'ordre dans ce bordel.. pas forcément séparer en deux fichiers car... pourquoi? ça à du sens ensemble mais au moins bien foutre
+// Les déclarations dans le cpp
 struct Vec2 {
     float x, y;
 

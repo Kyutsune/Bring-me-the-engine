@@ -1,10 +1,10 @@
 #pragma once
 
-#include "rendering/Shader.h"
-#include "math/Vec.h"
-#include "Mesh.h"
 #include "Material.h"
+#include "Mesh.h"
 #include "math/PlaneBoundingVolume.h"
+#include "math/Vec.h"
+#include "rendering/Shader.h"
 #include <filesystem>
 #include <iostream>
 
@@ -18,11 +18,11 @@ class Entity {
 public:
     Entity() : m_transform(Mat4::identity()), m_mesh(nullptr) {}
 
-Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
-       const std::string & filenameTextDiffuse = "",
-       const std::string & filenameNormalMap = "",
-       const std::string & filenameSpecularMap = "",
-       const std::string & name = "");
+    Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
+           const std::string & filenameTextDiffuse = "",
+           const std::string & filenameNormalMap = "",
+           const std::string & filenameSpecularMap = "",
+           const std::string & name = "");
 
     virtual ~Entity() = default;
 

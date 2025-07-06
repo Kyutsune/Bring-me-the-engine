@@ -6,7 +6,7 @@ enum LightType {
     LIGHT_ERROR = -1,
     LIGHT_POINT = 0,
     LIGHT_DIRECTIONAL = 1,
-    // Autre type de lumière possible : Spotlight, Area light, etc.
+    // Autre type de lumière possible : Spotlight, Area light, etc...
 };
 
 class Light {
