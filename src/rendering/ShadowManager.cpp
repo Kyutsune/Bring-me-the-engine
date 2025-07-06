@@ -57,8 +57,8 @@ void ShadowManager::bindShadows(Shader & shader, const Scene & scene) {
     for (size_t i = 0; i < count; ++i) {
         punctualShadows[i].bindTexture(GL_TEXTURE4 + i);
     }
-    // Si il y a moins que MAX_PONC_LIGHTS, binder les autres à 0 ou rien (optionnel)
-    // OpenGL n'aime pas forcément binder des textures "vides" donc on peut laisser vide
+    // Si il y a moins que MAX_PONC_LIGHTS, binder les autres vides
+    // OpenGL n'aime pas forcément binder des textures "vides" donc on les remplis de vide
 
     // Préparer un tableau complet de MAX_PONC_LIGHTS unités de texture
     std::vector<GLint> units(MAX_PONC_LIGHTS);
