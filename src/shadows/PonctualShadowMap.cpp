@@ -2,6 +2,10 @@
 #include "Globals.h"
 #include "math/Trigo.h"
 
+PonctualShadowMap::PonctualShadowMap() : m_width(0), m_height(0), m_shadowFBO(0),
+                                         m_depthCubemap(0), m_lightPosition(Vec3(0.0f, 0.0f, 0.0f)),
+                                         m_debugQuadVAO(0), m_debugQuadVBO(0), m_debugShader(nullptr) {}
+
 PonctualShadowMap::PonctualShadowMap(unsigned int width, unsigned int height)
     : m_width(width), m_height(height), m_lightPosition(0.0f, 0.0f, 0.0f) {
     init();

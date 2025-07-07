@@ -83,21 +83,37 @@ namespace Sections {
         }
     }
 
-    void directionnalLightSection(Scene * scene) {
-        if (ImGui::CollapsingHeader("Lumière directionnelle")) {
-            ImGui::SeparatorText("Paramètres de la lumière directionnelle");
-            LightingManager & lightingManager = scene->getLightingManager();
-            Light * light = lightingManager.getFirstDirectional();
+    void lightSection(Scene * scene) {
+        if (ImGui::CollapsingHeader("Lumières")) {
 
-            bool isActive = light->isActive();
-            if (ImGui::Checkbox("Activer", &isActive)) {
-                light->setActive(isActive);
+            if (ImGui::TreeNode("Lumière directionnelle")) {
+                directionnalLightSection(scene);
+                ImGui::TreePop();
             }
-            float intensity = light->getIntensity();
-            if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
-                light->setIntensity(intensity);
+
+            if (ImGui::TreeNode("Lumières ponctuelles")) {
+                ponctualLightSection(scene);
+                ImGui::TreePop();
             }
         }
+    }
+
+    void directionnalLightSection(Scene * scene) {
+        ImGui::SeparatorText("Paramètres de la lumière directionnelle");
+        LightingManager & lightingManager = scene->getLightingManager();
+        Light * light = lightingManager.getFirstDirectional();
+
+        bool isActive = light->isActive();
+        if (ImGui::Checkbox("Activer", &isActive)) {
+            light->setActive(isActive);
+        }
+        float intensity = light->getIntensity();
+        if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
+            light->setIntensity(intensity);
+        }
+    }
+
+    void ponctualLightSection(Scene * scene) {
     }
 
 }
