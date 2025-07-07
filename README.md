@@ -55,7 +55,7 @@ Romain Soares
 Mail: <soares.romain69100@gmail.com>  
 Profil Github: [kyutsune](https://www.github.com/Kyutsune)
 ___________________________________________
-## Les sources qui m'ont aidé lors de la réalisation de ce projet :
+## Les sources qui m'ont aidé lors de la réalisation de ce projet sont:
 https://opengl.developpez.com/tutoriels/apprendre-opengl-2/?page=eclairage-simple
 
 https://learnopengl.com/Guest-Articles/2021/Scene/Frustum-Culling
