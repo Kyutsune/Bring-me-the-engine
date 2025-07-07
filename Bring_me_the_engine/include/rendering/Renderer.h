@@ -7,6 +7,7 @@
 #include "rendering/Shader.h"
 #include "rendering/Skybox.h"
 #include "rendering/ShadowManager.h"
+#include "system/PathResolver.h"
 
 class Renderer {
 public:
@@ -32,5 +33,7 @@ private:
     Shader * m_shadowShaderPonctual;
 
     ShadowManager m_shadowManager;
-    Shader m_quadDebugShader = Shader("../shaders/debug/quad.vert", "../shaders/debug/quad.frag");
+
+    //AVENIR: à garder?? utile pour le debug mais bon en soit..
+    Shader m_quadDebugShader = Shader(PathResolver::getResourcePath("shaders/debug/quad.vert"), PathResolver::getResourcePath("shaders/debug/quad.frag"));
 };

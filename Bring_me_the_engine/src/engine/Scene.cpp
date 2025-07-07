@@ -1,8 +1,11 @@
 #include "engine/Scene.h"
 #include "math/Vec.h"
 #include "rendering/Shader.h"
-#include <GLFW/glfw3.h>
+#include "system/PathResolver.h"
+
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 
 Scene::Scene() : m_view(Mat4::identity()), m_projection(Mat4::identity()) {
     m_camera = Camera(
@@ -51,21 +54,21 @@ Scene::Scene() : m_view(Mat4::identity()), m_projection(Mat4::identity()) {
     }
 
     std::vector<std::string> faces = {
-        "../assets/cubemap/Nuit_bleue/right.jpg",
-        "../assets/cubemap/Nuit_bleue/left.jpg",
-        "../assets/cubemap/Nuit_bleue/bottom.jpg",
-        "../assets/cubemap/Nuit_bleue/top.jpg",
-        "../assets/cubemap/Nuit_bleue/front.jpg",
-        "../assets/cubemap/Nuit_bleue/back.jpg"};
+        PathResolver::getResourcePath("assets/cubemap/Nuit_bleue/right.jpg"),
+        PathResolver::getResourcePath("assets/cubemap/Nuit_bleue/left.jpg"),
+        PathResolver::getResourcePath("assets/cubemap/Nuit_bleue/bottom.jpg"),
+        PathResolver::getResourcePath("assets/cubemap/Nuit_bleue/top.jpg"),
+        PathResolver::getResourcePath("assets/cubemap/Nuit_bleue/front.jpg"),
+        PathResolver::getResourcePath("assets/cubemap/Nuit_bleue/back.jpg")};
     m_skybox = std::make_unique<Skybox>(faces);
 }
 
 void Scene::initObjects() {
     std::shared_ptr<Mesh> cubeMesh = createCube<std::shared_ptr<Mesh>>(Color::cyan());
     std::shared_ptr<Entity> cube_qui_tourne = std::make_shared<Entity>(Mat4::identity(), cubeMesh,
-                                                                       "../assets/materiaux/cuivre_diffus.jpg",
-                                                                       "../assets/materiaux/cuivre_normal.jpg",
-                                                                       "../assets/materiaux/cuivre_specular.jpg",
+                                                                       PathResolver::getResourcePath("assets/materiaux/cuivre_diffus.jpg"),
+                                                                       PathResolver::getResourcePath("assets/materiaux/cuivre_normal.jpg"),
+                                                                       PathResolver::getResourcePath("assets/materiaux/cuivre_specular.jpg"),
                                                                        "Cube_qui_tourne");
     cube_qui_tourne->getBoundingBox().setupBBoxBuffers();
     m_entities.push_back(cube_qui_tourne);
@@ -83,7 +86,7 @@ void Scene::initObjects() {
     std::shared_ptr<Mesh> cubeMesh3 = createCube<std::shared_ptr<Mesh>>();
     Mat4 t4 = Mat4::Translation(Vec3(3, 0, -3));
     std::shared_ptr<Entity> Cube_plein_de_texture = std::make_shared<Entity>(t4, cubeMesh3,
-                                                                             "../assets/materiaux/bois.jpg",
+                                                                             PathResolver::getResourcePath("assets/materiaux/bois.jpg"),
                                                                              "",
                                                                              "",
                                                                              "Cube_plein_de_texture");
@@ -98,8 +101,8 @@ void Scene::initObjects() {
     std::shared_ptr<Mesh> floorMesh = createFloor<std::shared_ptr<Mesh>>(25.f, -1.f);
     // auto sol_beton = std::make_shared<Entity>(t3, floorMesh, "../assets/sol/sol_cobble/sol_cobble.jpg", "../assets/sol/sol_cobble/sol_cobble_normal.jpg", "../assets/sol/sol_cobble/sol_cobble_specular.jpg");
     std::shared_ptr<Entity> sol_beton = std::make_shared<Entity>(Mat4::identity(), floorMesh,
-                                                                 "../assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg",
-                                                                 "../assets/sol/brique_recyclee/brique_recyclee_normal.jpg",
+                                                                 PathResolver::getResourcePath("assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg"),
+                                                                 PathResolver::getResourcePath("assets/sol/brique_recyclee/brique_recyclee_normal.jpg"),
                                                                  "",
                                                                  "Sol_beton");
     sol_beton->getBoundingBox().setupBBoxBuffers();
@@ -108,9 +111,9 @@ void Scene::initObjects() {
     std::shared_ptr<Mesh> sphereMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::red());
     Mat4 t5 = Mat4::Translation(Vec3(-2, 0, -5));
     std::shared_ptr<Entity> sphere = std::make_shared<Entity>(t5, sphereMesh,
-                                                              "../assets/materiaux/petit_caillou/petit_caillou_diffus.jpg",
-                                                              "../assets/materiaux/petit_caillou/petit_caillou_normal.jpg",
-                                                              "../assets/sol/sol_cobble/sol_cobble_specular.jpg",
+                                                              PathResolver::getResourcePath("assets/materiaux/petit_caillou/petit_caillou_diffus.jpg"),
+                                                              PathResolver::getResourcePath("assets/materiaux/petit_caillou/petit_caillou_normal.jpg"),
+                                                              PathResolver::getResourcePath("assets/sol/sol_cobble/sol_cobble_specular.jpg"),
                                                               "Sphere_toute_texturee");
     sphere->getBoundingBox().setupBBoxBuffers();
     m_entities.push_back(sphere);
