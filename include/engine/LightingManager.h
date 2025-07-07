@@ -25,8 +25,9 @@ public:
     const Light & getFirstDirectional() const;
     Light * getFirstDirectional();
 
-    const std::vector<Light> getPonctualLight() const;
-    std::vector<Light> * getPonctualLight();
+    const std::vector<Light> getPonctualLights() const;
+    std::vector<Light> * getPonctualLightsPtr();
+    std::vector<Light *> getPonctualLightsRef();
 
     void setupLightingOnScene();
 

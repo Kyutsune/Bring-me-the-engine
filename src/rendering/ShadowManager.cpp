@@ -13,7 +13,7 @@ void ShadowManager::renderShadows(const Scene & scene) {
     m_directionalShadow.render(scene, *m_dirShadowShader);
 
     // Shadow maps cubemap ponctuelles
-    const auto & pointLights = scene.getLightingManager().getPonctualLight();
+    const auto & pointLights = scene.getLightingManager().getPonctualLights();
 
     // Resize si besoin
     if (m_punctualShadows.size() < pointLights.size()) {
@@ -47,7 +47,7 @@ void ShadowManager::bindShadows(Shader & shader, const Scene & scene) {
 
     shader.set("usePointShadow", m_punctualShadowEnabled);
 
-    const auto & pointLights = scene.getLightingManager().getPonctualLight();
+    const auto & pointLights = scene.getLightingManager().getPonctualLights();
     size_t realCount = std::min(m_punctualShadows.size(), pointLights.size());
 
     size_t count = std::min(realCount, MAX_PONC_LIGHTS);

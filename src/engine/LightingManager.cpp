@@ -116,7 +116,7 @@ Light * LightingManager::getFirstDirectional() {
     return &dummyLight;
 }
 
-const std::vector<Light> LightingManager::getPonctualLight() const {
+const std::vector<Light> LightingManager::getPonctualLights() const {
     std::vector<Light> ponctualLights;
     for (const Light & light : m_lights) {
         if (light.getType() == LightType::LIGHT_POINT && light.isActive()) {
@@ -126,7 +126,7 @@ const std::vector<Light> LightingManager::getPonctualLight() const {
     return ponctualLights;
 }
 
-std::vector<Light> * LightingManager::getPonctualLight() {
+std::vector<Light> * LightingManager::getPonctualLightsPtr() {
     std::vector<Light> * ponctualLights = new std::vector<Light>();
     for (Light & light : m_lights) {
         if (light.getType() == LightType::LIGHT_POINT) {
@@ -134,4 +134,15 @@ std::vector<Light> * LightingManager::getPonctualLight() {
         }
     }
     return ponctualLights;
+}
+
+
+std::vector<Light*> LightingManager::getPonctualLightsRef() {
+    std::vector<Light*> ponctualLights;
+    for (Light & light : m_lights) {
+        if (light.getType() == LightType::LIGHT_POINT) {
+            ponctualLights.push_back(&light);
+        }
+    }
+    return ponctualLights; // pas besoin de static ici
 }

@@ -107,13 +107,32 @@ namespace Sections {
         if (ImGui::Checkbox("Activer", &isActive)) {
             light->setActive(isActive);
         }
-        float intensity = light->getIntensity();
-        if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
-            light->setIntensity(intensity);
+        float intensity = light->getIntensity() * 100.0f;
+        if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 100.0f, "%.0f%%", ImGuiSliderFlags_AlwaysClamp)) {
+            light->setIntensity(intensity / 100.0f);
         }
     }
 
     void ponctualLightSection(Scene * scene) {
+        ImGui::SeparatorText("Paramètres des lumières ponctuelles");
+        std::vector<Light *> lights = scene->getLightingManager().getPonctualLightsRef();
+        size_t count_of_lights = 1;
+
+        for (Light * light : lights) {
+            ImGui::PushID(light);
+            ImGui::SeparatorText(("Lumière " + std::to_string(count_of_lights++)).c_str());
+
+            bool isActive = light->isActive();
+            if (ImGui::Checkbox("Activer", &isActive)) {
+                light->setActive(isActive);
+            }
+            float intensity = light->getIntensity() * 100.0f;
+            if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 200.0f, "%.0f%%", ImGuiSliderFlags_AlwaysClamp)) {
+                light->setIntensity(intensity / 100.0f);
+            }
+
+            ImGui::PopID();
+        }
     }
 
 }
