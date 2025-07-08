@@ -111,6 +111,8 @@ namespace Sections {
         if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 100.0f, "%.0f%%", ImGuiSliderFlags_AlwaysClamp)) {
             light->setIntensity(intensity / 100.0f);
         }
+
+        //TODO: Rajouter le fait de pouvoir modifier la direction de la lumière directionnelle
     }
 
     void ponctualLightSection(Scene * scene) {
