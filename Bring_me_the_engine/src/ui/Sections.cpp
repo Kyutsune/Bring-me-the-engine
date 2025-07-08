@@ -131,6 +131,61 @@ namespace Sections {
                 light->setIntensity(intensity / 100.0f);
             }
 
+            ImGui::SeparatorText("Position de la lumière");
+
+            Vec3 position = light->getPosition();
+
+            if (ImGui::DragFloat3("Position", &position.x, 0.01f, -100.0f, 100.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
+                light->setPosition(position);
+            }
+
+            // Axe X
+            ImGui::PushID("X");
+            ImGui::Text("X");
+            ImGui::SameLine();
+            if (ImGui::Button("-")) {
+                position.x -= 0.2f;
+                light->setPosition(position);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("+")) {
+                position.x += 0.2f;
+                light->setPosition(position);
+            }
+            ImGui::PopID();
+
+            ImGui::SameLine();
+            // Axe Y
+            ImGui::PushID("Y");
+            ImGui::Text("Y");
+            ImGui::SameLine();
+            if (ImGui::Button("-")) {
+                position.y -= 0.2f;
+                light->setPosition(position);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("+")) {
+                position.y += 0.2f;
+                light->setPosition(position);
+            }
+            ImGui::PopID();
+
+            ImGui::SameLine();
+            // Axe Z
+            ImGui::PushID("Z");
+            ImGui::Text("Z");
+            ImGui::SameLine();
+            if (ImGui::Button("-")) {
+                position.z -= 0.2f;
+                light->setPosition(position);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("+")) {
+                position.z += 0.2f;
+                light->setPosition(position);
+            }
+            ImGui::PopID();
+
             ImGui::PopID();
         }
     }
