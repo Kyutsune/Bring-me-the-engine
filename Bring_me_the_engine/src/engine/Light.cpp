@@ -48,6 +48,7 @@ void Light::setType(LightType newType) { m_type = newType; }
 const Vec3 & Light::getPosition() const { return m_position; }
 const Vec3 & Light::getDirection() const { return m_direction; }
 const Color & Light::getColor() const { return m_color; }
+Color & Light::getColor() { return m_color; }
 float Light::getIntensity() const { return m_intensity; }
 void Light::setIntensity(float newIntensity) { m_intensity = newIntensity; }
 float Light::getConstant() const { return m_constant; }

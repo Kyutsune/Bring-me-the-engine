@@ -23,6 +23,7 @@ public:
     void setPosition(const Vec3 & newPosition);
     const Vec3 & getDirection() const;
     const Color & getColor() const;
+    Color & getColor();
     float getIntensity() const;
     void setIntensity(float newIntensity);
     float getConstant() const;

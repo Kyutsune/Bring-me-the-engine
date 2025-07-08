@@ -132,59 +132,146 @@ namespace Sections {
             }
 
             ImGui::SeparatorText("Position de la lumière");
-
             Vec3 position = light->getPosition();
 
             if (ImGui::DragFloat3("Position", &position.x, 0.01f, -100.0f, 100.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
                 light->setPosition(position);
             }
 
+            ImGuiIO & io = ImGui::GetIO();
+
+            // TODO: Plus tard il faudrait rajouter un bouton pour pouvoir adapter le delta de déplacement
+            //  En gros permettre de déplacer plus vite que de 0.01f par tick au maintien et de 0.2 par clic
+
             // Axe X
             ImGui::PushID("X");
             ImGui::Text("X");
             ImGui::SameLine();
+            static float s_holdTimerX = 0.0f;
+
             if (ImGui::Button("-")) {
-                position.x -= 0.2f;
-                light->setPosition(position);
+                if (s_holdTimerX < 0.15f) {
+                    position.x -= 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerX = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerX += io.DeltaTime;
+                if (s_holdTimerX > 0.15f) {
+                    position.x -= 0.01f;
+                    light->setPosition(position);
+                }
             }
             ImGui::SameLine();
+
             if (ImGui::Button("+")) {
-                position.x += 0.2f;
-                light->setPosition(position);
+                if (s_holdTimerX < 0.15f) {
+                    position.x += 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerX = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerX += io.DeltaTime;
+                if (s_holdTimerX > 0.15f) {
+                    position.x += 0.01f;
+                    light->setPosition(position);
+                }
             }
             ImGui::PopID();
 
-            ImGui::SameLine();
             // Axe Y
+            ImGui::SameLine();
             ImGui::PushID("Y");
             ImGui::Text("Y");
             ImGui::SameLine();
+            static float s_holdTimerY = 0.0f;
+
             if (ImGui::Button("-")) {
-                position.y -= 0.2f;
-                light->setPosition(position);
+                if (s_holdTimerY < 0.15f) {
+                    position.y -= 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerY = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerY += io.DeltaTime;
+                if (s_holdTimerY > 0.15f) {
+                    position.y -= 0.01f;
+                    light->setPosition(position);
+                }
             }
             ImGui::SameLine();
+
             if (ImGui::Button("+")) {
-                position.y += 0.2f;
-                light->setPosition(position);
+                if (s_holdTimerY < 0.15f) {
+                    position.y += 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerY = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerY += io.DeltaTime;
+                if (s_holdTimerY > 0.15f) {
+                    position.y += 0.01f;
+                    light->setPosition(position);
+                }
             }
             ImGui::PopID();
 
-            ImGui::SameLine();
             // Axe Z
+            ImGui::SameLine();
             ImGui::PushID("Z");
             ImGui::Text("Z");
             ImGui::SameLine();
+            static float s_holdTimerZ = 0.0f;
+
             if (ImGui::Button("-")) {
-                position.z -= 0.2f;
-                light->setPosition(position);
+                if (s_holdTimerZ < 0.15f) {
+                    position.z -= 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerZ = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerZ += io.DeltaTime;
+                if (s_holdTimerZ > 0.15f) {
+                    position.z -= 0.01f;
+                    light->setPosition(position);
+                }
             }
             ImGui::SameLine();
+
             if (ImGui::Button("+")) {
-                position.z += 0.2f;
-                light->setPosition(position);
+                if (s_holdTimerZ < 0.15f) {
+                    position.z += 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerZ = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerZ += io.DeltaTime;
+                if (s_holdTimerZ > 0.15f) {
+                    position.z += 0.01f;
+                    light->setPosition(position);
+                }
             }
             ImGui::PopID();
+
+            ImGui::SeparatorText("Couleur de la lumière");
+            Color & lightColor = light->getColor();
+
+            float colorTmp[3] = {
+                lightColor.r / 255.0f,
+                lightColor.g / 255.0f,
+                lightColor.b / 255.0f};
+
+            if (ImGui::ColorEdit3("Couleur", colorTmp)) {
+                lightColor.r = colorTmp[0] * 255.0f;
+                lightColor.g = colorTmp[1] * 255.0f;
+                lightColor.b = colorTmp[2] * 255.0f;
+            }
 
             ImGui::PopID();
         }
