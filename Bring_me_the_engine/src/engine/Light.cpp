@@ -55,3 +55,4 @@ float Light::getLinear() const { return m_linear; }
 float Light::getQuadratic() const { return m_quadratic; }
 bool Light::isActive() const { return m_active; }
 void Light::setActive(bool isActive) { m_active = isActive; }
+void Light::setPosition(const Vec3 & newPosition) { m_position = newPosition; }

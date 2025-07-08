@@ -3,8 +3,8 @@
 #include <cmath>
 #include <ostream>
 
-//TODO: Mettre de l'ordre dans ce bordel.. pas forcément séparer en deux fichiers car... pourquoi? ça à du sens ensemble mais au moins bien foutre
-// Les déclarations dans le cpp
+// TODO: Mettre de l'ordre dans ce bordel.. pas forcément séparer en deux fichiers car... pourquoi? ça à du sens ensemble mais au moins bien foutre
+//  Les déclarations dans le cpp
 struct Vec2 {
     float x, y;
 
@@ -147,10 +147,11 @@ struct Mat4 {
 
     Mat4 operator*(const Mat4 & other) const;
     Mat4 & translate(const Vec3 & t);
+    void setTranslation(const Vec3 & t);
+    Mat4 removeTranslation() const;
 
     const float * ptr() const;
     float * ptr();
-    Mat4 removeTranslation() const;
 
     static Mat4 orthographic(float left, float right, float bottom, float top, float near, float far);
 

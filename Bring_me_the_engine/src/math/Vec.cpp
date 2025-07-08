@@ -160,6 +160,13 @@ Mat4 & Mat4::translate(const Vec3 & t) {
     return *this;
 }
 
+void Mat4::setTranslation(const Vec3& t) {
+    data[12] = t.x;
+    data[13] = t.y;
+    data[14] = t.z;
+}
+
+
 const float * Mat4::ptr() const { return data; }
 float * Mat4::ptr() { return data; }
 

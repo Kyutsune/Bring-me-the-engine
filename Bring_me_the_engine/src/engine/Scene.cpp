@@ -3,9 +3,8 @@
 #include "rendering/Shader.h"
 #include "system/PathResolver.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <glad/glad.h>
 
 Scene::Scene() : m_view(Mat4::identity()), m_projection(Mat4::identity()) {
     m_camera = Camera(
@@ -23,28 +22,28 @@ Scene::Scene() : m_view(Mat4::identity()), m_projection(Mat4::identity()) {
     m_lightingManager.setupLightingOnScene();
 
     m_lightingManager.addLight({true,
-                                    LightType::LIGHT_POINT,
-                                    Vec3(3, 1, -1),
-                                    Vec3(0, -1, 0),
-                                    Color(255, 255, 255),
-                                    1.f,
-                                    1.0f, 0.7f, 1.8f});
+                                LightType::LIGHT_POINT,
+                                Vec3(3, 1, -1),
+                                Vec3(0, -1, 0),
+                                Color(255, 255, 255),
+                                1.f,
+                                1.0f, 0.7f, 1.8f});
 
     m_lightingManager.addLight({false,
-                                    LightType::LIGHT_DIRECTIONAL,
-                                    Vec3(0, 10, 0),
-                                    Vec3(1, -1, 0),
-                                    Color(255, 255, 255),
-                                    0.06f,
-                                    0.5f, 0.7f, 1.8f});
+                                LightType::LIGHT_DIRECTIONAL,
+                                Vec3(0, 10, 0),
+                                Vec3(1, -1, 0),
+                                Color(255, 255, 255),
+                                0.06f,
+                                0.5f, 0.7f, 1.8f});
 
     m_lightingManager.addLight({true,
-                                    LightType::LIGHT_POINT,
-                                    Vec3(-1, 1, -3),
-                                    Vec3(0, -1, 0),
-                                    Color(255, 255, 255),
-                                    0.7f,
-                                    1.0f, 0.7f, 1.8f});
+                                LightType::LIGHT_POINT,
+                                Vec3(-1, 1, -3),
+                                Vec3(0, -1, 0),
+                                Color(255, 255, 255),
+                                0.7f,
+                                1.0f, 0.7f, 1.8f});
 
     std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
     for (const Light & light : m_lightingManager.getLights()) {

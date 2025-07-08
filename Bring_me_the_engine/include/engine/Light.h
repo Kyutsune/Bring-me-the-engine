@@ -20,6 +20,7 @@ public:
     LightType getType() const;
     void setType(LightType newType);
     const Vec3 & getPosition() const;
+    void setPosition(const Vec3 & newPosition);
     const Vec3 & getDirection() const;
     const Color & getColor() const;
     float getIntensity() const;
