@@ -6,10 +6,6 @@
 #include "camera/Frustum.h"
 #include "engine/Entity.h"
 #include "engine/LightingManager.h"
-#include "engine/Mesh.h"
-#include "geometry/Cube.h"
-#include "geometry/Floor.h"
-#include "geometry/Sphere.h"
 
 #include <iostream>
 #include <memory>
@@ -18,6 +14,7 @@
 class Scene {
 public:
     Scene();
+    Scene(const int & sceneIndex);
     void update();
     void initObjects();
 

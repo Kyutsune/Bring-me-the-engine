@@ -112,7 +112,7 @@ namespace Sections {
             light->setIntensity(intensity / 100.0f);
         }
 
-        //TODO: Rajouter le fait de pouvoir modifier la direction de la lumière directionnelle
+        // TODO: Rajouter le fait de pouvoir modifier la direction de la lumière directionnelle
     }
 
     void ponctualLightSection(Scene * scene) {
@@ -277,6 +277,26 @@ namespace Sections {
 
             ImGui::PopID();
         }
+    }
+
+    bool SceneSection(Scene * scene) {
+        if (ImGui::CollapsingHeader("Scène")) {
+            static int currentScene = g_sceneIndex - 1;
+            static int selectedScene = g_sceneIndex - 1;
+
+            ImGui::SeparatorText("Séléction de la scène courante");
+            if (ImGui::Combo("Scene", &selectedScene, "Scene 1\0Scene 2\0")) {
+                if (selectedScene != currentScene) {
+                    currentScene = selectedScene;
+                    g_scenePtr.reset();
+                    std::cout << "Changement de scène: " << currentScene + 1 << std::endl;
+                    g_scenePtr = std::make_unique<Scene>(currentScene + 1);
+                    g_scene = g_scenePtr.get();
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
