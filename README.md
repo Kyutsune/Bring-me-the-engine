@@ -48,7 +48,7 @@ Afin de pouvoir naviguer dans le moteur, 3 types de déplacements sont possibles
 - **Déplacement sur les axes verticaux et horizontaux** :
   - Pour se faire il suffit de maintenir la touche `Ctrl` enfoncée et de déplacer la souris.
 
-Tout ses déplacements sont faisable en même temps, notamment le fait de pouvoir avancer avec ZASD tout en faisant pivoter l'axe de vue de la caméra.
+Tout ses déplacements sont réalisables en même temps, notamment le fait de pouvoir avancer avec ZASD tout en faisant pivoter l'axe de vue de la caméra.
 ____________________________________________
 ## Auteur
 Romain Soares  
