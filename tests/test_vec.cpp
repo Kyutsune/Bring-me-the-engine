@@ -13,3 +13,7 @@ TEST_CASE("Vec3 addition works", "[vec3]") {
     REQUIRE(c.y == Approx(7.0f));
     REQUIRE(c.z == Approx(9.0f));
 }
+
+TEST_CASE("Division by zero throws", "[vec3]") {
+    REQUIRE_THROWS(Vec3(1,2,3) / 0);
+}

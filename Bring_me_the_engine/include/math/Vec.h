@@ -1,4 +1,5 @@
 #pragma once
+
 #include "math/Color.h"
 #include <cmath>
 #include <ostream>
@@ -39,54 +40,33 @@ struct Vec2 {
 struct Vec3 {
     float x, y, z;
 
-    Vec3(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
-    Vec3(const Color & color) : x(color.r / 255.0f), y(color.g / 255.0f), z(color.b / 255.0f) {}
+    Vec3(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+    Vec3(const Color& color);
 
-    Vec3 operator+(const Vec3 & other) const { return {x + other.x, y + other.y, z + other.z}; }
-    Vec3 operator-(const Vec3 & other) const { return {x - other.x, y - other.y, z - other.z}; }
-    Vec3 operator*(float scalar) const { return {x * scalar, y * scalar, z * scalar}; }
-    Vec3 operator*(const Vec3 & other) const { return {x * other.x, y * other.y, z * other.z}; }
-    friend Vec3 operator*(float scalar, const Vec3 & v) { return {v.x * scalar, v.y * scalar, v.z * scalar}; }
-    Vec3 operator/(float scalar) const { return {x / scalar, y / scalar, z / scalar}; }
-    Vec3 operator+=(const Vec3 & other) {
-        x += other.x;
-        y += other.y;
-        z += other.z;
-        return *this;
-    }
-    Vec3 operator-=(const Vec3 & other) {
-        x -= other.x;
-        y -= other.y;
-        z -= other.z;
-        return *this;
-    }
+    Vec3 operator+(const Vec3& other) const;
+    Vec3 operator-(const Vec3& other) const;
+    Vec3 operator*(float scalar) const;
+    Vec3 operator*(const Vec3& other) const;
+    Vec3 operator/(float scalar) const;
 
-    const float * ptr() const { return &x; }
-    float * ptr() { return &x; }
+    Vec3 operator+=(const Vec3& other);
+    Vec3 operator-=(const Vec3& other);
 
-    float length() const { return std::sqrt(x * x + y * y + z * z); }
-    Vec3 normalized() const {
-        float len = length();
-        return len == 0 ? *this : *this / len;
-    }
+    Vec3 operator-() const;
 
-    float dot(const Vec3 & other) const { return x * other.x + y * other.y + z * other.z; }
+    const float* ptr() const;
+    float* ptr();
 
-    Vec3 cross(const Vec3 & other) const {
-        return {
-            y * other.z - z * other.y,
-            z * other.x - x * other.z,
-            x * other.y - y * other.x};
-    }
+    float length() const;
+    Vec3 normalized() const;
 
-    Vec3 operator-() const {
-        return Vec3(-x, -y, -z);
-    }
+    float dot(const Vec3& other) const;
+    Vec3 cross(const Vec3& other) const;
 
-    friend std::ostream & operator<<(std::ostream & os, const Vec3 & v) {
-        return os << "Vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
-    }
+    friend Vec3 operator*(float scalar, const Vec3& v);
+    friend std::ostream& operator<<(std::ostream& os, const Vec3& v);
 };
+
 
 inline Vec3 normalize(Vec3 v) {
     float len = v.length();
