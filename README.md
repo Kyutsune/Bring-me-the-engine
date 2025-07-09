@@ -5,13 +5,15 @@ ___________________________________________
 ## Compilation et Exécution
 Pour faire fonctionner le projet, cmake ainsi que les bibliothèques GLFW et GLM sont nécessaires.
 
+Toutes les commandes suivantes sont à lancer en étant dans le dossier Bring_me_the_engine/
+
 Pour compiler le projet, créer et se déplacer dans le dossier `build` :
 ```bash
 mkdir build && cd build
 ```
 Puis lancer la commande suivante qui va créer les fichiers de compilation :
 ```bash
-cmake ..
+cmake ../..
 ```
 Ensuite, pour compiler le projet, lancer la commande suivante :
 ```bash
