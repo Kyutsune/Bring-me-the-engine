@@ -68,11 +68,12 @@ int main() {
     glViewport(0, 0, g_windowWidth, g_windowHeight);
     glEnable(GL_DEPTH_TEST);
 
-    std::unique_ptr<Scene> gameScene = std::make_unique<Scene>();
 
     // On à une variable globale pour la scène, on peut y accéder depuis n'importe où dans le code.
     // C'est pratique pour les callbacks et autres fonctions qui n'ont pas accès à la scène
-    g_scene = gameScene.get();
+    g_sceneIndex = 1;
+    reloadScene(g_sceneIndex);
+
 
     // Création du menu et donc du contexte ImGui
     std::unique_ptr<Menu> menu = std::make_unique<Menu>(window);
@@ -107,9 +108,9 @@ int main() {
         menu->beginFrame();
 
         ClavierSouris::handleContinuousInput(window);
-        gameScene->update();
+        g_scenePtr->update();
 
-        renderer.renderFrame(*gameScene);
+        renderer.renderFrame(*g_scenePtr);
 
         menu->render();
         menu->endFrame();
@@ -120,7 +121,7 @@ int main() {
 
     // On oublie pas de nettoyer les ressources allouées, on le fait à la main ici car si on utilise
     // glfwTerminate() avant, on ne pourra plus désallouer les shaders ensuite.
-    gameScene.reset();
+    g_scenePtr.reset();
     shaders.clear();
 
     menu.reset();

@@ -111,6 +111,8 @@ namespace Sections {
         if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 100.0f, "%.0f%%", ImGuiSliderFlags_AlwaysClamp)) {
             light->setIntensity(intensity / 100.0f);
         }
+
+        // TODO: Rajouter le fait de pouvoir modifier la direction de la lumière directionnelle
     }
 
     void ponctualLightSection(Scene * scene) {
@@ -131,8 +133,170 @@ namespace Sections {
                 light->setIntensity(intensity / 100.0f);
             }
 
+            ImGui::SeparatorText("Position de la lumière");
+            Vec3 position = light->getPosition();
+
+            if (ImGui::DragFloat3("Position", &position.x, 0.01f, -100.0f, 100.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
+                light->setPosition(position);
+            }
+
+            ImGuiIO & io = ImGui::GetIO();
+
+            // TODO: Plus tard il faudrait rajouter un bouton pour pouvoir adapter le delta de déplacement
+            //  En gros permettre de déplacer plus vite que de 0.01f par tick au maintien et de 0.2 par clic
+
+            // Axe X
+            ImGui::PushID("X");
+            ImGui::Text("X");
+            ImGui::SameLine();
+            static float s_holdTimerX = 0.0f;
+
+            if (ImGui::Button("-")) {
+                if (s_holdTimerX < 0.15f) {
+                    position.x -= 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerX = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerX += io.DeltaTime;
+                if (s_holdTimerX > 0.15f) {
+                    position.x -= 0.01f;
+                    light->setPosition(position);
+                }
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("+")) {
+                if (s_holdTimerX < 0.15f) {
+                    position.x += 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerX = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerX += io.DeltaTime;
+                if (s_holdTimerX > 0.15f) {
+                    position.x += 0.01f;
+                    light->setPosition(position);
+                }
+            }
+            ImGui::PopID();
+
+            // Axe Y
+            ImGui::SameLine();
+            ImGui::PushID("Y");
+            ImGui::Text("Y");
+            ImGui::SameLine();
+            static float s_holdTimerY = 0.0f;
+
+            if (ImGui::Button("-")) {
+                if (s_holdTimerY < 0.15f) {
+                    position.y -= 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerY = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerY += io.DeltaTime;
+                if (s_holdTimerY > 0.15f) {
+                    position.y -= 0.01f;
+                    light->setPosition(position);
+                }
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("+")) {
+                if (s_holdTimerY < 0.15f) {
+                    position.y += 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerY = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerY += io.DeltaTime;
+                if (s_holdTimerY > 0.15f) {
+                    position.y += 0.01f;
+                    light->setPosition(position);
+                }
+            }
+            ImGui::PopID();
+
+            // Axe Z
+            ImGui::SameLine();
+            ImGui::PushID("Z");
+            ImGui::Text("Z");
+            ImGui::SameLine();
+            static float s_holdTimerZ = 0.0f;
+
+            if (ImGui::Button("-")) {
+                if (s_holdTimerZ < 0.15f) {
+                    position.z -= 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerZ = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerZ += io.DeltaTime;
+                if (s_holdTimerZ > 0.15f) {
+                    position.z -= 0.01f;
+                    light->setPosition(position);
+                }
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("+")) {
+                if (s_holdTimerZ < 0.15f) {
+                    position.z += 0.2f;
+                    light->setPosition(position);
+                }
+                s_holdTimerZ = 0.0f;
+            }
+            if (ImGui::IsItemActive()) {
+                s_holdTimerZ += io.DeltaTime;
+                if (s_holdTimerZ > 0.15f) {
+                    position.z += 0.01f;
+                    light->setPosition(position);
+                }
+            }
+            ImGui::PopID();
+
+            ImGui::SeparatorText("Couleur de la lumière");
+            Color & lightColor = light->getColor();
+
+            float colorTmp[3] = {
+                lightColor.r / 255.0f,
+                lightColor.g / 255.0f,
+                lightColor.b / 255.0f};
+
+            if (ImGui::ColorEdit3("Couleur", colorTmp)) {
+                lightColor.r = colorTmp[0] * 255.0f;
+                lightColor.g = colorTmp[1] * 255.0f;
+                lightColor.b = colorTmp[2] * 255.0f;
+            }
+
             ImGui::PopID();
         }
+    }
+
+    bool SceneSection(Scene * scene) {
+        if (ImGui::CollapsingHeader("Scène")) {
+            static int currentScene = g_sceneIndex - 1;
+            static int selectedScene = g_sceneIndex - 1;
+
+            ImGui::SeparatorText("Séléction de la scène courante");
+            if (ImGui::Combo("Scene", &selectedScene, "Scene 1\0Scene 2\0")) {
+                if (selectedScene != currentScene) {
+                    currentScene = selectedScene;
+                    g_scenePtr.reset();
+                    std::cout << "Changement de scène: " << currentScene + 1 << std::endl;
+                    g_scenePtr = std::make_unique<Scene>(currentScene + 1);
+                    g_scene = g_scenePtr.get();
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

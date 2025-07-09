@@ -57,6 +57,9 @@ void Menu::render() {
     setupMenuDisplay();
     ImGui::Begin("Bring me the menu", &m_show);
 
+    if(Sections::SceneSection(scene)){
+        scene = &getScene();
+    }
     Sections::textureSection(scene);
     Sections::lightSection(scene);
     Sections::fogSection(scene);

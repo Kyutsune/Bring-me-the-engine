@@ -52,7 +52,10 @@ target_link_libraries(${PROJECT_NAME}
 file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS tests/*.cpp)
 
 # Créer l'exécutable de tests
-add_executable(BringMeTheEngine-tests ${TEST_SOURCES})
+add_executable(BringMeTheEngine-tests ${TEST_SOURCES}
+    Bring_me_the_engine/src/math/Vec.cpp
+    Bring_me_the_engine/src/math/Mat4.cpp
+)
 
 # Inclure les headers nécessaires
 target_include_directories(BringMeTheEngine-tests PRIVATE
@@ -62,7 +65,7 @@ target_include_directories(BringMeTheEngine-tests PRIVATE
 
 # Lier les bibliothèques : moteur + dépendances + Catch2
 target_link_libraries(BringMeTheEngine-tests
-    PRIVATE
+    PRIVATE 
         Catch2::Catch2WithMain
         glad
         glfw
@@ -88,3 +91,5 @@ if(SANITIZE_ADDRESS)
         message(WARNING "AddressSanitizer n'est pas pris en charge par ce compilateur.")
     endif()
 endif()
+
+

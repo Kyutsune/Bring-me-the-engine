@@ -3,14 +3,24 @@
 
 // Pointeur global vers la scène actuelle, utilisé pour accéder à la caméra et aux entités
 extern Scene * g_scene;
+extern std::unique_ptr<Scene> g_scenePtr;
+// entier non signé représentant l'index de la scène actuelle
+extern size_t g_sceneIndex;
+
+//Fonction qui va nous permettre de recharger la scène actuelle 
+void reloadScene(const std::size_t & index);
+Scene & getScene();
+
+
 // Sensibilité de déplacement de la caméra via le clavier
 extern float g_sensibility_depl;
 // Sensibilité de rotation de la caméra via la souris
 extern float g_sensibility_rot;
 
-extern int g_windowWidth;
-extern int g_windowHeight;
+extern size_t g_windowWidth;
+extern size_t g_windowHeight;
 
+// Nombre maximum de lumières directionnelles et ponctuelles
 inline constexpr size_t MAX_DIR_LIGHTS = 1;
 inline constexpr size_t MAX_PONC_LIGHTS = 8;
 inline constexpr size_t MAX_LIGHTS = MAX_DIR_LIGHTS + MAX_PONC_LIGHTS;

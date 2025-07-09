@@ -11,7 +11,7 @@ Renderer::Renderer(Shader * entityShader, Shader * lightShader, Shader * skyboxS
       m_shadowShaderDirectionnal(shadowShaderDirectionnal),
       m_shadowShaderPonctual(shadowShaderPonctual),
       m_shadowManager(shadowShaderDirectionnal, shadowShaderPonctual) {
-        initShadowMap();
+    initShadowMap();
 }
 
 void Renderer::renderScene(const Scene & scene) {
@@ -61,17 +61,19 @@ void Renderer::renderEntities(const Scene & scene, const Mat4 & view, const Mat4
 
 void Renderer::renderLightEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection) {
     const auto & lights = scene.getLightingManager().getLights();
-    const auto & lightEntities = scene.getLightEntities();
+    const std::vector<std::shared_ptr<Entity>> & lightEntities = scene.getLightEntities();
 
     for (size_t i = 0; i < lightEntities.size(); ++i) {
         if (lights[i].getType() != LightType::LIGHT_POINT)
             continue;
 
+        Vec3 lightPos = lights[i].getPosition(); // ou lights[i].position si c'est public
+        lightEntities[i]->getTransform().setTranslation(lightPos);
+
         scene.getLightingManager().applyPosLights(*m_lightShader);
         lightEntities[i]->draw_entity(*m_lightShader, view, projection);
     }
 }
-
 
 void Renderer::renderFrame(const Scene & scene) {
     m_shadowManager.renderShadows(scene);

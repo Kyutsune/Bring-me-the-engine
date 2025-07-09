@@ -5,13 +5,15 @@ ___________________________________________
 ## Compilation et Exécution
 Pour faire fonctionner le projet, cmake ainsi que les bibliothèques GLFW et GLM sont nécessaires.
 
+Toutes les commandes suivantes sont à lancer en étant dans le dossier Bring_me_the_engine/
+
 Pour compiler le projet, créer et se déplacer dans le dossier `build` :
 ```bash
 mkdir build && cd build
 ```
 Puis lancer la commande suivante qui va créer les fichiers de compilation :
 ```bash
-cmake ..
+cmake ../..
 ```
 Ensuite, pour compiler le projet, lancer la commande suivante :
 ```bash
@@ -48,7 +50,7 @@ Afin de pouvoir naviguer dans le moteur, 3 types de déplacements sont possibles
 - **Déplacement sur les axes verticaux et horizontaux** :
   - Pour se faire il suffit de maintenir la touche `Ctrl` enfoncée et de déplacer la souris.
 
-Tout ses déplacements sont faisable en même temps, notamment le fait de pouvoir avancer avec ZASD tout en faisant pivoter l'axe de vue de la caméra.
+Tout ses déplacements sont réalisables en même temps, notamment le fait de pouvoir avancer avec ZASD tout en faisant pivoter l'axe de vue de la caméra.
 ____________________________________________
 ## Auteur
 Romain Soares  
