@@ -144,5 +144,5 @@ std::vector<Light*> LightingManager::getPonctualLightsRef() {
             ponctualLights.push_back(&light);
         }
     }
-    return ponctualLights; // pas besoin de static ici
+    return ponctualLights;
 }

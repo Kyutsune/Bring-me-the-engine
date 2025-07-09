@@ -27,10 +27,10 @@ namespace Sections {
     void fogSection(Scene * scene) {
         if (ImGui::CollapsingHeader("Fog")) {
             ImGui::SeparatorText("Type de fog actif");
-            static const char * items[] = {"Aucun", "Linéaire", "Exponentiel", "Exponentiel²"};
-            static int currentType = scene->getFogType();
-            if (ImGui::Combo("Type de Fog", &currentType, items, IM_ARRAYSIZE(items))) {
-                scene->setFogType(currentType);
+            static const char * s_items[] = {"Aucun", "Linéaire", "Exponentiel", "Exponentiel²"};
+            static int s_currentFogType = scene->getFogType();
+            if (ImGui::Combo("Type de Fog", &s_currentFogType, s_items, IM_ARRAYSIZE(s_items))) {
+                scene->setFogType(s_currentFogType);
             }
 
             ImGui::SeparatorText("Valeurs du Fog");
