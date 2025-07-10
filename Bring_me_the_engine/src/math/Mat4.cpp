@@ -3,8 +3,8 @@
 /// Ici que le coeur intéréssant pour le projet, c'est à dire les implémentations de Mat4
 
 #include "math/Vec.h"
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 Mat4::Mat4() {
     for (int i = 0; i < 16; ++i)
@@ -53,7 +53,7 @@ Mat4 Mat4::lookAt(const Vec3 & eye, const Vec3 & center, const Vec3 & up) {
 Mat4 Mat4::perspective(float fovRadians, float aspect, float near, float far) {
     Mat4 result;
 
-        memset(result.data, 0, sizeof(result.data));
+    memset(result.data, 0, sizeof(result.data));
 
     float tanHalfFovy = tan(fovRadians / 2.0f);
 
@@ -160,12 +160,11 @@ Mat4 & Mat4::translate(const Vec3 & t) {
     return *this;
 }
 
-void Mat4::setTranslation(const Vec3& t) {
+void Mat4::setTranslation(const Vec3 & t) {
     data[12] = t.x;
     data[13] = t.y;
     data[14] = t.z;
 }
-
 
 const float * Mat4::ptr() const { return data; }
 float * Mat4::ptr() { return data; }
@@ -197,6 +196,8 @@ Mat4 Mat4::orthographic(float left, float right, float bottom, float top, float 
 
     return result;
 }
+
+Vec3 Mat4::getTranslation() const { return Vec3(data[12], data[13], data[14]); }
 
 Mat4 Mat4::transpose() const {
     Mat4 result;
@@ -337,4 +338,27 @@ Mat4 Mat4::inverse() const {
         inv.data[i] = inv.data[i] * det;
 
     return inv;
+}
+
+float Mat4::operator[](size_t index) const {
+    if (index >= 16) {
+        throw std::out_of_range("Mat4 index out of range");
+    }
+    return data[index];
+}
+
+float & Mat4::operator[](size_t index) {
+    if (index >= 16) {
+        throw std::out_of_range("Mat4 index out of range");
+    }
+    return data[index];
+}
+
+Mat4 & Mat4::operator=(const Mat4 & other) {
+    if (this != &other) {
+        for (size_t i = 0; i < 16; ++i) {
+            data[i] = other.data[i];
+        }
+    }
+    return *this;
 }

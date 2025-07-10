@@ -135,12 +135,15 @@ struct Mat4 {
 
     static Mat4 orthographic(float left, float right, float bottom, float top, float near, float far);
 
-    inline Vec3 getTranslation() const { return Vec3(data[12], data[13], data[14]); }
+    Vec3 getTranslation() const;
 
     Mat4 transpose() const;
     Mat4 inverse() const;
 
     friend std::ostream & operator<<(std::ostream & os, const Mat4 & m);
+    float operator[](size_t index) const;
+    float & operator[](size_t index);
+    Mat4& operator=(const Mat4& other);
 };
 
 inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {
