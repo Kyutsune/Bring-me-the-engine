@@ -3,7 +3,7 @@
 #include "geometry/Cube.h"
 #include "geometry/Floor.h"
 #include "geometry/Sphere.h"
-#include "rendering/TextureManager.h"
+#include "rendering/GestionTextures/TextureManager.h"
 #include "system/PathResolver.h"
 
 namespace scenePreloaded {

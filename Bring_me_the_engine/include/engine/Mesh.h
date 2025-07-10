@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "rendering/Vertex.h"
-#include "rendering/Texture.h"
+#include "rendering/GestionTextures/Texture.h"
 #include "math/PlaneBoundingVolume.h"
 
 // Classe qui sera utilisée pour représenter un objet dans l'espace 3D.

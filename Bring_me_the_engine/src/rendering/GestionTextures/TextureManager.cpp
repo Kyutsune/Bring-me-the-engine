@@ -1,4 +1,4 @@
-#include "rendering/TextureManager.h"
+#include "rendering/GestionTextures/TextureManager.h"
 
 std::shared_ptr<Texture> TextureManager::load(const std::string & path) {
     auto it = cache.find(path);

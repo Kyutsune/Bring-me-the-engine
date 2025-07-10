@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
-#include "rendering/Texture.h"
+#include "rendering/GestionTextures/Texture.h"
 
 //AVENIR: Dans un futur hypothétique ou Bring me the engine se développe plus, le fait de garder en cache
 // Toutes les textures tout le temps peut devenir problématique en termes de mémoire.

@@ -12,7 +12,7 @@
 #include "rendering/Shader.h"
 #include "system/PathResolver.h"
 #include "ui/Menu.h"
-#include "rendering/TextureManager.h"
+#include "rendering/GestionTextures/TextureManager.h"
 
 #include "../external/imgui/backends/imgui_impl_glfw.h"
 #include "../external/imgui/backends/imgui_impl_opengl3.h"

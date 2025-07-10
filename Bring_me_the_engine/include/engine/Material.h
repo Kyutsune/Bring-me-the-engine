@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rendering/Texture.h"
+#include "rendering/GestionTextures/Texture.h"
 #include <memory>
 
 struct Material {
