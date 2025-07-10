@@ -24,6 +24,10 @@ public:
            const std::string & filenameSpecularMap = "",
            const std::string & name = "");
 
+    Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
+           std::shared_ptr<Material> material,
+           const std::string & name = "");
+
     virtual ~Entity() = default;
 
     const std::string & getName() const { return m_entity_name; }

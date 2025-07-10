@@ -34,6 +34,12 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
     m_entity_name = name.empty() ? "Unnamed Entity" : name;
 }
 
+Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
+               std::shared_ptr<Material> material,
+               const std::string & name) : m_transform(transform), m_mesh(std::move(mesh)), m_material(std::move(*material)) {
+    m_entity_name = name.empty() ? "Unnamed Entity" : name;
+}
+
 void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection) {
     updateCameraUniforms(shader, m_transform, view, projection);
 

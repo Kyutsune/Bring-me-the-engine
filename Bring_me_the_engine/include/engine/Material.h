@@ -14,4 +14,16 @@ struct Material {
     bool m_useDiffuse = false;
     bool m_useNormal = false;
     bool m_useSpecular = false;
+
+    Material() = default;
+
+    Material(const std::shared_ptr<Texture> & diffuse,
+             const std::shared_ptr<Texture> & normal,
+             const std::shared_ptr<Texture> & specular)
+        : m_diffuseTexture(diffuse),
+          m_normalMap(normal),
+          m_specularMap(specular),
+          m_useDiffuse(diffuse != nullptr),
+          m_useNormal(normal != nullptr),
+          m_useSpecular(specular != nullptr) {}
 };
