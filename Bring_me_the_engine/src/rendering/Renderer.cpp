@@ -46,8 +46,8 @@ void Renderer::renderSkybox(const Skybox * skybox, const Mat4 & view, const Mat4
 }
 
 void Renderer::renderEntities(const Scene & scene, const Mat4 & view, const Mat4 & projection) {
-    const auto & frustum = scene.getFrustum();
-    const auto & entities = scene.getEntities();
+    const Frustum & frustum = scene.getFrustum();
+    const std::vector<std::shared_ptr<Entity>> & entities = scene.getEntities();
 
     for (const std::shared_ptr<Entity> & entity : entities) {
         if (frustum.isBoxInFrustum(entity->getTransformedBoundingBox())) {
