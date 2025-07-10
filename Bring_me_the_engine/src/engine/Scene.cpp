@@ -28,7 +28,7 @@ Scene::Scene(const int & sceneIndex) : m_view(Mat4::identity()), m_projection(Ma
         Vec3(0, 1, 0),                       // up
         45.0f,                               // FOV
         1600.0f / 800.0f,                    // aspect ratio
-        0.1f, 100.0f);                       // near et far planes
+        0.1f, 1000.0f);                       // near et far planes
 
     m_view = m_camera.getViewMatrix();
     m_projection = m_camera.getProjectionMatrix();

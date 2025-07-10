@@ -38,6 +38,11 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
                std::shared_ptr<Material> material,
                const std::string & name) : m_transform(transform), m_mesh(std::move(mesh)), m_material(std::move(*material)) {
     m_entity_name = name.empty() ? "Unnamed Entity" : name;
+    if (this->m_mesh) {
+        m_boundingBox = this->m_mesh->getBoundingBox();
+    } else {
+        std::cout << "Warning: Mesh is null for entity: " << m_entity_name << std::endl;
+    }
 }
 
 void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection) {

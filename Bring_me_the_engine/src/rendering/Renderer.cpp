@@ -49,7 +49,7 @@ void Renderer::renderEntities(const Scene & scene, const Mat4 & view, const Mat4
     const auto & frustum = scene.getFrustum();
     const auto & entities = scene.getEntities();
 
-    for (const auto & entity : entities) {
+    for (const std::shared_ptr<Entity> & entity : entities) {
         if (frustum.isBoxInFrustum(entity->getTransformedBoundingBox())) {
             entity->draw_entity(*m_entityShader, view, projection);
         }

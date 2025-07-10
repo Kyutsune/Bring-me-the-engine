@@ -1,6 +1,6 @@
 #include "camera/Frustum.h"
-#include <iostream>
 #include <array>
+#include <math/Trigo.h>
 
 void Frustum::update(const Mat4 & m) {
     // Left plane
@@ -52,12 +52,11 @@ void Frustum::update(const Mat4 & m) {
     }
 }
 
-
 Frustum Frustum::updateFromCamera(const Camera & cam) {
     // Je suis un petit rigolo :)
     Frustum frutsum;
 
-    const float halfVSide = cam.getFarPlane() * tanf((cam.getFov() * M_PI / 180.0f) * 0.5f);
+    const float halfVSide = cam.getFarPlane() * tanf((radians(cam.getFov())) * 0.5f);
 
     const float halfHSide = halfVSide * cam.getAspectRatio();
     const Vec3 frontMultFar = cam.getFarPlane() * cam.getForward();
@@ -86,7 +85,6 @@ Frustum Frustum::updateFromCamera(const Camera & cam) {
         cam.getPosition(),
         (frontMultFar + cam.getUp() * halfVSide).cross(cam.getRight()));
 
-
     return frutsum;
 }
 
@@ -106,13 +104,13 @@ bool Frustum::isBoxInFrustum(const AABB & box) const {
         p.y = (plane.m_normal.y >= 0) ? maxY : minY;
         p.z = (plane.m_normal.z >= 0) ? maxZ : minZ;
 
+
         if (plane.distanceToPoint(p) < 0) {
             return false; // Box complètement hors du frustum
         }
     }
     return true; // Partiellement ou complètement dedans
 }
-
 
 AABB Frustum::computeBoundingBox() const {
     // Les 8 coins du frustum sont obtenus en intersectant les triplets de plans correspondants
@@ -131,7 +129,7 @@ AABB Frustum::computeBoundingBox() const {
     Vec3 minCorner = corners[0];
     Vec3 maxCorner = corners[0];
 
-    for (const auto& corner : corners) {
+    for (const auto & corner : corners) {
         minCorner.x = std::min(minCorner.x, corner.x);
         minCorner.y = std::min(minCorner.y, corner.y);
         minCorner.z = std::min(minCorner.z, corner.z);
