@@ -16,7 +16,6 @@ Menu::Menu(GLFWwindow * window) : window(window), scene(g_scene) {
 
     ImGuiIO & io = ImGui::GetIO();
     io.FontGlobalScale = 1.5f;
-    // Permet de changer le nom du fichier de configuration
     static std::string iniFilePath = PathResolver::getResourcePath("build/menu.ini").string();
     io.IniFilename = iniFilePath.c_str();
 

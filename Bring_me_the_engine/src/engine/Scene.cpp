@@ -23,12 +23,12 @@ Scene::Scene() : m_view(Mat4::identity()), m_projection(Mat4::identity()) {
 }
 Scene::Scene(const int & sceneIndex) : m_view(Mat4::identity()), m_projection(Mat4::identity()) {
     m_camera = Camera(
-        Vec3(-5.68114, 0.024997, -0.912596), // position à l'initialisation
-        Vec3(0.025365, 0.0263991, -3.00793), // le point ciblé
-        Vec3(0, 1, 0),                       // up
-        45.0f,                               // FOV
-        1600.0f / 800.0f,                    // aspect ratio
-        0.1f, 1000.0f);                       // near et far planes
+        Vec3(-5.7, 0., -1.), // position à l'initialisation
+        Vec3(0., 0., -3.),   // le point ciblé
+        Vec3(0, 1, 0),       // up
+        45.0f,               // FOV
+        1600.0f / 800.0f,    // aspect ratio
+        0.1f, 1000.0f);      // near et far planes
 
     m_view = m_camera.getViewMatrix();
     m_projection = m_camera.getProjectionMatrix();
