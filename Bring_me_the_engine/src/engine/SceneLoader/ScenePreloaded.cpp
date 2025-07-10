@@ -126,6 +126,8 @@ namespace scenePreloaded {
         sphere->getBoundingBox().setupBBoxBuffers();
         entities.emplace_back(sphere);
     }
+
+    
     void loadScene2(std::vector<std::shared_ptr<Entity>> & entities,
                     std::vector<std::shared_ptr<Entity>> & lightEntities,
                     std::unique_ptr<Skybox> & skybox,

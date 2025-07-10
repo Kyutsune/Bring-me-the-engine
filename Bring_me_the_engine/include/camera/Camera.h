@@ -39,6 +39,7 @@ public:
     inline Vec3 getForward() const { return getDirection(); }
     inline Vec3 getBackward() const { return -getDirection(); }
     inline Vec3 getUp() const { return m_up; }
+    inline Vec3 & getUp() { return m_up; }
     inline float getFov() const { return m_fov; }
     inline float getAspectRatio() const { return m_aspectRatio; }
     inline float getNearPlane() const { return m_nearPlane; }

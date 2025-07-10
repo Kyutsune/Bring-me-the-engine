@@ -41,7 +41,7 @@ void Scene::update() {
     m_projection = m_camera.getProjectionMatrix();
 
     // Mise à jour du frustum pour le culling
-    m_frustum = m_frustum.updateFromCamera(m_camera);
+    m_frustum.update(m_view * m_projection);
 
     float angle = glfwGetTime();
     if (!m_entities.empty() && m_entities[0]->getName() == "Cube_qui_tourne") {

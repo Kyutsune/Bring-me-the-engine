@@ -1,6 +1,7 @@
 #include "camera/Frustum.h"
 #include <array>
 #include <math/Trigo.h>
+#include <iostream>
 
 void Frustum::update(const Mat4 & m) {
     // Left plane
@@ -100,10 +101,10 @@ bool Frustum::isBoxInFrustum(const AABB & box) const {
         float minZ = std::min(box.m_min.z, box.m_max.z);
         float maxZ = std::max(box.m_min.z, box.m_max.z);
 
+
         p.x = (plane.m_normal.x >= 0) ? maxX : minX;
         p.y = (plane.m_normal.y >= 0) ? maxY : minY;
         p.z = (plane.m_normal.z >= 0) ? maxZ : minZ;
-
 
         if (plane.distanceToPoint(p) < 0) {
             return false; // Box complètement hors du frustum
