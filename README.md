@@ -15,9 +15,18 @@ Puis lancer la commande suivante qui va créer les fichiers de compilation :
 ```bash
 cmake ../..
 ```
-Ensuite, pour compiler le projet, lancer la commande suivante :
+Ensuite, pour compiler le projet en entier (test + exécutable), lancer la commande suivante :
 ```bash
 make
+```
+Pour ne compiler que l'exécutable, lancer la commande suivante :
+```bash
+make BringMeTheEngine
+```
+Pour ne compiler que les tests, lancer la commande suivante :
+```bash
+make BringMeTheEngine-tests
+
 ```
 Enfin, pour lancer le projet, exécuter la commande suivante :
 ```bash
@@ -28,7 +37,7 @@ Pour lancer les fichiers de tests, exécuter la commande suivante :
 ../bin/Bring-me-the-engine-tests
 ```
 
-Une automatisation de tout le processus de pré-compilation et de compilation est possible en lançant à partir de la racine du projet la commande suivante :
+Une automatisation de tout le processus de pré-compilation et de compilation est possible en lançant à partir de la racine du projet la commande suivante (test+exécutable) :
 ```bash
 ./rebuild.sh
 ```
