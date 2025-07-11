@@ -45,14 +45,14 @@ namespace Sections {
             ImGui::SeparatorText("Couleur du Fog");
             Color & fogColor = scene->getFogColor();
             float colorTmp[3] = {
-                fogColor.r / 255.0f,
-                fogColor.g / 255.0f,
-                fogColor.b / 255.0f};
+                fogColor.r,
+                fogColor.g,
+                fogColor.b};
 
             if (ImGui::ColorEdit3("Couleur", colorTmp)) {
-                fogColor.r = colorTmp[0] * 255.0f;
-                fogColor.g = colorTmp[1] * 255.0f;
-                fogColor.b = colorTmp[2] * 255.0f;
+                fogColor.r = colorTmp[0];
+                fogColor.g = colorTmp[1];
+                fogColor.b = colorTmp[2];
             }
         }
     }
@@ -107,9 +107,9 @@ namespace Sections {
         if (ImGui::Checkbox("Activer", &isActive)) {
             light->setActive(isActive);
         }
-        float intensity = light->getIntensity() * 100.0f;
-        if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 100.0f, "%.0f%%", ImGuiSliderFlags_AlwaysClamp)) {
-            light->setIntensity(intensity / 100.0f);
+        float intensity = light->getIntensity() * 10.0f;
+        if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 400.0f, "%.0f%%", ImGuiSliderFlags_AlwaysClamp)) {
+            light->setIntensity(intensity / 10.0f);
         }
 
         // TODO: Rajouter le fait de pouvoir modifier la direction de la lumière directionnelle
@@ -128,9 +128,9 @@ namespace Sections {
             if (ImGui::Checkbox("Activer", &isActive)) {
                 light->setActive(isActive);
             }
-            float intensity = light->getIntensity() * 100.0f;
+            float intensity = light->getIntensity() * 10.f;
             if (ImGui::SliderFloat("Intensité", &intensity, 0.0f, 200.0f, "%.0f%%", ImGuiSliderFlags_AlwaysClamp)) {
-                light->setIntensity(intensity / 100.0f);
+                light->setIntensity(intensity / 10.f); // Reconverti en [0.0 – 10.0]
             }
 
             ImGui::SeparatorText("Position de la lumière");
@@ -265,14 +265,14 @@ namespace Sections {
             Color & lightColor = light->getColor();
 
             float colorTmp[3] = {
-                lightColor.r / 255.0f,
-                lightColor.g / 255.0f,
-                lightColor.b / 255.0f};
+                lightColor.r,
+                lightColor.g,
+                lightColor.b};
 
             if (ImGui::ColorEdit3("Couleur", colorTmp)) {
-                lightColor.r = colorTmp[0] * 255.0f;
-                lightColor.g = colorTmp[1] * 255.0f;
-                lightColor.b = colorTmp[2] * 255.0f;
+                lightColor.r = colorTmp[0];
+                lightColor.g = colorTmp[1];
+                lightColor.b = colorTmp[2];
             }
 
             ImGui::PopID();

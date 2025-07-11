@@ -7,6 +7,7 @@ extern std::unique_ptr<Scene> g_scenePtr;
 // entier non signé représentant l'index de la scène actuelle
 extern size_t g_sceneIndex;
 
+
 //Fonction qui va nous permettre de recharger la scène actuelle 
 void reloadScene(const std::size_t & index);
 Scene & getScene();

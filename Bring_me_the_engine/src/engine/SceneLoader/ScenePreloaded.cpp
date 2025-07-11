@@ -18,8 +18,8 @@ namespace scenePreloaded {
                                   LightType::LIGHT_POINT,
                                   Vec3(3, 1, -1),
                                   Vec3(0, -1, 0),
-                                  Color(255, 255, 255),
-                                  1.f,
+                                  Color(1.f, 1.f, 1.f, 1.f),
+                                  8.f,
                                   1.0f, 0.7f, 1.8f});
 
         lightingManager.addLight({false,
@@ -27,7 +27,7 @@ namespace scenePreloaded {
                                   Vec3(0, 10, 0),
                                   Vec3(1, -1, 0),
                                   Color(255, 255, 255),
-                                  0.06f,
+                                  10.f,
                                   0.5f, 0.7f, 1.8f});
 
         lightingManager.addLight({true,
@@ -35,7 +35,7 @@ namespace scenePreloaded {
                                   Vec3(-1, 1, -3),
                                   Vec3(0, -1, 0),
                                   Color(255, 255, 255),
-                                  0.7f,
+                                  7.f,
                                   1.0f, 0.7f, 1.8f});
 
         // Entité qui sera utilisée pour représenter les lumières ponctuelles dans la scène
@@ -74,7 +74,7 @@ namespace scenePreloaded {
 
         entities.emplace_back(cube_qui_tourne);
 
-        // Cube avec une couleur rose
+        // Cube tout bleu
         std::shared_ptr<Mesh> cubeMesh2 = createCube<std::shared_ptr<Mesh>>(Color::rose());
         Mat4 t2 = Mat4::Translation(Vec3(1, 0, -5));
         std::shared_ptr<Entity> Cube_tout_bleu = std::make_shared<Entity>(t2, cubeMesh2,

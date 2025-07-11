@@ -26,7 +26,7 @@ void LightingManager::setupLightingOnScene() {
     m_lightingSettings.m_shininess = 64.f;
 
     // Paramètres sur le fog
-    m_lightingSettings.m_fogColor = Color(126.f, 126.f, 126.f, 1.f); // Gris clair
+    m_lightingSettings.m_fogColor = Color(8, 159, 255, 255); 
     m_lightingSettings.m_fogStart = 15.0f;
     m_lightingSettings.m_fogEnd = 30.0f;
     m_lightingSettings.m_fogDensity = 0.025f;
@@ -78,9 +78,9 @@ void LightingManager::applyLightning(Shader & shader, const Vec3 & viewPos) cons
     shader.set("shininess", m_lightingSettings.m_shininess);
 
     // Paramètres sur le fog
-    shader.setVec3("fogColor", Vec3(m_lightingSettings.m_fogColor.r / 255.0f,
-                                    m_lightingSettings.m_fogColor.g / 255.0f,
-                                    m_lightingSettings.m_fogColor.b / 255.0f));
+    shader.setVec3("fogColor", Vec3(m_lightingSettings.m_fogColor.r,
+                                    m_lightingSettings.m_fogColor.g,
+                                    m_lightingSettings.m_fogColor.b));
     shader.setFloat("fogStart", m_lightingSettings.m_fogStart);
     shader.setFloat("fogEnd", m_lightingSettings.m_fogEnd);
     shader.setFloat("fogDensity", m_lightingSettings.m_fogDensity);

@@ -17,4 +17,7 @@ public:
 private:
     inline static double m_lastX = 0.0, m_lastY = 0.0;
     inline static bool m_firstMouse = true;
+
+
+    void gestionClicGauche();
 };

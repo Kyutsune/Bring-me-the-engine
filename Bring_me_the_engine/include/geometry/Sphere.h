@@ -33,7 +33,7 @@ inline T createSphere(float radius = 1.0f, int sectorCount = 36, int stackCount 
             vertices.push_back(Vertex{
                 position,
                 normal,
-                {color.r / 255.f, color.g / 255.f, color.b / 255.f},
+                {color.r, color.g, color.b},
                 texCoords
             });
         }

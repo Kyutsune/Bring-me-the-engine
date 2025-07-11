@@ -15,7 +15,7 @@ struct LightSettings {
 
 
     // Paramètres pour le fog
-    Color m_fogColor = Color(126.f, 126.f, 126.f, 1.f); // Gris clair
+    Color m_fogColor = Color(8, 159, 255, 255); 
     float m_fogStart = 5.0f;
     float m_fogEnd = 20.0f;
     float m_fogDensity = 0.045f;

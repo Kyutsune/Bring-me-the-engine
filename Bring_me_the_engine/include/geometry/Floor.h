@@ -13,10 +13,10 @@ inline T createFloor(float size = 10.0f, float height = 0.0f, const Color & colo
     float repeat = size * texelDensity;
 
     std::vector<Vertex> vertices = {
-        {{-half, height, -half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {0.0f, 0.0f}},
-        {{half, height, -half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {repeat, 0.0f}},
-        {{half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {repeat, repeat}},
-        {{-half, height, half}, {0, 1, 0}, {color.r / 255.f, color.g / 255.f, color.b / 255.f}, {0.0f, repeat}},
+        {{-half, height, -half}, {0, 1, 0}, {color.r, color.g, color.b}, {0.0f, 0.0f}},
+        {{half, height, -half}, {0, 1, 0}, {color.r, color.g, color.b}, {repeat, 0.0f}},
+        {{half, height, half}, {0, 1, 0}, {color.r, color.g, color.b}, {repeat, repeat}},
+        {{-half, height, half}, {0, 1, 0}, {color.r, color.g, color.b}, {0.0f, repeat}},
     };
 
     std::vector<unsigned int> indices = {

@@ -3,7 +3,7 @@
 Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
 
 Vec3::Vec3(const Color & color)
-    : x(color.r / 255.0f), y(color.g / 255.0f), z(color.b / 255.0f) {}
+    : x(color.r), y(color.g), z(color.b) {}
 
 Vec3 Vec3::operator+(const Vec3 & other) const {
     return {x + other.x, y + other.y, z + other.z};
