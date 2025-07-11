@@ -20,6 +20,8 @@ void ClavierSouris::handleContinuousInput(GLFWwindow * window) {
 
     //FIXME: J'utilise du hardcode pour les entiers de touches car le système de GLFW est sur le qwerty et pas azerty.
     // Il pourrait y avoir d'autres moyens plus propre pour gérer cela?
+    // Voici la solution de Hazel par exemple : 
+    // https://github.com/TheCherno/Hazel/blob/1feb70572fa87fa1c4ba784a2cfeada5b4a500db/Hazel/src/Hazel/Core/KeyCodes.h
     if (glfwGetKey(window, 87) == GLFW_PRESS) { //z
         Vec3 dir = cam->getForward();
         cam->setPosition(cam->getPosition() + dir * g_sensibility_depl);
