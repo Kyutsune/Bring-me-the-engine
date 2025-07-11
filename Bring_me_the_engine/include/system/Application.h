@@ -9,7 +9,7 @@ class GLFWwindow;
 
 class Application {
 public:
-    int run();
+    void run();
 
 private:
     bool initGLFW();
