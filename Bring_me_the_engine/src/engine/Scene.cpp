@@ -44,7 +44,7 @@ void Scene::update() {
 
     float angle = glfwGetTime();
     if (!m_entities.empty() && m_entities[0]->getName() == "Cube_qui_tourne") {
-        Mat4 rotation = Mat4::rotateX(angle) * Mat4::rotateY(angle);
+        Mat4 rotation = Mat4::rotateY(angle) * Mat4::rotateZ(angle);
         Mat4 translation = Mat4::Translation({0, 0, -1});
 
         m_entities[0]->setTransform(translation * rotation);

@@ -3,10 +3,13 @@
 #include "Material.h"
 #include "Mesh.h"
 #include "math/PlaneBoundingVolume.h"
+#include "math/Quat.h"
 #include "math/Vec.h"
 #include "rendering/Shader.h"
 #include <filesystem>
 #include <iostream>
+
+// TODO: foutre de l'ordre dans ce joyeux bordel
 
 inline void updateCameraUniforms(Shader & shader, const Mat4 & model, const Mat4 & view, const Mat4 & projection) {
     shader.setMat4("model", model);
@@ -32,9 +35,8 @@ public:
 
     const std::string & getName() const { return m_entity_name; }
     const Mat4 & getTransform() const { return m_transform; }
-    Mat4& getTransform() { return m_transform; }
-    void setTransform(const Mat4 & newTransform) { m_transform = newTransform; }
-    inline void setPosition(const Vec3 & newPosition) { m_transform.setTranslation(newPosition); }
+    Mat4 & getTransform() { return m_transform; }
+    void setTransform(const Mat4 & newTransform);
 
     void draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection);
 
@@ -49,11 +51,30 @@ public:
     inline bool isVisible() const { return visible; }
     inline void setVisible(bool v) { visible = v; }
 
+    inline void setPosition(const Vec3 & pos) {
+        m_transform.setTranslation(pos);
+        m_position = pos;
+        updateTransform();
+    }
+
+    inline void setRotation(const Quat & rot) {
+        m_rotation = rot.normalized();
+        updateTransform();
+    }
+
+    inline Vec3 getPosition() const { return m_position; }
+    inline Quat getRotation() const { return m_rotation; }
+
+    void updateTransform();
+
 private:
     std::string m_entity_name;
-    Mat4 m_transform;
     std::shared_ptr<Mesh> m_mesh;
     AABB m_boundingBox;
+
+    Vec3 m_position = Vec3(0.0f);
+    Quat m_rotation = Quat::identity();
+    Mat4 m_transform;
 
     Material m_material;
     bool visible = false;

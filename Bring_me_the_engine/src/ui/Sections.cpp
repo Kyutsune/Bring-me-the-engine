@@ -206,10 +206,11 @@ namespace Sections {
                 if (g_entityExpanded[name]) {
                     ImGui::Indent();
 
-                    Vec3 position = entity->getTransform().getTranslation();
-                    Vec3 rotationDeg = entity->getTransform().getEulerAngles() * (180.0f / M_PI);
+                    ImGui::SeparatorText("Position");
 
-                    ImGui::Text("Position : (%.2f, %.2f, %.2f)", position.x, position.y, position.z);
+                    Vec3 position = entity->getTransform().getTranslation();
+
+                    ImGui::Text("(%.2f, %.2f, %.2f)", position.x, position.y, position.z);
 
                     if (ImGui::DragFloat3("Position", &position.x, 0.01f, -100.0f, 100.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp)) {
                         entity->setPosition(position);
@@ -219,21 +220,19 @@ namespace Sections {
                         entity->setPosition(newPos);
                     });
 
-                    if (ImGui::DragFloat3("Rotation", &rotationDeg.x, 0.1f)) {
-                        // Convertir de nouveau en radians
-                        Vec3 newEuler = rotationDeg * (3.14159265f / 180.0f);
+                    ImGui::SeparatorText("Rotation");
+                    Vec3 currentEulerDeg = entity->getRotation().toEuler() * (180.0f / M_PI);
+                    ImGui::Text("Orientation actuelle : (%.1f°, %.1f°, %.1f°)", currentEulerDeg.x, currentEulerDeg.y, currentEulerDeg.z);
 
-                        // Construire matrice rotation
-                        Mat4 rotMat;
-                        rotMat = rotMat.fromEulerAngles(newEuler);
-
-                        // Conserver la translation actuelle
-                        Vec3 pos = entity->getTransform().getTranslation();
-
-                        // Appliquer translation + rotation
-                        Mat4 transform = rotMat * Mat4::Translation(pos);
-
-                        entity->setTransform(transform);
+                    static Vec3 deltaRotation = {0, 0, 0};
+                    if (ImGui::DragFloat3("", &deltaRotation.x, 0.1f)) {
+                        Quat delta = Quat::fromEuler(deltaRotation * (M_PI / 180.0f));
+                        entity->setRotation(delta * entity->getRotation());
+                        deltaRotation = {0, 0, 0};
+                    }
+                    if (ImGui::Button("Réinitialiser la rotation")) {
+                        entity->setRotation(Quat::identity());
+                        deltaRotation = {0, 0, 0};
                     }
 
                     if (ImGui::Button("Supprimer l'objet")) {

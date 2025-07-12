@@ -78,3 +78,5 @@ https://learnopengl.com/Advanced-Lighting/Shadows/Point-Shadows
 https://www.youtube.com/@TheCherno
 
 https://fr.wikipedia.org/wiki/Quaternions_et_rotation_dans_l%27espace
+
+https://www.opengl-tutorial.org/fr/intermediate-tutorials/tutorial-17-quaternions/#quaternions

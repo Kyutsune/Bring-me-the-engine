@@ -32,6 +32,9 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
         m_boundingBox = this->m_mesh->getBoundingBox();
     }
     m_entity_name = name.empty() ? "Unnamed Entity" : name;
+
+    m_position = transform.getTranslation();
+    m_rotation = Quat::fromEuler(transform.getEulerAngles());
 }
 
 Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
@@ -43,6 +46,9 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
     } else {
         std::cout << "Warning: Mesh is null for entity: " << m_entity_name << std::endl;
     }
+
+    m_position = transform.getTranslation();
+    m_rotation = Quat::fromEuler(transform.getEulerAngles());
 }
 
 void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection) {
@@ -75,6 +81,16 @@ void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projec
     m_mesh->draw();
 }
 
+void Entity::setTransform(const Mat4 & newTransform) {
+    m_transform = newTransform;
+    m_position = newTransform.getTranslation();
+    m_rotation = Quat::fromEuler(newTransform.getEulerAngles());
+}
+
 AABB Entity::getTransformedBoundingBox() const {
     return m_boundingBox.transform(m_transform);
+}
+
+void Entity::updateTransform() {
+    m_transform =  m_rotation.toMat4() * Mat4::Translation(m_position);
 }
