@@ -3,6 +3,7 @@
 #include "math/Vec.h"
 #include "rendering/Shader.h"
 #include "system/PathResolver.h"
+#include <algorithm>
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -46,8 +47,18 @@ void Scene::update() {
     float angle = glfwGetTime();
     if (!m_entities.empty() && m_entities[0]->getName() == "Cube_qui_tourne") {
         Mat4 rotation = Mat4::rotateY(angle) * Mat4::rotateZ(angle);
-        Mat4 translation = Mat4::Translation({0,0,-1});
+        Mat4 translation = Mat4::Translation({0, 0, -1});
 
         m_entities[0]->setTransform(translation * rotation);
+    }
+}
+
+void Scene::removeEntity(const std::shared_ptr<Entity>& entity) {
+    //FIXME: mes textures restent en mémoire après la suppression de l'entité dans la scène,
+    // Il faudrait vérifier si pas de soucis lors de la suppression de l'entité qui pourrait
+    // Causer des soucis de performances ou de mémoire. (ou les deux)
+    auto it = std::find(m_entities.begin(), m_entities.end(), entity);
+    if (it != m_entities.end()) {
+        m_entities.erase(it);
     }
 }

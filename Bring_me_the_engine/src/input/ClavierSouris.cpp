@@ -142,9 +142,9 @@ namespace ClavierSouris {
 
         for (const auto & entity : entities) {
             if (entity->isVisible() && IntersectUtils::intersectEntity(ray, *entity, retour_info)) {
-                std::cout << "Intersection avec l'entité: " << entity->getName() << std::endl;
-                std::cout << "Position d'intersection: " << retour_info.position << std::endl;
-                std::cout << "Normale à l'intersection: " << retour_info.normal << std::endl;
+                // std::cout << "Intersection avec l'entité: " << entity->getName() << std::endl;
+                // std::cout << "Position d'intersection: " << retour_info.position << std::endl;
+                // std::cout << "Normale à l'intersection: " << retour_info.normal << std::endl;
 
                 g_entityExpanded.clear(); // Pour n'ouvrir qu'une seule section et fermer les autres
                 g_entityExpanded[entity->getName()] = true;

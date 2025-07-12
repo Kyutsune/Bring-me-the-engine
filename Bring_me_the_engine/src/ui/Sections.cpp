@@ -190,6 +190,8 @@ namespace Sections {
             ImGui::SetNextItemOpen(true, ImGuiCond_Always);
             g_forceOpenObjectHeader = false;
         }
+        std::shared_ptr<Entity> entityToDelete = nullptr;
+
         if (ImGui::CollapsingHeader("Objets")) {
             for (const std::shared_ptr<Entity> & entity : scene->getEntities()) {
                 ImGui::PushID(entity.get());
@@ -217,11 +219,19 @@ namespace Sections {
                         entity->setPosition(newPos);
                     });
 
+                    if (ImGui::Button("Supprimer l'objet")) {
+                        entityToDelete = entity;
+                    }
+
                     ImGui::Unindent();
                     ImGui::Separator();
                 }
 
                 ImGui::PopID();
+            }
+            if (entityToDelete) {
+                scene->removeEntity(entityToDelete);
+                g_entityExpanded.erase(entityToDelete->getName());
             }
         }
     }

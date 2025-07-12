@@ -38,6 +38,8 @@ public:
     inline Color & getFogColor() { return m_lightingManager.settings().m_fogColor; }
 
 
+    void removeEntity(const std::shared_ptr<Entity> & entity);
+
 private:
     Camera m_camera;
     Mat4 m_view;
