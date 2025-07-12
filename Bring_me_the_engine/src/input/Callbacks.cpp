@@ -12,7 +12,7 @@ namespace Callbacks {
     }
 
     void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
-        ClavierSouris::handleMouse(window, xpos, ypos);
+        ClavierSouris::handleMouseMovement(window, xpos, ypos);
     }
 
 }

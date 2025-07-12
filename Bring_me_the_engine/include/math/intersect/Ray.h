@@ -10,4 +10,6 @@ struct Ray {
         os << "Ray(origin: " << ray.origin << ", direction: " << ray.direction << ")";
         return os;
     }
+    static Ray generateRayFromScreen(double mouseX, double mouseY);
+
 };

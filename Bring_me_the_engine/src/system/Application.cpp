@@ -39,7 +39,7 @@ void Application::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_menu->beginFrame();
-        ClavierSouris::handleContinuousInput(m_window);
+        ClavierSouris::update(m_window);
         g_scenePtr->update();
         renderer.renderFrame(*g_scenePtr);
         m_menu->render();

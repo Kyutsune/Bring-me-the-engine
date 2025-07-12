@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "engine/Scene.h"
 #include "imgui.h"
+#include <unordered_map>
 
 namespace Sections {
 
@@ -297,6 +298,38 @@ namespace Sections {
             }
         }
         return false;
+    }
+
+    void objectSection(Scene * scene) {
+        if (g_forceOpenObjectHeader) {
+            ImGui::SetNextItemOpen(true, ImGuiCond_Always);
+            g_forceOpenObjectHeader = false; 
+        }
+        if (ImGui::CollapsingHeader("Objets")) {
+            for (const std::shared_ptr<Entity> & entity : scene->getEntities()) {
+                const std::string & name = entity->getName();
+                if (name.empty())
+                    continue;
+
+                // Crée une ligne cliquable pour ouvrir la section de l'entité
+                if (ImGui::Selectable(name.c_str(), g_entityExpanded[name])) {
+                    g_entityExpanded[name] = !g_entityExpanded[name];
+                }
+
+                if (g_entityExpanded[name]) {
+                    ImGui::Indent();
+
+                    // Affiche ses infos ici (position, matériau...)
+                    Material & material = entity->getMaterial();
+                    Vec3 position = entity->getTransform().getTranslation();
+
+                    ImGui::Text("Position : (%.2f, %.2f, %.2f)", position.x, position.y, position.z);
+
+                    ImGui::Unindent();
+                    ImGui::Separator();
+                }
+            }
+        }
     }
 
 }

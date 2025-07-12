@@ -19,3 +19,7 @@ size_t g_windowWidth = 1600;
 size_t g_windowHeight = 800;
 
 size_t g_sceneIndex = 0; // Scene par défaut qui va nécessairement être une erreur, doit être initialisée
+
+
+std::unordered_map<std::string, bool> g_entityExpanded;
+bool g_forceOpenObjectHeader = false; 

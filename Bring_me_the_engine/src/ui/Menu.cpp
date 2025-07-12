@@ -61,6 +61,8 @@ void Menu::render() {
     if(Sections::SceneSection(scene)){
         scene = &getScene();
     }
+
+    Sections::objectSection(scene);
     Sections::textureSection(scene);
     Sections::lightSection(scene);
     Sections::fogSection(scene);

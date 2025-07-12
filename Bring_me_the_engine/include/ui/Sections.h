@@ -13,4 +13,5 @@ namespace Sections {
     // Le booléen sert à savoir si on à changer de scène ou non
     bool SceneSection(Scene * scene);
     void quitButton(GLFWwindow * window);
+    void objectSection(Scene * scene);
 }

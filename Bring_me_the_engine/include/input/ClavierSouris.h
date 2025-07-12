@@ -11,16 +11,15 @@
 // Mais aussi de gérer le fait que la touche puisse être pressée en continu.
 void reactKeyboardPressed(GLFWwindow * window, const char * nameKeyPressed, int keyPressed);
 
-class ClavierSouris {
-public:
-    static void handleMouse(GLFWwindow * window, double xpos, double ypos);
-    static void handleContinuousInput(GLFWwindow * window);
+namespace ClavierSouris {
+    void update(GLFWwindow * window);
 
-private:
-    inline static double m_lastX = 0.0, m_lastY = 0.0;
-    inline static bool m_firstMouse = true;
+    void handleMouseLeftClick(GLFWwindow * window);
 
+    void handleMouseMovement(GLFWwindow * window, double xpos, double ypos);
+    void handleContinuousInput(GLFWwindow * window);
 
-    static void gestionClicGauche(double x, double y);
-    static Ray generateRayFromScreen(double mouseX, double mouseY);
-};
+    // Cette fonction est interne, mais on la laisse publique si besoin,
+    // sinon la déplacer dans le .cpp et la rendre `static` là-bas
+    void gestionClicGauche(double x, double y);
+}
