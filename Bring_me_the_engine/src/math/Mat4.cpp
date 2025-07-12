@@ -67,6 +67,21 @@ Mat4 Mat4::perspective(float fovRadians, float aspect, float near, float far) {
     return result;
 }
 
+Mat4 Mat4::rotateX(float angleRadians) {
+    Mat4 result;
+    float c = cos(angleRadians);
+    float s = sin(angleRadians);
+
+    result.data[5] = c;
+    result.data[6] = -s;
+    result.data[9] = s;
+    result.data[10] = c;
+    result.data[0] = 1.0f;
+    result.data[15] = 1.0f;
+
+    return result;
+}
+
 Mat4 Mat4::rotateY(float angleRadians) {
     Mat4 result;
     float c = cos(angleRadians);
@@ -198,6 +213,37 @@ Mat4 Mat4::orthographic(float left, float right, float bottom, float top, float 
 }
 
 Vec3 Mat4::getTranslation() const { return Vec3(data[12], data[13], data[14]); }
+
+Vec3 Mat4::getEulerAngles() const {
+    float m00 = data[0], m01 = data[1], m02 = data[2];
+    float m10 = data[4], m11 = data[5], m12 = data[6];
+    float m20 = data[8], m21 = data[9], m22 = data[10];
+
+    float sy = sqrt(m00 * m00 + m01 * m01);
+    bool singular = sy < 1e-6f;
+
+    float x, y, z;
+
+    if (!singular) {
+        x = atan2(-m12, m22);
+        y = atan2(-m02, sy);
+        z = atan2(-m01, m11);
+    } else {
+        // Gestion du Gimbal Lock
+        x = atan2(-m12, m22);                 // Gardez X
+        y = (m02 < 0) ? M_PI / 2 : -M_PI / 2; // Y fixé à ±90°
+        z = atan2(-m01, m11);                 // Recalculez Z
+    }
+
+    return Vec3(x, y, z);
+}
+
+Mat4 Mat4::fromEulerAngles(const Vec3 & euler) {
+    Mat4 Rx = Mat4::rotateX(euler.x);
+    Mat4 Ry = Mat4::rotateY(euler.y);
+    Mat4 Rz = Mat4::rotateZ(euler.z);
+    return Rz * Rx * Ry;  
+}
 
 Mat4 Mat4::transpose() const {
     Mat4 result;

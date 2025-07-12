@@ -41,32 +41,31 @@ struct Vec3 {
     float x, y, z;
 
     Vec3(float x = 0.0f, float y = 0.0f, float z = 0.0f);
-    Vec3(const Color& color);
+    Vec3(const Color & color);
 
-    Vec3 operator+(const Vec3& other) const;
-    Vec3 operator-(const Vec3& other) const;
+    Vec3 operator+(const Vec3 & other) const;
+    Vec3 operator-(const Vec3 & other) const;
     Vec3 operator*(float scalar) const;
-    Vec3 operator*(const Vec3& other) const;
+    Vec3 operator*(const Vec3 & other) const;
     Vec3 operator/(float scalar) const;
 
-    Vec3 operator+=(const Vec3& other);
-    Vec3 operator-=(const Vec3& other);
+    Vec3 operator+=(const Vec3 & other);
+    Vec3 operator-=(const Vec3 & other);
 
     Vec3 operator-() const;
 
-    const float* ptr() const;
-    float* ptr();
+    const float * ptr() const;
+    float * ptr();
 
     float length() const;
     Vec3 normalized() const;
 
-    float dot(const Vec3& other) const;
-    Vec3 cross(const Vec3& other) const;
+    float dot(const Vec3 & other) const;
+    Vec3 cross(const Vec3 & other) const;
 
-    friend Vec3 operator*(float scalar, const Vec3& v);
-    friend std::ostream& operator<<(std::ostream& os, const Vec3& v);
+    friend Vec3 operator*(float scalar, const Vec3 & v);
+    friend std::ostream & operator<<(std::ostream & os, const Vec3 & v);
 };
-
 
 inline Vec3 normalize(Vec3 v) {
     float len = v.length();
@@ -114,6 +113,7 @@ struct Mat4 {
     static Mat4 identity();
     static Mat4 lookAt(const Vec3 & eye, const Vec3 & center, const Vec3 & up);
     static Mat4 perspective(float fovRadians, float aspect, float near, float far);
+    static Mat4 rotateX(float angleRadians);
     static Mat4 rotateY(float angleRadians);
     static Mat4 rotateZ(float angleRadians);
     static Mat4 Translation(const Vec3 & translation);
@@ -121,7 +121,7 @@ struct Mat4 {
     static Mat4 Scale(float scaleX, float scaleY, float scaleZ);
     static Mat4 Scale(float scaleFactor);
 
-    Mat4 rotateX(float angleRadians);
+    
     Mat4 rotate(const Vec3 & axis, float angle);
     void setIdentity();
 
@@ -136,6 +136,8 @@ struct Mat4 {
     static Mat4 orthographic(float left, float right, float bottom, float top, float near, float far);
 
     Vec3 getTranslation() const;
+    Vec3 getEulerAngles() const;
+    Mat4 fromEulerAngles(const Vec3 & euler);
 
     Mat4 transpose() const;
     Mat4 inverse() const;
@@ -143,7 +145,7 @@ struct Mat4 {
     friend std::ostream & operator<<(std::ostream & os, const Mat4 & m);
     float operator[](size_t index) const;
     float & operator[](size_t index);
-    Mat4& operator=(const Mat4& other);
+    Mat4 & operator=(const Mat4 & other);
 };
 
 inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {

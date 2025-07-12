@@ -206,8 +206,8 @@ namespace Sections {
                 if (g_entityExpanded[name]) {
                     ImGui::Indent();
 
-                    Material & material = entity->getMaterial();
                     Vec3 position = entity->getTransform().getTranslation();
+                    Vec3 rotationDeg = entity->getTransform().getEulerAngles() * (180.0f / M_PI);
 
                     ImGui::Text("Position : (%.2f, %.2f, %.2f)", position.x, position.y, position.z);
 
@@ -218,6 +218,23 @@ namespace Sections {
                     SectionsUtilitary::renderPositionEditor(name + " Position", position, [&](const Vec3 & newPos) {
                         entity->setPosition(newPos);
                     });
+
+                    if (ImGui::DragFloat3("Rotation", &rotationDeg.x, 0.1f)) {
+                        // Convertir de nouveau en radians
+                        Vec3 newEuler = rotationDeg * (3.14159265f / 180.0f);
+
+                        // Construire matrice rotation
+                        Mat4 rotMat;
+                        rotMat = rotMat.fromEulerAngles(newEuler);
+
+                        // Conserver la translation actuelle
+                        Vec3 pos = entity->getTransform().getTranslation();
+
+                        // Appliquer translation + rotation
+                        Mat4 transform = rotMat * Mat4::Translation(pos);
+
+                        entity->setTransform(transform);
+                    }
 
                     if (ImGui::Button("Supprimer l'objet")) {
                         entityToDelete = entity;

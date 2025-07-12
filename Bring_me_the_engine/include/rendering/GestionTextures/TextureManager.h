@@ -12,6 +12,9 @@ class TextureManager {
 public:
     static std::shared_ptr<Texture> load(const std::string& path);
     static void clear();
+    static void clear(const std::string& path);
+
+    static size_t getTextureCount();
 
 private:
     static inline std::unordered_map<std::string, std::shared_ptr<Texture>> cache;
