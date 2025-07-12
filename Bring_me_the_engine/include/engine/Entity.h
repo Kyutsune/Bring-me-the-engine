@@ -14,7 +14,7 @@ inline void updateCameraUniforms(Shader & shader, const Mat4 & model, const Mat4
     shader.setMat4("projection", projection);
 }
 
-class Entity {
+class Entity : public std::enable_shared_from_this<Entity> {
 public:
     Entity() : m_transform(Mat4::identity()), m_mesh(nullptr) {}
 

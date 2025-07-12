@@ -19,6 +19,7 @@ public:
     AABB getBoundingBox() const;
 
     inline std::vector<Vertex> getVertices() const{ return m_vertices;}
+    inline const std::vector<unsigned int> & getIndices() const { return m_indices; }
 
 private:
     GLuint m_VAO, m_VBO, m_EBO;

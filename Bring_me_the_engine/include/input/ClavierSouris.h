@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Globals.h"
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "Globals.h"
+#include "math/intersect/Ray.h"
 
 // Ici on a une fonction à part pour réagir aux touches du clavier et une autre pour le déplacement.
 // Cela permet de séparer la logique de gestion des entrées clavier et la logique de déplacement de la caméra d'une part.
@@ -19,5 +21,6 @@ private:
     inline static bool m_firstMouse = true;
 
 
-    void gestionClicGauche();
+    static void gestionClicGauche(double x, double y);
+    static Ray generateRayFromScreen(double mouseX, double mouseY);
 };
