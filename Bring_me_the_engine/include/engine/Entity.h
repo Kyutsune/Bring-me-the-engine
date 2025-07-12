@@ -46,6 +46,9 @@ public:
 
     inline const std::shared_ptr<Mesh> & getMesh() const { return m_mesh; }
 
+    inline bool isVisible() const { return visible; }
+    inline void setVisible(bool v) { visible = v; }
+
 private:
     std::string m_entity_name;
     Mat4 m_transform;
@@ -53,4 +56,5 @@ private:
     AABB m_boundingBox;
 
     Material m_material;
+    bool visible = false;
 };

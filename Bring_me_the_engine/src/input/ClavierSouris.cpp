@@ -142,11 +142,11 @@ void ClavierSouris::gestionClicGauche(double x, double y) {
     IntersectionInfo retour_info;
 
     for (const auto & entity : entities) {
-        if (IntersectUtils::intersectEntity(ray, *entity, retour_info)) {
+        if (entity->isVisible() && IntersectUtils::intersectEntity(ray, *entity, retour_info)) {
             std::cout << "Intersection avec l'entité: " << entity->getName() << std::endl;
             std::cout << "Position d'intersection: " << retour_info.position << std::endl;
             std::cout << "Normale à l'intersection: " << retour_info.normal << std::endl;
-            return; // On arrête après la première intersection trouvée, par soucis d'optimisation 
+            return; // On arrête après la première intersection trouvée, par soucis d'optimisation
         }
     }
 }

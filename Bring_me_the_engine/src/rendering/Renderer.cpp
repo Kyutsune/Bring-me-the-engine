@@ -52,6 +52,9 @@ void Renderer::renderEntities(const Scene & scene, const Mat4 & view, const Mat4
     for (const std::shared_ptr<Entity> & entity : entities) {
         if (frustum.isBoxInFrustum(entity->getTransformedBoundingBox())) {
             entity->draw_entity(*m_entityShader, view, projection);
+            entity->setVisible(true);
+        } else {
+            entity->setVisible(false);
         }
 
         // else if(!frustum.isBoxInFrustum(entity->getTransformedBoundingBox()) && entity->getName()=="Cube_tout_bleu"){
