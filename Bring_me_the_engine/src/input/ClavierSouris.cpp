@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "math/intersect/IntersectInfo.h"
 #include "math/intersect/IntersectUtils.h"
+#include "imgui.h"
 #include <iostream>
 
 void reactKeyboardPressed(GLFWwindow * window, const char * nameKeyPressed, int keyPressed) {
@@ -68,6 +69,9 @@ namespace ClavierSouris {
     void handleMouseLeftClick(GLFWwindow * window) {
         double xpos, ypos;
         glfwGetCursorPos(window, &xpos, &ypos);
+
+        if (ImGui::GetIO().WantCaptureMouse)
+            return;
 
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
             gestionClicGauche(xpos, ypos);

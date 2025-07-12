@@ -34,7 +34,7 @@ public:
     const Mat4 & getTransform() const { return m_transform; }
     Mat4& getTransform() { return m_transform; }
     void setTransform(const Mat4 & newTransform) { m_transform = newTransform; }
-    inline void setPosition(const Vec3 & newPosition) { m_transform.translate(newPosition); }
+    inline void setPosition(const Vec3 & newPosition) { m_transform.setTranslation(newPosition); }
 
     void draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection);
 
