@@ -92,5 +92,5 @@ AABB Entity::getTransformedBoundingBox() const {
 }
 
 void Entity::updateTransform() {
-    m_transform =  m_rotation.toMat4() * Mat4::Translation(m_position);
+    m_transform = Mat4::Scale(m_scale) * m_rotation.toMat4() * Mat4::Translation(m_position);
 }

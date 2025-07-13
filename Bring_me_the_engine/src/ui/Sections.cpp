@@ -220,6 +220,12 @@ namespace Sections {
                         entity->setPosition(newPos);
                     });
 
+                    ImGui::SeparatorText("Echelle");
+                    Vec3 scale = entity->getScale();
+                    if (ImGui::DragFloat3("Scale", &scale.x, 0.01f, 0.01f, 100.0f, "%.2f")) {
+                        entity->setScale(scale);
+                    }
+
                     ImGui::SeparatorText("Rotation");
                     Vec3 currentEulerDeg = entity->getRotation().toEuler() * (180.0f / M_PI);
                     ImGui::Text("Orientation actuelle : (%.1f°, %.1f°, %.1f°)", currentEulerDeg.x, currentEulerDeg.y, currentEulerDeg.z);

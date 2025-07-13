@@ -105,6 +105,10 @@ struct Vec4 {
 };
 
 struct Mat4 {
+    // Mes matrices sont stockées en ligne majeure, donc les colonnes sont stockées consécutivement
+    // mes translations sont dans data[12], data[13], data[14]
+    // ce qui implique que mes * sont dans le sens inverse de la convention glsl qui elle est en colonne majeure
+    // Concrètement m_transform = S * R * T;  fait S puis R et finalement T, pas l'inverse comme en glsl
     float data[16];
 
     Mat4();

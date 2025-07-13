@@ -57,6 +57,13 @@ public:
         updateTransform();
     }
 
+    inline void setScale(const Vec3 & scale) {
+        m_scale = scale;
+        updateTransform();
+    }
+
+    inline Vec3 getScale() const { return m_scale; }
+
     inline void setRotation(const Quat & rot) {
         m_rotation = rot.normalized();
         updateTransform();
@@ -74,6 +81,7 @@ private:
 
     Vec3 m_position = Vec3(0.0f);
     Quat m_rotation = Quat::identity();
+    Vec3 m_scale = Vec3(1.0f, 1.0f, 1.0f);
     Mat4 m_transform;
 
     Material m_material;
