@@ -39,3 +39,4 @@ enum TypeEntityCreated {
 };
 
 extern TypeEntityCreated g_typeEntityCreated;
+extern bool g_isCreatingEntity;

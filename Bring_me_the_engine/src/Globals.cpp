@@ -25,3 +25,4 @@ std::unordered_map<std::string, bool> g_entityExpanded;
 bool g_forceOpenObjectHeader = false; 
 
 TypeEntityCreated g_typeEntityCreated = TypeEntityCreated::Cube;
+bool g_isCreatingEntity = true;
