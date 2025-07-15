@@ -140,6 +140,7 @@ namespace ClavierSouris {
         const std::vector<std::shared_ptr<Entity>> & entities = scene.getEntities();
         IntersectionInfo retour_info;
 
+        /// Partie servant à sélectionner l'entité sur laquelle on clique, et d'ouvir son menu
         for (const auto & entity : entities) {
             if (entity->isVisible() && IntersectUtils::intersectEntity(ray, *entity, retour_info)) {
                 // std::cout << "Intersection avec l'entité: " << entity->getName() << std::endl;
@@ -153,5 +154,9 @@ namespace ClavierSouris {
                 return; // Stop à la première intersection trouvée
             }
         }
+        /// Si aucune entité séléctionnée à l'endroit du clic, on va créer une entité selon le choix dans le menu
+        
+
+
     }
 }

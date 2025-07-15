@@ -29,3 +29,13 @@ inline constexpr size_t MAX_LIGHTS = MAX_DIR_LIGHTS + MAX_PONC_LIGHTS;
 extern std::unordered_map<std::string, bool> g_entityExpanded;
 // Pour forcer l'ouverture de la section des objets dans le menu
 extern bool g_forceOpenObjectHeader;
+
+/// Partie qui gérera le fait de séléctionner quel entité on veut afficher dans le menu
+enum TypeEntityCreated {
+    None,
+    Cube,
+    Sphere,
+    Plane
+};
+
+extern TypeEntityCreated g_typeEntityCreated;

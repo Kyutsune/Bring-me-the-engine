@@ -23,3 +23,5 @@ size_t g_sceneIndex = 0; // Scene par défaut qui va nécessairement être une e
 
 std::unordered_map<std::string, bool> g_entityExpanded;
 bool g_forceOpenObjectHeader = false; 
+
+TypeEntityCreated g_typeEntityCreated = TypeEntityCreated::Cube;
