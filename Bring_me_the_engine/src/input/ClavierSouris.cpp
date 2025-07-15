@@ -186,6 +186,8 @@ namespace ClavierSouris {
                 return;
             } else {
                 // On est pas sur le sol, on séléctionne l'entité sur laquelle on a cliqué
+                //AVENIR: Quand le système de séléction sera implémenter, il suffira de sortir ce bout de code
+                // et de le conditionner au fait qu'on ait choisir la séléction plutôt que la création d'entité
                 g_entityExpanded.clear();
                 g_entityExpanded[retour_info.entity->getName()] = true;
                 g_forceOpenObjectHeader = true;
