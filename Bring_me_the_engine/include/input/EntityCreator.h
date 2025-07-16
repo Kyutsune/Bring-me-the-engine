@@ -17,4 +17,5 @@ private:
 
 
     std::shared_ptr<Entity> createCubeAndPlace(const double & x, const double & y, const double & z);
+    std::shared_ptr<Entity> createSphereAndPlace(const double & x, const double & y, const double & z);
 };

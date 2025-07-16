@@ -4,6 +4,7 @@
 #include "engine/Scene.h"
 
 namespace Sections {
+    /// Partie concernant les sections du menu principal
     void textureSection(Scene * scene);
     void lightSection(Scene * scene);
     void directionnalLightSection(Scene * scene);
@@ -14,4 +15,10 @@ namespace Sections {
     bool SceneSection(Scene * scene);
     void quitButton(GLFWwindow * window);
     void objectSection(Scene * scene);
+
+
+    /// Partie concernant les sections du menu d'édition de la scène
+    void changeEntityCreatedSection(Scene * scene);
+
+
 }

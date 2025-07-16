@@ -2,6 +2,7 @@
 
 #include "engine/Mesh.h"
 #include "geometry/Cube.h"
+#include "geometry/Sphere.h"
 
 unsigned int EntityCreator::m_nb_cube_created = 0;
 unsigned int EntityCreator::m_nb_sphere_created = 0;
@@ -17,6 +18,9 @@ std::shared_ptr<Entity> EntityCreator::createEntity(TypeEntityCreated type, cons
     if (type == TypeEntityCreated::Cube) {
         return createCubeAndPlace(x, y, z);
     }
+    if (type == TypeEntityCreated::Sphere) {
+        return createSphereAndPlace(x, y, z);
+    }
     return nullptr;
 }
 
@@ -31,6 +35,18 @@ std::shared_ptr<Entity> EntityCreator::createCubeAndPlace(const double & x, cons
     cubeFinal->getBoundingBox().setupBBoxBuffers();
     getScene().getEntities().emplace_back(cubeFinal);
     return cubeFinal;
+}
+std::shared_ptr<Entity> EntityCreator::createSphereAndPlace(const double & x, const double & y, const double & z) {
+    std::shared_ptr<Mesh> t_sphereMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::rose());
+    Mat4 t_translation = Mat4::Translation(Vec3(x, y, z));
+    std::shared_ptr<Material> t_boisMaterial = std::make_shared<Material>(nullptr, nullptr, nullptr);
+    std::string t_name = getNameOfEntityCreated(TypeEntityCreated::Sphere);
+    std::shared_ptr<Entity> sphereFinal = std::make_shared<Entity>(
+        t_translation, t_sphereMesh, t_boisMaterial, t_name);
+
+    sphereFinal->getBoundingBox().setupBBoxBuffers();
+    getScene().getEntities().emplace_back(sphereFinal);
+    return sphereFinal;
 }
 
 std::string EntityCreator::getNameOfEntityCreated(TypeEntityCreated type) {
