@@ -1,5 +1,5 @@
 # Bring-me-the-engine
-![Logo du moteur](Bring_me_the_engine/assets/BringMeTheEngineLogo.png)
+![Logo du moteur](Bring_me_the_engine/assets/BringMeTheEngineLogo2.png)
 
 Bring me the engine est un moteur de rendu et un moteur graphique 3D codé en C++ et basé sur OpenGL.
 ___________________________________________
