@@ -2,9 +2,9 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "imgui.h"
 
+#include "system/PathResolver.h"
 #include "ui/Menu.h"
 #include "ui/Sections.h"
-#include "system/PathResolver.h"
 
 Menu::Menu(GLFWwindow * window) : window(window), scene(g_scene) {
     IMGUI_CHECKVERSION();
@@ -52,13 +52,14 @@ void Menu::setupMenuDisplay() {
 }
 
 void Menu::render() {
-    if (!m_show)
+    if (!m_menu_principal)
         return;
 
+    /// Partie du menu qui gère tout ce qui touche à la scène déjà existante, on pourrait dire le menu "principal"
     setupMenuDisplay();
-    ImGui::Begin("Bring me the menu", &m_show);
+    ImGui::Begin("Bring me the menu", &m_menu_principal);
 
-    if(Sections::SceneSection(scene)){
+    if (Sections::SceneSection(scene)) {
         scene = &getScene();
     }
 
@@ -69,6 +70,13 @@ void Menu::render() {
     Sections::sensitivitySection();
     Sections::quitButton(window);
 
+    // Deuxième partie du menu qui conditionnera elle tout ce qui touche à l'édition de la scène,
+    // dont le fait de rajouter des entités, textures etc...
+    setupMenuDisplay();
+    ImGui::Begin("Scene Editor", &m_menu_principal);
+    Sections::changeEntityCreatedSection(scene);
+
+    ImGui::End();
     ImGui::End();
 }
 

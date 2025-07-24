@@ -258,4 +258,25 @@ namespace Sections {
         }
     }
 
+    void changeEntityCreatedSection(Scene * scene) {
+        if (ImGui::CollapsingHeader("Objets à créer")) {
+            ImGui::SeparatorText("Type d'entité à créer");
+
+            static const char * items[] = {"Cube", "Sphere"};
+
+            int currentItem = -1;
+            if (g_typeEntityCreated == TypeEntityCreated::Cube)
+                currentItem = 0;
+            else if (g_typeEntityCreated == TypeEntityCreated::Sphere)
+                currentItem = 1;
+
+            if (ImGui::Combo("Type d'entité", &currentItem, items, IM_ARRAYSIZE(items))) {
+                if (currentItem == 0)
+                    g_typeEntityCreated = TypeEntityCreated::Cube;
+                else if (currentItem == 1)
+                    g_typeEntityCreated = TypeEntityCreated::Sphere;
+            }
+        }
+    }
+
 }

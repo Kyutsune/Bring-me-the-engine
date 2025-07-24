@@ -23,7 +23,8 @@ protected:
     Scene * scene;
 
 private:
-    bool m_show = true;
+    bool m_menu_principal = true;
+    bool m_menu_scene_editor = true;
 
     int m_taille_minimale_x;
     int m_taille_minimale_y;

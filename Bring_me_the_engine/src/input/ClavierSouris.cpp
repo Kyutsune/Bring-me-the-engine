@@ -1,8 +1,9 @@
 #include "input/ClavierSouris.h"
 #include "Globals.h"
+#include "imgui.h"
+#include "input/EntityCreator.h"
 #include "math/intersect/IntersectInfo.h"
 #include "math/intersect/IntersectUtils.h"
-#include "imgui.h"
 #include <iostream>
 
 void reactKeyboardPressed(GLFWwindow * window, const char * nameKeyPressed, int keyPressed) {
@@ -138,25 +139,67 @@ namespace ClavierSouris {
         Ray ray = Ray::generateRayFromScreen(x, y);
         const Scene & scene = getScene();
         const std::vector<std::shared_ptr<Entity>> & entities = scene.getEntities();
+
         IntersectionInfo retour_info;
+        retour_info.t = std::numeric_limits<float>::max();
 
-        /// Partie servant à sélectionner l'entité sur laquelle on clique, et d'ouvir son menu
+        // Ici on va récupérer l'entité la plus proche de la caméra dans la direction du clic
         for (const auto & entity : entities) {
-            if (entity->isVisible() && IntersectUtils::intersectEntity(ray, *entity, retour_info)) {
-                // std::cout << "Intersection avec l'entité: " << entity->getName() << std::endl;
-                // std::cout << "Position d'intersection: " << retour_info.position << std::endl;
-                // std::cout << "Normale à l'intersection: " << retour_info.normal << std::endl;
+            if (!entity->isVisible())
+                continue;
 
-                g_entityExpanded.clear(); // Pour n'ouvrir qu'une seule section et fermer les autres
-                g_entityExpanded[entity->getName()] = true;
-                g_forceOpenObjectHeader = true; // Force l'ouverture de la section des objets dans le menu
+            IntersectUtils::intersectEntity(ray, *entity, retour_info);
+        }
 
-                return; // Stop à la première intersection trouvée
+        if (retour_info.hit && retour_info.entity) {
+            // Si sol cliqué, alors on va vouloir créer une entité si possible en l'endroit du clic
+            // TODO: Il faudrait un moyen plus propre de savoir si on a cliqué sur le sol ou pas
+            // Ici on suppose que le sol est l'entité nommée "Sol_beton" ce qui n'est pas générique
+            if (retour_info.entity->getName() == "Sol_beton") {
+                EntityCreator t_entityCreator;
+
+                // Boucle qui va vérifier si une entité existe déjà à l'endroit du clic ou à proximité directe
+                bool entityExists = false;
+                for (const auto & e : getScene().getEntities()) {
+                    if (e == retour_info.entity)
+                        continue;
+
+                    if ((e->getPosition() - retour_info.position).length() <= 1.5f) {
+                        entityExists = true;
+                        break;
+                    }
+                }
+
+                if (entityExists)
+                    return;
+
+                // Si aucune entité n'existe à cet endroit, on crée une nouvelle entité
+                std::shared_ptr<Entity> t_entity_ret = t_entityCreator.createEntity(
+                    g_typeEntityCreated,
+                    retour_info.position.x,
+                    retour_info.entity->getPosition().y,
+                    retour_info.position.z);
+
+                g_entityExpanded.clear();
+                g_entityExpanded[t_entity_ret->getName()] = true;
+                g_forceOpenObjectHeader = true;
+                return;
+            } else {
+                // On est pas sur le sol, on séléctionne l'entité sur laquelle on a cliqué
+                //AVENIR: Quand le système de séléction sera implémenter, il suffira de sortir ce bout de code
+                // et de le conditionner au fait qu'on ait choisir la séléction plutôt que la création d'entité
+                g_entityExpanded.clear();
+                g_entityExpanded[retour_info.entity->getName()] = true;
+                g_forceOpenObjectHeader = true;
+                return;
             }
         }
-        /// Si aucune entité séléctionnée à l'endroit du clic, on va créer une entité selon le choix dans le menu
-        
 
-
+        // Si aucune intersection avec une entité, on va créer une entité en y=0 (convention du moteur)
+        Vec3 hitPoint;
+        if (IntersectUtils::intersectRayWithPlaneY0(ray, hitPoint)) {
+            EntityCreator t_entityCreator;
+            t_entityCreator.createEntity(g_typeEntityCreated, hitPoint.x, hitPoint.y, hitPoint.z);
+        }
     }
 }

@@ -78,4 +78,17 @@ namespace IntersectUtils {
         return hit;
     }
 
+    bool intersectRayWithPlaneY0(const Ray & ray, Vec3 & outHitPoint) {
+        Vec3 planeNormal = Vec3(0, 1, 0); // Normale du plan Y=0
+        float denom = planeNormal.dot(ray.direction);
+        if (std::abs(denom) > 1e-6f) {
+            float t = -ray.origin.dot(planeNormal) / denom;
+            if (t >= 0) {
+                outHitPoint = ray.origin + ray.direction * t;
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
