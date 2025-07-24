@@ -120,6 +120,7 @@ struct Mat4 {
     static Mat4 rotateX(float angleRadians);
     static Mat4 rotateY(float angleRadians);
     static Mat4 rotateZ(float angleRadians);
+    static Mat4 rotateXYZ(const Vec3 & anglesRadians);
     static Mat4 Translation(const Vec3 & translation);
     static Mat4 Scale(const Vec3 & scale);
     static Mat4 Scale(float scaleX, float scaleY, float scaleZ);
@@ -140,8 +141,10 @@ struct Mat4 {
     static Mat4 orthographic(float left, float right, float bottom, float top, float near, float far);
 
     Vec3 getTranslation() const;
+    Vec3 getScale() const;
     Vec3 getEulerAngles() const;
     Mat4 fromEulerAngles(const Vec3 & euler);
+
 
     Mat4 transpose() const;
     Mat4 inverse() const;

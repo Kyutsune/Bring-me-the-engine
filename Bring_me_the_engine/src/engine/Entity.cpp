@@ -5,7 +5,7 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
                const std::string & filenameNormalMap,
                const std::string & filenameSpecularMap,
                const std::string & name)
-    : m_transform(transform), m_mesh(std::move(mesh)) {
+    : m_mesh(std::move(mesh)) {
 
     if (!filenameTextDiffuse.empty() && !std::filesystem::exists(filenameTextDiffuse)) {
         std::cout << "Erreur lors du chargement de la texture : " << filenameTextDiffuse << " La couleur seule sera utilisée" << std::endl;
@@ -33,13 +33,13 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
     }
     m_entity_name = name.empty() ? "Unnamed Entity" : name;
 
-    m_position = transform.getTranslation();
-    m_rotation = Quat::fromEuler(transform.getEulerAngles());
+    setTransform(transform);
+    updateTransform();
 }
 
 Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
                std::shared_ptr<Material> material,
-               const std::string & name) : m_transform(transform), m_mesh(std::move(mesh)), m_material(std::move(*material)) {
+               const std::string & name) : m_mesh(std::move(mesh)), m_material(std::move(*material)) {
     m_entity_name = name.empty() ? "Unnamed Entity" : name;
     if (this->m_mesh) {
         m_boundingBox = this->m_mesh->getBoundingBox();
@@ -47,8 +47,8 @@ Entity::Entity(const Mat4 & transform, std::shared_ptr<Mesh> mesh,
         std::cout << "Warning: Mesh is null for entity: " << m_entity_name << std::endl;
     }
 
-    m_position = transform.getTranslation();
-    m_rotation = Quat::fromEuler(transform.getEulerAngles());
+    setTransform(transform);
+    updateTransform();
 }
 
 void Entity::draw_entity(Shader & shader, const Mat4 & view, const Mat4 & projection) {
@@ -85,6 +85,7 @@ void Entity::setTransform(const Mat4 & newTransform) {
     m_transform = newTransform;
     m_position = newTransform.getTranslation();
     m_rotation = Quat::fromEuler(newTransform.getEulerAngles());
+    m_scale = newTransform.getScale();
 }
 
 AABB Entity::getTransformedBoundingBox() const {
@@ -92,5 +93,5 @@ AABB Entity::getTransformedBoundingBox() const {
 }
 
 void Entity::updateTransform() {
-    m_transform = Mat4::Scale(m_scale) * m_rotation.toMat4() * Mat4::Translation(m_position);
+    m_transform = m_rotation.toMat4() * Mat4::Translation(m_position) * Mat4::Scale(m_scale);
 }

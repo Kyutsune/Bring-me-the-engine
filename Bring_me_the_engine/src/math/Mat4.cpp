@@ -112,6 +112,12 @@ Mat4 Mat4::rotateZ(float angleRadians) {
     return result;
 }
 
+Mat4 Mat4::rotateXYZ(const Vec3 & anglesRadians) {
+    return Mat4::rotateZ(anglesRadians.x) *
+           Mat4::rotateY(anglesRadians.y) *
+           Mat4::rotateX(anglesRadians.z);
+}
+
 Mat4 Mat4::Translation(const Vec3 & t) {
     Mat4 result;
     result.data[12] = t.x;
@@ -213,6 +219,13 @@ Mat4 Mat4::orthographic(float left, float right, float bottom, float top, float 
 }
 
 Vec3 Mat4::getTranslation() const { return Vec3(data[12], data[13], data[14]); }
+Vec3 Mat4::getScale() const {
+    float sx = sqrt(data[0] * data[0] + data[4] * data[4] + data[8] * data[8]);
+    float sy = sqrt(data[1] * data[1] + data[5] * data[5] + data[9] * data[9]);
+    float sz = sqrt(data[2] * data[2] + data[6] * data[6] + data[10] * data[10]);
+
+    return Vec3(sx, sy, sz);
+}
 
 Vec3 Mat4::getEulerAngles() const {
     float m00 = data[0], m01 = data[1], m02 = data[2];
@@ -242,7 +255,7 @@ Mat4 Mat4::fromEulerAngles(const Vec3 & euler) {
     Mat4 Rx = Mat4::rotateX(euler.x);
     Mat4 Ry = Mat4::rotateY(euler.y);
     Mat4 Rz = Mat4::rotateZ(euler.z);
-    return Rz * Rx * Ry;  
+    return Rz * Rx * Ry;
 }
 
 Mat4 Mat4::transpose() const {

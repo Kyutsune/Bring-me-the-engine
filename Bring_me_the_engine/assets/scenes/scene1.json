@@ -1,0 +1,229 @@
+{
+  "skybox": {
+    "faces": [
+      "assets/cubemap/Nuit_bleue/right.jpg",
+      "assets/cubemap/Nuit_bleue/left.jpg",
+      "assets/cubemap/Nuit_bleue/bottom.jpg",
+      "assets/cubemap/Nuit_bleue/top.jpg",
+      "assets/cubemap/Nuit_bleue/front.jpg",
+      "assets/cubemap/Nuit_bleue/back.jpg"
+    ]
+  },
+  "lights": [
+    {
+      "type": "point",
+      "position": [
+        3,
+        1,
+        -1
+      ],
+      "direction": [
+        0,
+        -1,
+        0
+      ],
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "intensity": 8,
+      "attenuation": [
+        1.0,
+        0.7,
+        1.8
+      ],
+      "cast_shadows": true
+    },
+    {
+      "type": "directional",
+      "position": [
+        0,
+        10,
+        0
+      ],
+      "direction": [
+        1,
+        -1,
+        0
+      ],
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "intensity": 10,
+      "attenuation": [
+        0.5,
+        0.7,
+        1.8
+      ],
+      "cast_shadows": false
+    },
+    {
+      "type": "point",
+      "position": [
+        -1,
+        1,
+        -3
+      ],
+      "direction": [
+        0,
+        -1,
+        0
+      ],
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "intensity": 7,
+      "attenuation": [
+        1.0,
+        0.7,
+        1.8
+      ],
+      "cast_shadows": true
+    }
+  ],
+  "entities": [
+    {
+      "name": "Cube_qui_tourne",
+      "mesh": "cube",
+      "color": [
+        0,
+        1,
+        1
+      ],
+      "material": {
+        "diffuse": "assets/materiaux/cuivre_diffus.jpg",
+        "normal": "assets/materiaux/cuivre_normal.jpg",
+        "specular": "assets/materiaux/cuivre_specular.jpg"
+      },
+      "transform": {
+        "translate": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "rotate": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Cube_tout_bleu",
+      "mesh": "cube",
+      "color": [
+        1,
+        0.4,
+        0.7
+      ],
+      "material": {},
+      "transform": {
+        "translate": [
+          1,
+          0,
+          -5
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "rotate": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Cube_plein_de_texture",
+      "mesh": "cube",
+      "material": {
+        "diffuse": "assets/materiaux/bois.jpg"
+      },
+      "transform": {
+        "translate": [
+          3,
+          0,
+          -3
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "rotate": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Sol_beton",
+      "mesh": "floor",
+      "material": {
+        "diffuse": "assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg",
+        "normal": "assets/sol/brique_recyclee/brique_recyclee_normal.jpg"
+      },
+      "transform": {
+        "translate": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "rotate": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Sphere_toute_texturee",
+      "mesh": "sphere",
+      "color": [
+        1,
+        0,
+        0
+      ],
+      "material": {
+        "diffuse": "assets/materiaux/petit_caillou/petit_caillou_diffus.jpg",
+        "normal": "assets/materiaux/petit_caillou/petit_caillou_normal.jpg",
+        "specular": "assets/sol/sol_cobble/sol_cobble_specular.jpg"
+      },
+      "transform": {
+        "translate": [
+          -2,
+          0,
+          -5
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "rotate": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}

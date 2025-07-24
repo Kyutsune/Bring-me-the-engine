@@ -12,10 +12,10 @@ namespace SceneLoader {
 
         switch (sceneIndex) {
         case 1:
-            scenePreloaded::loadScene1(entities, lightEntities, skybox, lightingManager);
+            scenePreloaded::loadSceneFromJson("assets/scenes/scene1.json", entities, lightEntities, skybox, lightingManager);
             break;
         case 2:
-            scenePreloaded::loadScene2(entities, lightEntities, skybox, lightingManager);
+            scenePreloaded::loadSceneFromJson("assets/scenes/scene2.json", entities, lightEntities, skybox, lightingManager);
             break;
         default:
             std::cerr << "SceneLoader: Scene index " << sceneIndex << " not implemented.\n";

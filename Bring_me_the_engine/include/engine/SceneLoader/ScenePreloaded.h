@@ -14,4 +14,10 @@ namespace scenePreloaded {
                     std::vector<std::shared_ptr<Entity>> & lightEntities,
                     std::unique_ptr<Skybox> & skybox,
                     LightingManager & lightingManager);
+
+    void loadSceneFromJson(const std::string & filePath,
+                           std::vector<std::shared_ptr<Entity>> & entities,
+                           std::vector<std::shared_ptr<Entity>> & lightEntities,
+                           std::unique_ptr<Skybox> & skybox,
+                           LightingManager & lightingManager);
 }

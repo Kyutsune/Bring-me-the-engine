@@ -5,6 +5,10 @@
 #include "geometry/Sphere.h"
 #include "rendering/GestionTextures/TextureManager.h"
 #include "system/PathResolver.h"
+#include <fstream>
+
+#include "../external/json/json.hpp"
+using json = nlohmann::json;
 
 namespace scenePreloaded {
     void loadScene1(std::vector<std::shared_ptr<Entity>> & entities,
@@ -90,7 +94,7 @@ namespace scenePreloaded {
         Mat4 t4 = Mat4::Translation(Vec3(3, 0, -3));
 
         std::shared_ptr<Texture> bois_diffuse = TextureManager::load(PathResolver::getResourcePath("assets/materiaux/bois.jpg"));
-        std::shared_ptr<Material> boisMaterial = std::make_shared<Material>(bois_diffuse,nullptr,nullptr);
+        std::shared_ptr<Material> boisMaterial = std::make_shared<Material>(bois_diffuse, nullptr, nullptr);
 
         std::shared_ptr<Entity> Cube_plein_de_texture = std::make_shared<Entity>(
             t4, cubeMesh3, boisMaterial, "Cube_plein_de_texture");
@@ -127,7 +131,6 @@ namespace scenePreloaded {
         entities.emplace_back(sphere);
     }
 
-    
     void loadScene2(std::vector<std::shared_ptr<Entity>> & entities,
                     std::vector<std::shared_ptr<Entity>> & lightEntities,
                     std::unique_ptr<Skybox> & skybox,
@@ -175,4 +178,145 @@ namespace scenePreloaded {
         sol_beton->getBoundingBox().setupBBoxBuffers();
         entities.emplace_back(sol_beton);
     }
+
+    void loadSceneFromJson(const std::string & filePath,
+                           std::vector<std::shared_ptr<Entity>> & entities,
+                           std::vector<std::shared_ptr<Entity>> & lightEntities,
+                           std::unique_ptr<Skybox> & skybox,
+                           LightingManager & lightingManager) {
+
+        std::ifstream in(PathResolver::getResourcePath(filePath));
+        if (!in.is_open()) {
+            std::cerr << "❌ Impossible d'ouvrir le fichier JSON : " << filePath << std::endl;
+            return;
+        }
+
+        json sceneJson;
+        try {
+            in >> sceneJson;
+        } catch (const std::exception & e) {
+            std::cerr << "❌ Erreur lors du parsing JSON : " << e.what() << std::endl;
+            return;
+        }
+
+        // SKYBOX
+        if (sceneJson.contains("skybox") && sceneJson["skybox"].contains("faces")) {
+            std::vector<std::string> faces;
+            for (const auto & face : sceneJson["skybox"]["faces"]) {
+                faces.push_back(PathResolver::getResourcePath(face.get<std::string>()));
+            }
+            skybox = std::make_unique<Skybox>(faces);
+        }
+
+        // LIGHTS
+        lightingManager.setupLightingOnScene();
+        if (sceneJson.contains("lights") && sceneJson["lights"].is_array()) {
+            for (const auto & lightJson : sceneJson["lights"]) {
+                bool enabled = lightJson.value("enabled", true);
+                std::string typeStr = lightJson.value("type", "directional");
+                LightType type = typeStr == "point" ? LightType::LIGHT_POINT : LightType::LIGHT_DIRECTIONAL;
+
+                Vec3 position = Vec3(0.0f), direction = Vec3(0.0f, -1.0f, 0.0f);
+                if (lightJson.contains("position") && lightJson["position"].is_array() && lightJson["position"].size() == 3) {
+                    position = Vec3(lightJson["position"][0], lightJson["position"][1], lightJson["position"][2]);
+                }
+                if (lightJson.contains("direction") && lightJson["direction"].is_array() && lightJson["direction"].size() == 3) {
+                    direction = Vec3(lightJson["direction"][0], lightJson["direction"][1], lightJson["direction"][2]);
+                }
+
+                Color color = Color::white();
+                if (lightJson.contains("color") && lightJson["color"].is_array() && lightJson["color"].size() == 4) {
+                    color = Color(
+                        static_cast<float>(lightJson["color"][0]),
+                        static_cast<float>(lightJson["color"][1]),
+                        static_cast<float>(lightJson["color"][2]),
+                        static_cast<float>(lightJson["color"][3]));
+                }
+
+                float intensity = lightJson.value("intensity", 1.0f);
+
+                float att_constant = 1.0f, att_linear = 0.0f, att_quad = 0.0f;
+                if (lightJson.contains("attenuation") && lightJson["attenuation"].is_array() && lightJson["attenuation"].size() == 3) {
+                    att_constant = lightJson["attenuation"][0].get<float>();
+                    att_linear = lightJson["attenuation"][1].get<float>();
+                    att_quad = lightJson["attenuation"][2].get<float>();
+                }
+
+                Light light(enabled, type, position, direction, color, intensity, att_constant, att_linear, att_quad);
+                lightingManager.addLight(light);
+            }
+        }
+
+        // VISUAL LIGHT ENTITIES
+        std::shared_ptr<Mesh> lightMesh = createSphere<std::shared_ptr<Mesh>>(0.5f, 36, 18, Color::white());
+        for (const Light & light : lightingManager.getLights()) {
+            Mat4 lightTransform = Mat4::Scale(Vec3(0.1f, 0.1f, 0.1f)) * Mat4::Translation(light.getPosition());
+            std::shared_ptr<Entity> lightEntity = std::make_shared<Entity>(lightTransform, lightMesh);
+            lightEntities.emplace_back(lightEntity);
+        }
+
+        // ENTITIES
+        if (sceneJson.contains("entities") && sceneJson["entities"].is_array()) {
+            for (const auto & e : sceneJson["entities"]) {
+                std::string type = e.value("mesh", "");
+                std::shared_ptr<Mesh> mesh;
+
+                if (type == "cube") {
+                    if (e.contains("color") && e["color"].is_array() && e["color"].size() == 3) {
+                        mesh = createCube<std::shared_ptr<Mesh>>(Color(
+                            static_cast<float>(e["color"][0]),
+                            static_cast<float>(e["color"][1]),
+                            static_cast<float>(e["color"][2])));
+                    } else {
+                        mesh = createCube<std::shared_ptr<Mesh>>();
+                    }
+                } else if (type == "sphere") {
+                    float radius = e.value("radius", 0.5f);
+                    mesh = createSphere<std::shared_ptr<Mesh>>(radius, 36, 18, Color::white());
+                } else if (type == "floor") {
+                    mesh = createFloor<std::shared_ptr<Mesh>>(e.value("size", 25.0f), e.value("y", -1.0f));
+                } else {
+                    continue; // type non reconnu
+                }
+
+                // Transformation
+                Vec3 translation(0.f), scale(1.f), rotation(0.f);
+                if (e.contains("transform")) {
+                    const auto & t = e["transform"];
+                    if (t.contains("translate") && t["translate"].is_array() && t["translate"].size() == 3) {
+                        translation = Vec3(t["translate"][0], t["translate"][1], t["translate"][2]);
+                    }
+                    if (t.contains("scale") && t["scale"].is_array() && t["scale"].size() == 3) {
+                        scale = Vec3(t["scale"][0], t["scale"][1], t["scale"][2]);
+                    }
+                    if (t.contains("rotate") && t["rotate"].is_array() && t["rotate"].size() == 3) {
+                        rotation = Vec3(t["rotate"][0], t["rotate"][1], t["rotate"][2]);
+                    }
+                }
+
+                Mat4 transform = Mat4::Scale(scale) * Mat4::rotateXYZ(rotation) * Mat4::Translation(translation);
+
+                // Matériaux
+                std::shared_ptr<Material> material = nullptr;
+                if (e.contains("material")) {
+                    std::string diffuse = e["material"].value("diffuse", "");
+                    std::string normal = e["material"].value("normal", "");
+                    std::string specular = e["material"].value("specular", "");
+
+                    std::shared_ptr<Texture> d = diffuse.empty() ? nullptr : TextureManager::load(PathResolver::getResourcePath(diffuse));
+                    std::shared_ptr<Texture> n = normal.empty() ? nullptr : TextureManager::load(PathResolver::getResourcePath(normal));
+                    std::shared_ptr<Texture> s = specular.empty() ? nullptr : TextureManager::load(PathResolver::getResourcePath(specular));
+
+                    material = std::make_shared<Material>(d, n, s);
+                }
+
+                std::string name = e.value("name", "Unnamed");
+
+                std::shared_ptr<Entity> entity = std::make_shared<Entity>(transform, mesh, material, name);
+                entity->getBoundingBox().setupBBoxBuffers();
+                entities.emplace_back(entity);
+            }
+        }
+    }
+
 }

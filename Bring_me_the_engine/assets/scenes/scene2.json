@@ -1,0 +1,48 @@
+{
+  "lights": [
+    {
+      "enabled": true,
+      "type": "point",
+      "position": [3.0, 1.0, -1.0],
+      "direction": [0.0, -1.0, 0.0],
+      "color": [255, 255, 255],
+      "intensity": 10.0,
+      "attenuation": [1.0, 0.7, 1.8]
+    },
+    {
+      "enabled": false,
+      "type": "directional",
+      "position": [0.0, 10.0, 0.0],
+      "direction": [1.0, -1.0, 0.0],
+      "color": [255, 255, 255],
+      "intensity": 10.0,
+      "attenuation": [0.5, 0.7, 1.8]
+    },
+    {
+      "enabled": true,
+      "type": "point",
+      "position": [-1.0, 1.0, -3.0],
+      "direction": [0.0, -1.0, 0.0],
+      "color": [255, 255, 255],
+      "intensity": 10.0,
+      "attenuation": [1.0, 0.7, 1.8]
+    }
+  ],
+  "entities": [
+    {
+      "name": "Sol_beton",
+      "mesh": "floor",
+      "transform": {
+        "position": [0.0, 0.0, 0.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "material": {
+        "diffuse": "assets/sol/brique_recyclee/brique_recyclee_diffuse.jpg",
+        "normal": "assets/sol/brique_recyclee/brique_recyclee_normal.jpg",
+        "specular": ""
+      }
+    }
+  ],
+  "skybox": null
+}

@@ -55,6 +55,7 @@ target_include_directories(BringMeTheEngine-lib
         ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/external/glad/include
         ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/external/imgui
         ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/external/imgui/backends
+        ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/external/json
 )
 
 # Lier les bibliothèques à la lib du moteur
@@ -82,6 +83,7 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/src
         ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/external/imgui
         ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/external/imgui/backends
+        ${CMAKE_SOURCE_DIR}/Bring_me_the_engine/external/json
 )
 
 # Lier les bibliothèques à l'exécutable
