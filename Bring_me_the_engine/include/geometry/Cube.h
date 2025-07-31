@@ -5,8 +5,22 @@
 #include "math/Color.h"
 #include "math/Tang_Bitang.h"
 
+/**
+ * @brief Helper template variable pour static_assert sur types non supportés.
+ */
 template<class> inline constexpr bool always_false = false;
 
+/**
+ * @brief Crée un cube centré en (0,0,0) avec des dimensions 1x1x1.
+ * 
+ * Le cube est composé de 6 faces, chaque face a sa normale propre,
+ * des coordonnées de texture UV simples (0-1), et une couleur unie.
+ * Les tangentes et bitangentes sont calculées pour chaque vertex pour le shading.
+ * 
+ * @tparam T Type de retour, soit Mesh soit std::shared_ptr<Mesh>.
+ * @param color Couleur uniforme appliquée à tous les sommets (par défaut gris clair).
+ * @return Un objet de type T contenant le maillage du cube.
+ */
 template<typename T = Mesh>
 inline T createCube(const Color & color = Color(204.f, 204.f, 204.f)) {
     std::vector<Vertex> vertices = {

@@ -5,6 +5,22 @@
 #include <memory>
 #include <vector>
 
+/**
+ * @brief Crée un plan horizontal ("floor") centré à l'origine.
+ * 
+ * Génère un maillage carré avec une hauteur constante, des couleurs uniformes,
+ * et des coordonnées UV répétées en fonction de la taille.
+ * Calcule aussi les tangentes et bitangentes nécessaires pour le shading.
+ * 
+ * @tparam T Type de retour : Mesh ou std::shared_ptr<Mesh>.
+ * @param size Taille du carré (largeur et profondeur).
+ * @param height Hauteur Y du plan.
+ * @param color Couleur appliquée uniformément aux sommets (par défaut vert).
+ * @return Un objet de type T représentant le mesh généré.
+ * 
+ * @note La densité des texels est fixée à 0.5f pour répéter les UV.
+ * @note Le plan est orienté horizontalement avec une normale (0,1,0).
+ */
 template <typename T = Mesh>
 inline T createFloor(float size = 10.0f, float height = 0.0f, const Color & color = Color(16.f, 144.f, 48.f)) {
     float half = size / 2.0f;
@@ -21,7 +37,8 @@ inline T createFloor(float size = 10.0f, float height = 0.0f, const Color & colo
 
     std::vector<unsigned int> indices = {
         0, 1, 2,
-        2, 3, 0};
+        2, 3, 0
+    };
 
     computeTangentsAndBitangents(vertices, indices);
 

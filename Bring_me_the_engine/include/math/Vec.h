@@ -6,9 +6,19 @@
 
 // TODO: Mettre de l'ordre dans ce bordel.. pas forcément séparer en deux fichiers car... pourquoi? ça à du sens ensemble mais au moins bien foutre
 //  Les déclarations dans le cpp
-struct Vec2 {
-    float x, y;
 
+/**
+ * @brief Vecteur 2D avec composantes flottantes.
+ */
+struct Vec2 {
+    float x; ///< Composante X
+    float y; ///< Composante Y
+
+    /**
+     * @brief Constructeur par défaut et avec initialisation des composantes.
+     * @param x Composante X (défaut 0)
+     * @param y Composante Y (défaut 0)
+     */
     Vec2(float x = 0.0f, float y = 0.0f) : x(x), y(y) {}
 
     Vec2 operator+(const Vec2 & other) const { return {x + other.x, y + other.y}; }
@@ -16,29 +26,57 @@ struct Vec2 {
     Vec2 operator*(float scalar) const { return {x * scalar, y * scalar}; }
     Vec2 operator/(float scalar) const { return {x / scalar, y / scalar}; }
 
+    /**
+     * @brief Accès au tableau de composantes (const).
+     * @return Pointeur constant vers x.
+     */
     const float * ptr() const { return &x; }
+
+    /**
+     * @brief Accès au tableau de composantes (modifiable).
+     * @return Pointeur vers x.
+     */
     float * ptr() { return &x; }
 
-    // Simplement une distance euclidienne, qui sera la même pour Vec2 et Vec3
+    /**
+     * @brief Calcul de la longueur euclidienne du vecteur.
+     * @return Longueur positive.
+     */
     float length() const { return sqrt(x * x + y * y); }
 
-    // Normalisation basique, on veut un vecteur de longueur 1
+    /**
+     * @brief Retourne un vecteur normalisé (longueur 1).
+     * Si la longueur est nulle, retourne une copie identique.
+     * @return Vecteur normalisé.
+     */
     Vec2 normalized() const {
         float len = length();
         return len == 0 ? *this : *this / len;
     }
 
+    /**
+     * @brief Opposé du vecteur.
+     * @return Vecteur avec composantes inversées.
+     */
     Vec2 operator-() const {
         return Vec2(-x, -y);
     }
 
+    /**
+     * @brief Affiche le vecteur au format Vec2(x, y).
+     */
     friend std::ostream & operator<<(std::ostream & os, const Vec2 & v) {
         return os << "Vec2(" << v.x << ", " << v.y << ")";
     }
 };
 
+/**
+ * @brief Vecteur 3D avec composantes flottantes.
+ */
 struct Vec3 {
-    float x, y, z;
+    float x; ///< Composante X
+    float y; ///< Composante Y
+    float z; ///< Composante Z
 
     Vec3(float x = 0.0f, float y = 0.0f, float z = 0.0f);
     Vec3(const Color & color);
@@ -60,13 +98,29 @@ struct Vec3 {
     float length() const;
     Vec3 normalized() const;
 
+    /**
+     * @brief Produit scalaire entre deux vecteurs.
+     * @param other Autre vecteur.
+     * @return Valeur scalaire.
+     */
     float dot(const Vec3 & other) const;
+
+    /**
+     * @brief Produit vectoriel entre deux vecteurs.
+     * @param other Autre vecteur.
+     * @return Vecteur perpendiculaire aux deux vecteurs.
+     */
     Vec3 cross(const Vec3 & other) const;
 
     friend Vec3 operator*(float scalar, const Vec3 & v);
     friend std::ostream & operator<<(std::ostream & os, const Vec3 & v);
 };
 
+/**
+ * @brief Normalise un vecteur 3D.
+ * @param v Vecteur à normaliser.
+ * @return Vecteur normalisé ou vecteur original si longueur nulle.
+ */
 inline Vec3 normalize(Vec3 v) {
     float len = v.length();
     if (len != 0.0f) {
@@ -75,6 +129,9 @@ inline Vec3 normalize(Vec3 v) {
     return v;
 }
 
+/**
+ * @brief Vecteur 4D avec composantes flottantes.
+ */
 struct Vec4 {
     float x, y, z, w;
 
@@ -99,17 +156,21 @@ struct Vec4 {
     Vec4 operator-() const {
         return Vec4(-x, -y, -z, -w);
     }
+
     friend std::ostream & operator<<(std::ostream & os, const Vec4 & v) {
         return os << "Vec4(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
     }
 };
 
+/**
+ * @brief Matrice 4x4 stockée en ligne majeure.
+ * 
+ * Remarques importantes :  
+ * - Les translations sont dans data[12], data[13], data[14].  
+ * - Concrètement m_transform = S * R * T;  fait S puis R et finalement T, pas l'inverse (T puis R puis S) comme en glsl
+ */
 struct Mat4 {
-    // Mes matrices sont stockées en ligne majeure, donc les colonnes sont stockées consécutivement
-    // mes translations sont dans data[12], data[13], data[14]
-    // ce qui implique que mes * sont dans le sens inverse de la convention glsl qui elle est en colonne majeure
-    // Concrètement m_transform = S * R * T;  fait S puis R et finalement T, pas l'inverse comme en glsl
-    float data[16];
+    float data[16]; ///< Données matricielles stockées en ligne majeure.
 
     Mat4();
     Mat4(std::initializer_list<float> list);
@@ -126,7 +187,6 @@ struct Mat4 {
     static Mat4 Scale(float scaleX, float scaleY, float scaleZ);
     static Mat4 Scale(float scaleFactor);
 
-    
     Mat4 rotate(const Vec3 & axis, float angle);
     void setIdentity();
 
@@ -145,7 +205,6 @@ struct Mat4 {
     Vec3 getEulerAngles() const;
     Mat4 fromEulerAngles(const Vec3 & euler);
 
-
     Mat4 transpose() const;
     Mat4 inverse() const;
 
@@ -155,6 +214,12 @@ struct Mat4 {
     Mat4 & operator=(const Mat4 & other);
 };
 
+/**
+ * @brief Multiplie une matrice 4x4 par un vecteur 3D homogène (avec division par w).
+ * @param mat Matrice 4x4.
+ * @param vec Vecteur 3D.
+ * @return Vecteur 3D transformé.
+ */
 inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {
     float x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12];
     float y = mat.data[1] * vec.x + mat.data[5] * vec.y + mat.data[9] * vec.z + mat.data[13];
@@ -170,6 +235,15 @@ inline Vec3 operator*(const Mat4 & mat, const Vec3 & vec) {
     return Vec3(x, y, z);
 }
 
+/**
+ * @brief Transforme un point 3D par une matrice sans division par w.
+ * 
+ * Utile pour appliquer une translation.
+ * 
+ * @param mat Matrice 4x4.
+ * @param vec Point 3D.
+ * @return Point transformé.
+ */
 inline Vec3 transformPoint(const Mat4 & mat, const Vec3 & vec) {
     float x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12];
     float y = mat.data[1] * vec.x + mat.data[5] * vec.y + mat.data[9] * vec.z + mat.data[13];
@@ -178,6 +252,12 @@ inline Vec3 transformPoint(const Mat4 & mat, const Vec3 & vec) {
     return Vec3(x, y, z);
 }
 
+/**
+ * @brief Multiplie une matrice 4x4 par un vecteur 4D.
+ * @param mat Matrice 4x4.
+ * @param vec Vecteur 4D.
+ * @return Vecteur 4D transformé.
+ */
 inline Vec4 operator*(const Mat4 & mat, const Vec4 & vec) {
     Vec4 result;
     result.x = mat.data[0] * vec.x + mat.data[4] * vec.y + mat.data[8] * vec.z + mat.data[12] * vec.w;

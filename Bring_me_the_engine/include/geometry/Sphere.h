@@ -6,7 +6,20 @@
 #include <vector>
 #include <type_traits>
   
-
+/**
+ * @brief Crée une sphère paramétrique centrée à l'origine.
+ * 
+ * Cette fonction génère une sphère approximative à partir de secteurs (longitude) et stacks (latitude).
+ * Chaque vertex contient position, normale, couleur et coordonnées de texture.
+ * Les tangentes et bitangentes sont calculées pour support des normal maps.
+ * 
+ * @tparam T Type retourné : Mesh ou std::shared_ptr<Mesh>.
+ * @param radius Rayon de la sphère.
+ * @param sectorCount Nombre de divisions en longitude (secteurs).
+ * @param stackCount Nombre de divisions en latitude (stacks).
+ * @param color Couleur appliquée uniformément sur tous les vertices.
+ * @return T L'objet mesh représentant la sphère.
+ */
 template<typename T = Mesh>
 inline T createSphere(float radius = 1.0f, int sectorCount = 36, int stackCount = 18, const Color & color = Color(255, 255, 255)) {
     std::vector<Vertex> vertices;
